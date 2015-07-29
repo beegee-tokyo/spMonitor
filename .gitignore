@@ -1,0 +1,10 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+/arduino/libraries/Adafruit_TSL2561_U/examples
+/arduino/libraries/EmonLib/examples
+/arduino/libraries/Timer/examples

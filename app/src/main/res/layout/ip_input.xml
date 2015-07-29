@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_ip_header_txt"
+        android:id="@+id/tv_ip_header"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_ip_header"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/ll_ip_in">
+
+        <EditText
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/et_ip_1"
+            android:layout_weight="1"
+            android:text="@string/et_ip1_txt"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tv_col_txt"
+            android:id="@+id/tv_col_1"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+        <EditText
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/et_ip_2"
+            android:layout_weight="1"
+            android:text="@string/et_ip2_txt"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tv_col_txt"
+            android:id="@+id/tv_col_2"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+        <EditText
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/et_ip_3"
+            android:layout_weight="1"
+            android:text="@string/et_ip3_txt"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tv_col_txt"
+            android:id="@+id/tv_col_3"
+            android:layout_weight="1"
+            android:gravity="center"/>
+
+        <EditText
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/et_ip_4"
+            android:layout_weight="1"
+            android:text="@string/et_ip4_txt"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
