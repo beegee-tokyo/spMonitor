@@ -17,51 +17,50 @@
  *@param context
  *          Pointer to application context
  */
-void getMeasures ( void *context ) {
-	/* Activity LED on */
-	digitalWrite ( activityLED, HIGH );
+void getMeasures () {
+  /* Activity LED on */
+  digitalWrite ( activityLED, HIGH );
 
-	/* Get the light measurement if a sensor is attached */
-	readLux();
-	collLight = collLight + sunLux;
-	collCountLight += 1;
+  wdt_reset();
+  /* Get the light measurement if a sensor is attached */
+  //readLux();
 
-	Bridge.put ( "Light", String ( sunLux ) );
+  wdt_reset();
+  /* Get the measured current from the solar panel */
+  /** Measured current from current sensor 1 */
+  emon[0].calcVI(20, 2000);
 
-	/* Get the measured current from the solar panel */
-	/** Measured current from current sensor 1 */
-	measuredCurr1 = emon1.calcIrms ( 1480 );
+  /** Sensor 1 is measuring the solar panel, if it is less than 20W then mostlikely that is the standby current drawn by the inverters */
+  if ( emon[0].Irms < 0.5 ) {
+    collPower[0] = collPower[0] + 0;
+    Bridge.put ( "sr", "0" );
+  } else {
+    collPower[0] = collPower[0] + emon[0].realPower;
+    Bridge.put ( "sr", String ( emon[0].realPower ) );
+  }
+  collCount[0] += 1;
 
-	/** Sensor 1 is measuring the solar panel, any value above 9A is nonsense */
-	if ( measuredCurr1 > 9.0 ) {
-		measuredCurr1 = prevCurr1;
-	} else {
-		collCurr1 = collCurr1 + ( measuredCurr1 * measuredCurr1 );
-		collCount1 += 1;
-	}
+  Bridge.put ( "s", String ( emon[0].Irms ) );
+  Bridge.put ( "sv", String ( emon[0].Vrms ) );
+  Bridge.put ( "sa", String ( emon[0].apparentPower ) );
+  Bridge.put ( "sp", String ( emon[0].powerFactor ) );
 
-	prevCurr1 = measuredCurr1;
+  wdt_reset();
+  /** Get the measured current from sensor 2 which can be attached to anything */
+  /** Measured current from current sensor 2 */
+  emon[1].calcVI(20, 2000);
 
-	Bridge.put ( "Curr1", String ( measuredCurr1 ) );
+  collPower[1] = collPower[1] + emon[1].realPower;
+  collCount[1] += 1;
 
-	/** Get the measured current from sensor 2 which can be attached to anything */
-	/** Measured current from current sensor 2 */
-	measuredCurr2 = emon2.calcIrms ( 1480 );
+  Bridge.put ( "c", String ( emon[1].Irms ) );
+  Bridge.put ( "cr", String ( emon[1].realPower ) );
+  Bridge.put ( "cv", String ( emon[1].Vrms ) );
+  Bridge.put ( "ca", String ( emon[1].apparentPower ) );
+  Bridge.put ( "cp", String ( emon[1].powerFactor ) );
 
-	/** Sensor 2 can measuring max 50A, any value above is nonsense */
-	if ( measuredCurr2 > 50.0 ) {
-		measuredCurr2 = prevCurr2;
-	} else {
-		collCurr2 = collCurr2 + ( measuredCurr2 * measuredCurr2 );
-		collCurr2 += measuredCurr2;
-		collCount2 += 1;
-	}
-
-	prevCurr2 = measuredCurr2;
-
-	Bridge.put ( "Curr2", String ( measuredCurr2 ) );
-
-	/* Activity LED off */
-	digitalWrite ( activityLED, LOW );
+  /* Activity LED off */
+  digitalWrite ( activityLED, LOW );
 }
+
 

@@ -14,57 +14,73 @@
  * setup
  * required by Arduino IDE
  *
- * Initialize serial port
  * Initialize timers for LED and analog readings
  * Initialize sensor interfaces
  * Initialize communication
  */
 void setup() {
-	/** enable serial port for debug messages with Serial.println() */
-	Serial.begin ( 9600 );
+  /** set pin to output */
+  pinMode ( activityLED, OUTPUT );
 
-	/** set pin to output */
-	pinMode ( activityLED, OUTPUT );
-	pinMode ( accessLED, OUTPUT );
+  /** Initialize bridge connection */
+  Bridge.begin();
+  /* Listen for incoming connection only from localhost */
+  /* (no one from the external network could connect) */
+  server.listenOnLocalhost();
+  server.begin();
 
-	/** Initiate call of getMeasures every 5 seconds */
-	measureEvent = eventTimer.every ( messFreq, getMeasures, ( void * ) 0 );
-	/** Initiate call of saveMeasures every 60 seconds */
-	saveEvent = eventTimer.every ( saveFreq, saveData, ( void * ) 0 );
+  /** Initialize access to SDcard */
+  FileSystem.begin();
 
-	/** Initialize bridge connection */
-	Bridge.begin();
-	/* Listen for incoming connection only from localhost */
-	/* (no one from the external network could connect) */
-	server.listenOnLocalhost();
-	server.begin();
+  /** Configure the Adafruit TSL2561 light sensor */
+  /* Initialise the sensor */
+  if ( tsl.begin() ) {
+    /* Setup the sensor gain and integration time */
+    configureSensor();
+  }
 
-	/** Initialize access to SDcard */
-	FileSystem.begin();
+  /** Preset values for current sensing */
+  iCal[0] = iCalVal1;
+  /** Currently used current calibration value for current sensor 2 */
+  iCal[1] = iCalVal2;
+  collPower[0] = collPower[1] = 0.0;
+  collCount[0] = collCount[1] = collCount[2] = 0;
 
-	/** Configure the Adafruit TSL2561 light sensor */
-	/* Initialise the sensor */
-	if ( tsl.begin() ) {
-		/* Setup the sensor gain and integration time */
-		configureSensor();
-	} else {
-		errorEvent = eventTimer.oscillate ( accessLED, 500, HIGH );
-	}
+  /** Configure the YHDC SCT013-000 current sensors */
+  /* Initialise the current sensor 1 */
+  emon[0].voltage( 2, vCal, 1.3 );
+  emon[0].current ( 0, iCal[0] );
+  /* Initialise the current sensor 2 */
+  emon[1].voltage( 2, vCal, 2 );
+  emon[1].current ( 1, iCal[1] );
 
-	/** Configure the YHDC SCT013-000 current sensors */
-	/* Initialise the current sensor 1 */
-	emon1.current ( 0, calValue1 );
-	/* Initialise the current sensor 2 */
-	emon2.current ( 1, calValue2 );
+  /* Get initial reading to setup the low pass filter */
+  unsigned int i = 0;
+  while (i<20) {
+    /* LED on */
+    digitalWrite ( activityLED, HIGH );
+    emon[0].calcVI ( 20, 2000 );
+    emon[1].calcVI ( 20, 2000 );
+    /* LED off */
+    digitalWrite ( activityLED, LOW );
+    i++;
+  }
 
-	/* Get initial reading to setup the low pass filter */
-	for ( unsigned int i = 0; i < 10; i++ ) {
-		/* LED on */
-		digitalWrite ( activityLED, HIGH );
-		measuredCurr1 = emon1.calcIrms ( 1480 );
-		measuredCurr2 = emon2.calcIrms ( 1480 );
-		/* LED off */
-		digitalWrite ( activityLED, LOW );
-	}
+  /* For debug only */
+  //String fileName = "/mnt/sda1/debug.txt";
+
+  //File dataFile = FileSystem.open ( fileName.c_str(), FILE_APPEND );
+
+  //if ( dataFile ) {
+  //  dataFile.println ( "Restart\n" );
+  //  dataFile.close();
+  //}
+  /* End of For debug only */
+
+  /** Initiate call of getMeasures and saveData every 5 seconds / 60 seconds */
+  lastMeasure = lastSave = lastReset = millis();
+
+  /** Activate the watchdog */
+  wdt_enable(WDTO_8S);
 }
 

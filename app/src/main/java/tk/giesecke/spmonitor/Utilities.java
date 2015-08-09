@@ -8,7 +8,6 @@ import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.squareup.okhttp.Request;
@@ -30,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * @author Bernd Giesecke
  * @version 0 beta July 12, 2015.
  */
-public class Utilities {
+class Utilities {
 
 	/**
 	 * Scan the local subnet and return a list of IP addresses found
@@ -40,7 +39,7 @@ public class Utilities {
 	 * @return <ArrayList>hosts</ArrayList>
 	 *            Array list with all found IP addresses
 	 */
-	public static ArrayList<String> scanSubNet(String subnet){
+	private static ArrayList<String> scanSubNet(String subnet){
 		/** Array list to hold found IP addresses */
 		ArrayList<String> hosts = new ArrayList<>();
 
@@ -86,6 +85,7 @@ public class Utilities {
 				.url(urlString)
 				.build();
 
+		/** Response from spMonitor device */
 		Response response;
 		try {
 			response = spMonitor.client.newCall(request).execute();
@@ -204,11 +204,8 @@ public class Utilities {
 	 * Start animation of refresh icon in action bar
 	 */
 	public static void startRefreshAnim() {
-		/** Image button for refresh data status */
-		ImageButton ivRefresh = (ImageButton) spMonitor.appView.findViewById(R.id.iv_update);
 		/** Progressbar that will be shown instead of image button during refresh */
-		ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.b_tb_refresh_rot);
-		ivRefresh.setVisibility(View.GONE);
+		ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
 		refreshRot.setVisibility(View.VISIBLE);
 	}
 
@@ -216,12 +213,9 @@ public class Utilities {
 	 * Stop animation of refresh icon in action bar
 	 */
 	public static void stopRefreshAnim() {
-		/** Image button for refresh data status */
-		ImageButton ivRefresh = (ImageButton) spMonitor.appView.findViewById(R.id.iv_update);
 		/** Progressbar that will be shown instead of image button during refresh */
-		ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.b_tb_refresh_rot);
-		ivRefresh.setVisibility(View.VISIBLE);
-		refreshRot.setVisibility(View.GONE);
+		ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
+		refreshRot.setVisibility(View.INVISIBLE);
 	}
 
 	/**
@@ -254,15 +248,15 @@ public class Utilities {
 		minMax[0] = 0;
 		minMax[1] = 2000;
 
-		if (spMonitor.showSeries1 && spMonitor.showSeries2) {
-			minMax[0] = Math.min(spMonitor.sensor1Series.getLowestValueY(), spMonitor.sensor2Series.getLowestValueY());
-			minMax[1] = Math.max(spMonitor.sensor1Series.getHighestValueY(), spMonitor.sensor2Series.getHighestValueY());
-		} else if (spMonitor.showSeries1) {
-			minMax[0] = spMonitor.sensor1Series.getLowestValueY();
-			minMax[1] = spMonitor.sensor1Series.getHighestValueY();
+		if (spMonitor.showSolar && spMonitor.showCons) {
+			minMax[0] = Math.min(spMonitor.solarSeries.getLowestValueY(), spMonitor.consSeries.getLowestValueY());
+			minMax[1] = Math.max(spMonitor.solarSeries.getHighestValueY(), spMonitor.consSeries.getHighestValueY());
+		} else if (spMonitor.showSolar) {
+			minMax[0] = spMonitor.solarSeries.getLowestValueY();
+			minMax[1] = spMonitor.solarSeries.getHighestValueY();
 		} else {
-			minMax[0] = spMonitor.sensor2Series.getLowestValueY();
-			minMax[1] = spMonitor.sensor2Series.getHighestValueY();
+			minMax[0] = spMonitor.consSeries.getLowestValueY();
+			minMax[1] = spMonitor.consSeries.getHighestValueY();
 		}
 		return minMax;
 	}

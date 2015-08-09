@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
@@ -87,6 +88,10 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.bt_man_ip:
+				/** Progressbar that will be shown instead of image button during refresh */
+				ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
+				refreshRot.setVisibility(View.INVISIBLE);
+
 				/** Alert dialog builder to show dialog for manual IP address input */
 				AlertDialog.Builder ipDialBuilder = new AlertDialog.Builder(this);
 				/** Layout inflater to show dialog for manual IP address input */
@@ -102,7 +107,7 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 							public void onClick(DialogInterface dialog, int which) {
 								/** String containing the IP address entered by the user */
 								String ipBuilder;
-								/** Pointer to edit text field */
+								/** Pointer to edit text fields */
 								EditText numField = (EditText) ipDialView.findViewById(R.id.et_ip_1);
 								ipBuilder = numField.getText().toString();
 								ipBuilder = ipBuilder + ":";
@@ -157,41 +162,46 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 				/** String holding the IP address the spMonitor was found at last start */
 				String ip = params[1]; //stored URL we need to check
 				/** Result of check if spMonitor is still on same IP address */
-				String result = Utilities.checkDeviceIP(ip);
-				if (result.startsWith("Freq")) {
-					Utilities.setCalValues(result);
-					spMonitor.deviceIP = "http://"+ip+"/arduino/";
-					spMonitor.mPrefs.edit().putString("spMonitorIP", spMonitor.deviceIP).apply();
-					return "true";
-				} else {
-					/* First try to find in the range of the old stored IP address */
-					/** Last part of IP address the spMonitor was found at last start */
-					int oldIP = Integer.parseInt(ip.substring(ip.lastIndexOf(".")+1));
-					/** Subnet without last part */
-					String subnet = ip.substring(0, ip.lastIndexOf("."));
-					subnet += ".";
-					if (oldIP > 10) oldIP = oldIP - 10;
-					else oldIP = 0;
-					if (oldIP > 235) oldIP = 235;
-					for (int i = oldIP; i < oldIP+20; i++) {
-						ip = subnet+String.valueOf(i);
+				String result;
+				for (int i=0; i<3; i++) { //try three times before giving up
+					result = Utilities.checkDeviceIP(ip);
+					if (result.startsWith("F ")) {
+						Utilities.setCalValues(result);
+						spMonitor.deviceIP = "http://"+ip+"/arduino/";
+						spMonitor.mPrefs.edit().putString("spMonitorIP", spMonitor.deviceIP).apply();
+						return "true";
+					}
+				}
+				/* spMonitor device not found on the stored IP address */
+				/* First try to find in the range of the old stored IP address */
+				/** Last part of IP address the spMonitor was found at last start */
+				int oldIP = Integer.parseInt(ip.substring(ip.lastIndexOf(".")+1));
+				/** Subnet without last part */
+				String subnet = ip.substring(0, ip.lastIndexOf("."));
+				subnet += ".";
+				if (oldIP > 10) oldIP = oldIP - 10;
+				else oldIP = 0;
+				if (oldIP > 235) oldIP = 235;
+				for (int i = oldIP; i < oldIP+20; i++) {
+					ip = subnet+String.valueOf(i);
+					for (i=0; i<3; i++) { //try three times before giving up
 						result = Utilities.checkDeviceIP(ip);
-						if (result.startsWith("Freq")) {
+						if (result.startsWith("F ")) {
 							Utilities.setCalValues(result);
-							spMonitor.deviceIP = "http://" + ip + "/arduino/";
+							spMonitor.deviceIP = "http://"+ip+"/arduino/";
 							spMonitor.mPrefs.edit().putString("spMonitorIP", spMonitor.deviceIP).apply();
 							return "true";
 						}
 					}
-					/* Couldn't find the device yet, make a full IP range scan */
-					spMonitor.deviceIP = Utilities.searchDeviceIP();
+				}
+				/* Still couldn't find the spMonitor device, make a full IP range scan */
+				spMonitor.deviceIP = Utilities.searchDeviceIP();
 
-					if (spMonitor.deviceIP.equalsIgnoreCase("")) {
-						return "false";
-					} else {
-						spMonitor.mPrefs.edit().putString("spMonitorIP", spMonitor.deviceIP).apply();
-						return "true";
-					}
+				if (spMonitor.deviceIP.equalsIgnoreCase("")) {
+					return "false";
+				} else {
+					spMonitor.mPrefs.edit().putString("spMonitorIP", spMonitor.deviceIP).apply();
+					return "true";
 				}
 			}
 			return "false";
@@ -200,6 +210,10 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 		protected void onPostExecute(String result) {
 
 			if (result.equalsIgnoreCase("true")) {
+				/** Progressbar that will be shown instead of image button during refresh */
+				ProgressBar refreshRot = (ProgressBar) findViewById(R.id.pb_splash);
+				refreshRot.setVisibility(View.INVISIBLE);
+
 				updateText(getResources().getString(R.string.found_device, spMonitor.deviceIP));
 				spMonitor.mPrefs.edit().putString("spMonitorIP", spMonitor.deviceIP);
 				manualEntry.setVisibility(View.INVISIBLE);
@@ -207,6 +221,10 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 				// start main activity
 				startMain();
 			} else {
+				/** Progressbar that will be shown instead of image button during refresh */
+				ProgressBar refreshRot = (ProgressBar) findViewById(R.id.pb_splash);
+				refreshRot.setVisibility(View.INVISIBLE);
+
 				// wait for user to close the app or enter the IP manually
 				updateText(getResources().getString(R.string.err_no_device));
 				manualEntry.setVisibility(View.VISIBLE);

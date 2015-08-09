@@ -1,5 +1,5 @@
 # spMonitor
-Solar Panel Monitor with Arduino Uno, current &amp; light sensors and WiFi module to transfer data to a PC or Android device
+Solar Panel Monitor with Arduino Uno, current and light sensors and WiFi module to transfer data to a PC or Android device
 
 ## Solar Panel Monitor
  

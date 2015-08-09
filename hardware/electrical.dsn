@@ -1,0 +1,1522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--This file was written by TinyCAD Version 2.80.08 Build #631 Production Release
+If you wish to view this file go to http://tinycad.sourceforge.net to
+download the executable.-->
+<TinyCADSheets>
+	<TinyCAD>
+		<NAME>Sheet 1</NAME>
+		<DETAILS>
+			<Size width='2100' height='1485'/>
+			<GUIDES horiz='7' vert='5'/>
+			<TITLE>Electrical diagram for spMonitor</TITLE>
+			<AUTHOR>Bernd Giesecke</AUTHOR>
+			<REVISION>1.0</REVISION>
+			<DOCNUMBER>electrical</DOCNUMBER>
+			<ORGANISATION>Private</ORGANISATION>
+			<SHEETS>1 of 1</SHEETS>
+			<SHOWS>3</SHOWS>
+			<DATE>July 30th 2015</DATE>
+			<GRID spacing='100.00000' snap='1'/>
+		</DETAILS>
+		<FONT id='1'>
+			<HEIGHT>-10</HEIGHT>
+			<WIDTH>0</WIDTH>
+			<WEIGHT>400</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='3'>
+			<HEIGHT>-24</HEIGHT>
+			<WIDTH>11</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='4'>
+			<HEIGHT>-16</HEIGHT>
+			<WIDTH>8</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='5'>
+			<HEIGHT>-11</HEIGHT>
+			<WIDTH>5</WIDTH>
+			<WEIGHT>400</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='6'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='7'>
+			<HEIGHT>-26</HEIGHT>
+			<WIDTH>9</WIDTH>
+			<WEIGHT>900</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial Black</FACENAME>
+		</FONT>
+		<FONT id='8'>
+			<HEIGHT>-13</HEIGHT>
+			<WIDTH>6</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='9'>
+			<HEIGHT>-15</HEIGHT>
+			<WIDTH>7</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='10'>
+			<HEIGHT>-15</HEIGHT>
+			<WIDTH>7</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='11'>
+			<HEIGHT>-15</HEIGHT>
+			<WIDTH>7</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='12'>
+			<HEIGHT>-15</HEIGHT>
+			<WIDTH>7</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<FONT id='13'>
+			<HEIGHT>-15</HEIGHT>
+			<WIDTH>7</WIDTH>
+			<WEIGHT>700</WEIGHT>
+			<ITALIC>0</ITALIC>
+			<UNDERLINE>0</UNDERLINE>
+			<STRIKEOUT>0</STRIKEOUT>
+			<CHARSET>0</CHARSET>
+			<FACENAME>Arial</FACENAME>
+		</FONT>
+		<STYLE id='0'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>1</THICKNESS>
+		</STYLE>
+		<STYLE id='2'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>2</THICKNESS>
+		</STYLE>
+		<STYLE id='4'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>1</THICKNESS>
+		</STYLE>
+		<STYLE id='5'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>4</THICKNESS>
+		</STYLE>
+		<STYLE id='6'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>2</THICKNESS>
+		</STYLE>
+		<STYLE id='7'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>1</THICKNESS>
+		</STYLE>
+		<STYLE id='8'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>4</THICKNESS>
+		</STYLE>
+		<FILL id='0'>
+			<INDEX>-1</INDEX>
+			<COLOR>000000</COLOR>
+		</FILL>
+		<FILL id='1'>
+			<INDEX>0</INDEX>
+			<COLOR>000000</COLOR>
+		</FILL>
+		<FILL id='2'>
+			<INDEX>0</INDEX>
+			<COLOR>000000</COLOR>
+		</FILL>
+		<SYMBOLDEF id='1'>
+			<NAME type='0'>SW_SPST</NAME>
+			<REF type='0'>S?</REF>
+			<DESCRIPTION>Single Pole Switch</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='50.00000,49.00000'/>
+			<TinyCAD>
+				<ELLIPSE a='43.00000,46.00000' b='45.00000,48.00000' style='6' fill='0'/>
+				<POLYGON pos='37.80000,45.00000' style='7' fill='0'>
+					<POINT pos='0.08264,1.68127' arc='0'/>
+					<POINT pos='5.20000,0.00000' arc='0'/>
+				</POLYGON>
+				<PIN pos='32.00000,47.00000' which='0' elec='4' direction='3' part='0' number='1' show='1' length='15' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='49.00000,47.00000' which='0' elec='4' direction='2' part='0' number='2' show='1' length='15' number_pos='0' centre_name='0'></PIN>
+				<ELLIPSE a='36.00000,46.00000' b='38.00000,48.00000' style='6' fill='0'/>
+				<POLYGON pos='35.00000,47.00000' style='7' fill='0'>
+					<POINT pos='1.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='45.00000,47.00000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='1.00000,0.00000' arc='2'/>
+				</POLYGON>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='2'>
+			<NAME type='1'>RESISTOR</NAME>
+			<REF type='1'>R?</REF>
+			<DESCRIPTION>Resistor</DESCRIPTION>
+			<PPP>1</PPP>
+			<REF_POINT power='0' part='0' pos='23.00000,28.00000'/>
+			<REF_POINT power='1' part='0' pos='23.00000,28.00000'/>
+			<TinyCAD>
+				<RECTANGLE a='20.60000,26.00000' b='20.60000,26.00000' style='7' fill='0'/>
+				<RECTANGLE a='20.60000,26.00000' b='21.60000,22.00000' style='7' fill='0'/>
+				<PIN pos='21.00000,20.00000' which='0' elec='0' direction='1' part='0' number='1' show='0' length='10' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='21.00000,28.00000' which='0' elec='0' direction='0' part='0' number='2' show='0' length='10' number_pos='0' centre_name='0'></PIN>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='3'>
+			<NAME type='0'>CE</NAME>
+			<REF type='0'>C?</REF>
+			<DESCRIPTION>Capacitor Electrolytic</DESCRIPTION>
+			<PPP>1</PPP>
+			<REF_POINT power='0' part='0' pos='92.00000,32.00000'/>
+			<TinyCAD>
+				<POLYGON pos='90.60000,26.80000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='1.20000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='91.20000,26.20000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.20000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='89.20000,28.00000' style='7' fill='0'>
+					<POINT pos='1.60000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='90.00000,29.00000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,3.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='90.00000,25.00000' style='7' fill='0'>
+					<POINT pos='0.00000,3.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='91.60000,28.00000' style='7' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='88.40000,28.00000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='88.40000,29.00000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='3.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<PIN pos='90.00000,32.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='90.00000,25.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='4'>
+			<NAME type='0'>HDR_2_1</NAME>
+			<REF type='0'>U?</REF>
+			<DESCRIPTION>New symbol</DESCRIPTION>
+			<PPP>25</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='51.00000,34.00000'/>
+			<TinyCAD>
+				<RECTANGLE a='46.00000,29.00000' b='48.00000,31.00000' style='7' fill='1'/>
+				<ELLIPSE a='48.00000,29.00000' b='50.00000,31.00000' style='7' fill='0'/>
+				<PIN pos='47.00000,34.00000' which='0' elec='4' direction='0' part='0' number='1' show='3' length='15' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='1' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='1' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='2' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='2' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='3' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='3' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='4' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='4' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='5' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='5' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='6' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='6' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='7' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='7' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='8' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='8' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='9' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='9' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='10' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='10' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='11' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='11' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='12' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='12' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='13' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='13' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='14' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='14' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='15' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='15' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='16' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='16' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='17' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='17' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='18' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='18' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='19' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='19' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='20' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='20' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='21' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='21' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='22' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='22' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='23' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='23' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='24' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='24' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='49.00000,34.00000' which='0' elec='0' direction='0' part='0' number='2' show='1' length='15' number_pos='0' centre_name='0'></PIN>
+				<RECTANGLE a='46.00000,29.00000' b='50.00000,31.00000' style='7' fill='0'/>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='5'>
+			<NAME type='0'>Arduino Y&#039;un</NAME>
+			<REF type='0'>U?</REF>
+			<DESCRIPTION>Arduino Yun</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='116.00000,172.00000'/>
+			<TinyCAD>
+				<RECTANGLE a='60.00000,36.00000' b='110.00000,166.00000' style='6' fill='0'/>
+				<PIN pos='116.00000,44.00000' which='0' elec='5' direction='2' part='0' number='1' show='3' length='30' number_pos='0' centre_name='0'>SCL</PIN>
+				<PIN pos='116.00000,48.00000' which='0' elec='5' direction='2' part='0' number='2' show='3' length='30' number_pos='0' centre_name='0'>SDA</PIN>
+				<PIN pos='116.00000,56.00000' which='0' elec='5' direction='2' part='0' number='5' show='3' length='30' number_pos='0' centre_name='0'>D13/SCK</PIN>
+				<PIN pos='116.00000,60.00000' which='0' elec='5' direction='2' part='0' number='6' show='3' length='30' number_pos='0' centre_name='0'>D12/MSIO</PIN>
+				<PIN pos='116.00000,64.00000' which='0' elec='5' direction='2' part='0' number='7' show='3' length='30' number_pos='0' centre_name='0'>D11/MOSI</PIN>
+				<PIN pos='116.00000,68.00000' which='0' elec='5' direction='2' part='0' number='8' show='3' length='30' number_pos='0' centre_name='0'>D10/SS</PIN>
+				<PIN pos='116.00000,72.00000' which='0' elec='5' direction='2' part='0' number='9' show='3' length='30' number_pos='0' centre_name='0'>D9</PIN>
+				<PIN pos='116.00000,76.00000' which='0' elec='5' direction='2' part='0' number='10' show='3' length='30' number_pos='0' centre_name='0'>D8</PIN>
+				<PIN pos='116.00000,80.00000' which='0' elec='5' direction='2' part='0' number='11' show='3' length='30' number_pos='0' centre_name='0'>D7</PIN>
+				<PIN pos='116.00000,84.00000' which='0' elec='5' direction='2' part='0' number='12' show='3' length='30' number_pos='0' centre_name='0'>D6</PIN>
+				<PIN pos='116.00000,88.00000' which='0' elec='5' direction='2' part='0' number='13' show='3' length='30' number_pos='0' centre_name='0'>D5</PIN>
+				<PIN pos='116.00000,92.00000' which='0' elec='5' direction='2' part='0' number='14' show='3' length='30' number_pos='0' centre_name='0'>D4</PIN>
+				<PIN pos='116.00000,96.00000' which='0' elec='5' direction='2' part='0' number='15' show='3' length='30' number_pos='0' centre_name='0'>D3/INT1</PIN>
+				<PIN pos='116.00000,100.00000' which='0' elec='5' direction='2' part='0' number='16' show='3' length='30' number_pos='0' centre_name='0'>D2/INT0</PIN>
+				<PIN pos='116.00000,104.00000' which='0' elec='5' direction='2' part='0' number='17' show='3' length='30' number_pos='0' centre_name='0'>D1/TX</PIN>
+				<PIN pos='116.00000,108.00000' which='0' elec='5' direction='2' part='0' number='18' show='3' length='30' number_pos='0' centre_name='0'>D0/RX</PIN>
+				<PIN pos='78.00000,172.00000' which='0' elec='0' direction='0' part='0' number='4' show='3' length='30' number_pos='0' centre_name='0'>GND</PIN>
+				<PIN pos='54.00000,48.00000' which='0' elec='1' direction='3' part='0' number='2' show='3' length='30' number_pos='0' centre_name='0'>IOREF</PIN>
+				<PIN pos='54.00000,44.00000' which='0' elec='6' direction='3' part='0' number='1' show='3' length='30' number_pos='0' centre_name='0'>NC</PIN>
+				<PIN pos='54.00000,52.00000' which='0' elec='0' direction='3' part='0' number='4' show='3' length='30' number_pos='0' centre_name='0'>RESET</PIN>
+				<PIN pos='78.00000,30.00000' which='0' elec='1' direction='1' part='0' number='5' show='3' length='30' number_pos='0' centre_name='0'>3.3V</PIN>
+				<PIN pos='84.00000,30.00000' which='0' elec='1' direction='1' part='0' number='6' show='3' length='30' number_pos='0' centre_name='0'>5V</PIN>
+				<PIN pos='84.00000,172.00000' which='0' elec='0' direction='0' part='0' number='7' show='3' length='30' number_pos='0' centre_name='0'>GND</PIN>
+				<PIN pos='90.00000,172.00000' which='0' elec='0' direction='0' part='0' number='8' show='3' length='30' number_pos='0' centre_name='0'>GND</PIN>
+				<PIN pos='90.00000,30.00000' which='0' elec='0' direction='1' part='0' number='9' show='3' length='30' number_pos='0' centre_name='0'>VIN</PIN>
+				<PIN pos='54.00000,60.00000' which='0' elec='5' direction='3' part='0' number='10' show='3' length='30' number_pos='0' centre_name='0'>AD0</PIN>
+				<PIN pos='54.00000,64.00000' which='0' elec='5' direction='3' part='0' number='11' show='3' length='30' number_pos='0' centre_name='0'>AD1</PIN>
+				<PIN pos='54.00000,68.00000' which='0' elec='5' direction='3' part='0' number='12' show='3' length='30' number_pos='0' centre_name='0'>AD2</PIN>
+				<PIN pos='54.00000,72.00000' which='0' elec='5' direction='3' part='0' number='13' show='3' length='30' number_pos='0' centre_name='0'>AD3</PIN>
+				<PIN pos='54.00000,76.00000' which='0' elec='5' direction='3' part='0' number='14' show='3' length='30' number_pos='0' centre_name='0'>AD4</PIN>
+				<PIN pos='54.00000,80.00000' which='0' elec='5' direction='3' part='0' number='15' show='3' length='30' number_pos='0' centre_name='0'>AD5/SCL</PIN>
+				<PIN pos='54.00000,84.00000' which='0' elec='5' direction='3' part='0' number='16' show='3' length='30' number_pos='0' centre_name='0'>AD6/SDA</PIN>
+				<TEXT pos='74.00000,78.00000' direction='3' font='7' color='000000'>Arduino Y&#039;un</TEXT>
+				<PIN pos='54.00000,92.00000' which='0' elec='0' direction='3' part='0' number='1' show='1' length='30' number_pos='0' centre_name='0'>5V</PIN>
+				<PIN pos='54.00000,95.00000' which='0' elec='0' direction='3' part='0' number='2' show='1' length='30' number_pos='0' centre_name='0'>D-</PIN>
+				<PIN pos='54.00000,98.00000' which='0' elec='0' direction='3' part='0' number='3' show='1' length='30' number_pos='0' centre_name='0'>D+</PIN>
+				<PIN pos='54.00000,101.00000' which='0' elec='0' direction='3' part='0' number='4' show='1' length='30' number_pos='0' centre_name='0'>Gnd</PIN>
+				<POLYGON pos='61.00000,91.00000' style='7' fill='0'>
+					<POINT pos='6.00000,0.00000' arc='0'/>
+					<POINT pos='10.00000,3.14286' arc='0'/>
+					<POINT pos='10.00000,7.85716' arc='0'/>
+					<POINT pos='6.00000,11.00000' arc='0'/>
+					<POINT pos='0.00000,11.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='6.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='65.00000,94.00000' style='7' fill='0'>
+					<POINT pos='2.40000,0.00000' arc='0'/>
+					<POINT pos='4.00000,1.42857' arc='0'/>
+					<POINT pos='4.00000,3.57143' arc='0'/>
+					<POINT pos='2.40000,5.00000' arc='0'/>
+					<POINT pos='0.00000,5.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='2.40000,0.00000' arc='0'/>
+				</POLYGON>
+				<PIN pos='116.00000,116.00000' which='0' elec='1' direction='2' part='0' number='X1' show='3' length='30' number_pos='0' centre_name='0'>MISO</PIN>
+				<PIN pos='116.00000,120.00000' which='0' elec='1' direction='2' part='0' number='X2' show='3' length='30' number_pos='0' centre_name='0'>5V</PIN>
+				<PIN pos='116.00000,124.00000' which='0' elec='1' direction='2' part='0' number='X3' show='3' length='30' number_pos='0' centre_name='0'>SCK</PIN>
+				<PIN pos='116.00000,128.00000' which='0' elec='0' direction='2' part='0' number='X4' show='3' length='30' number_pos='0' centre_name='0'>MOSI</PIN>
+				<PIN pos='116.00000,132.00000' which='0' elec='0' direction='2' part='0' number='X5' show='3' length='30' number_pos='0' centre_name='0'>RESET</PIN>
+				<PIN pos='116.00000,136.00000' which='0' elec='0' direction='2' part='0' number='X6' show='3' length='30' number_pos='0' centre_name='0'>GND</PIN>
+				<PIN pos='116.00000,52.00000' which='0' elec='1' direction='2' part='0' number='3' show='3' length='30' number_pos='0' centre_name='0'>AREF</PIN>
+				<TEXT pos='72.00000,98.00000' direction='3' font='6' color='000000'>USB</TEXT>
+				<TEXT pos='96.00000,128.00000' direction='3' font='6' color='000000'>ICSP</TEXT>
+				<RECTANGLE a='94.00000,112.00000' b='110.00000,142.00000' style='6' fill='0'/>
+				<RECTANGLE a='60.00000,86.00000' b='80.00000,106.00000' style='6' fill='0'/>
+				<TEXT pos='72.00000,100.00000' direction='3' font='6' color='000000'>Host</TEXT>
+				<PIN pos='54.00000,112.00000' which='0' elec='0' direction='3' part='0' number='1' show='1' length='30' number_pos='0' centre_name='0'>5V</PIN>
+				<PIN pos='54.00000,115.00000' which='0' elec='0' direction='3' part='0' number='2' show='1' length='30' number_pos='0' centre_name='0'>D-</PIN>
+				<PIN pos='54.00000,118.00000' which='0' elec='0' direction='3' part='0' number='3' show='1' length='30' number_pos='0' centre_name='0'>D+</PIN>
+				<PIN pos='54.00000,121.00000' which='0' elec='0' direction='3' part='0' number='4' show='1' length='30' number_pos='0' centre_name='0'>Gnd</PIN>
+				<POLYGON pos='61.00000,111.00000' style='7' fill='0'>
+					<POINT pos='6.00000,0.00000' arc='0'/>
+					<POINT pos='10.00000,3.14286' arc='0'/>
+					<POINT pos='10.00000,7.85716' arc='0'/>
+					<POINT pos='6.00000,11.00000' arc='0'/>
+					<POINT pos='0.00000,11.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='6.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='65.00000,114.00000' style='7' fill='0'>
+					<POINT pos='2.40000,0.00000' arc='0'/>
+					<POINT pos='4.00000,1.42857' arc='0'/>
+					<POINT pos='4.00000,3.57143' arc='0'/>
+					<POINT pos='2.40000,5.00000' arc='0'/>
+					<POINT pos='0.00000,5.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='2.40000,0.00000' arc='0'/>
+				</POLYGON>
+				<TEXT pos='72.00000,118.00000' direction='3' font='6' color='000000'>USB</TEXT>
+				<RECTANGLE a='60.00000,106.00000' b='80.00000,126.00000' style='6' fill='0'/>
+				<TEXT pos='72.00000,120.00000' direction='3' font='6' color='000000'>Prog</TEXT>
+				<PIN pos='54.00000,130.00000' which='0' elec='0' direction='3' part='0' number='R1' show='3' length='30' number_pos='0' centre_name='0'>RD+</PIN>
+				<PIN pos='54.00000,134.00000' which='0' elec='0' direction='3' part='0' number='R2' show='3' length='30' number_pos='0' centre_name='0'>RD-</PIN>
+				<PIN pos='54.00000,138.00000' which='0' elec='0' direction='3' part='0' number='R3' show='3' length='30' number_pos='0' centre_name='0'>CT</PIN>
+				<PIN pos='54.00000,146.00000' which='0' elec='0' direction='3' part='0' number='R4' show='3' length='30' number_pos='0' centre_name='0'>TD-</PIN>
+				<PIN pos='54.00000,142.00000' which='0' elec='0' direction='3' part='0' number='R5' show='3' length='30' number_pos='0' centre_name='0'>TD+</PIN>
+				<PIN pos='54.00000,150.00000' which='0' elec='0' direction='3' part='0' number='R7' show='3' length='30' number_pos='0' centre_name='0'>RXCT</PIN>
+				<PIN pos='54.00000,154.00000' which='0' elec='0' direction='3' part='0' number='R8' show='3' length='30' number_pos='0' centre_name='0'>TXCT</PIN>
+				<POLYGON pos='68.00000,132.00000' style='7' fill='0'>
+					<POINT pos='0.00000,2.00000' arc='0'/>
+					<POINT pos='0.00000,18.00000' arc='0'/>
+					<POINT pos='6.00000,18.00000' arc='0'/>
+					<POINT pos='6.00000,14.00000' arc='0'/>
+					<POINT pos='8.00000,14.00000' arc='0'/>
+					<POINT pos='8.00000,12.00000' arc='0'/>
+					<POINT pos='10.00000,12.00000' arc='0'/>
+					<POINT pos='10.00000,6.00000' arc='0'/>
+					<POINT pos='8.00000,6.00000' arc='0'/>
+					<POINT pos='8.00000,4.00000' arc='0'/>
+					<POINT pos='6.00000,4.00000' arc='0'/>
+					<POINT pos='6.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,2.00000' arc='0'/>
+					<POINT pos='0.00000,2.00000' arc='0'/>
+				</POLYGON>
+				<RECTANGLE a='60.00000,126.00000' b='80.00000,158.00000' style='6' fill='0'/>
+				<TEXT pos='70.00000,142.00000' direction='3' font='8' color='000000'>LAN</TEXT>
+				<ELLIPSE a='105.00000,149.00000' b='107.00000,151.00000' style='7' fill='0'/>
+				<ELLIPSE a='104.00000,148.00000' b='108.00000,152.00000' style='7' fill='0'/>
+				<POLYGON pos='106.00000,151.00000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,3.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='108.00000,150.00000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<PIN pos='110.00000,150.00000' which='5' elec='4' direction='3' part='0' number='1' show='3' length='30' number_pos='0' centre_name='0'>SHIELD</PIN>
+				<PIN pos='106.00000,154.00000' which='5' elec='4' direction='3' part='0' number='2' show='3' length='30' number_pos='0' centre_name='0'>LINE</PIN>
+				<RECTANGLE a='94.00000,142.00000' b='110.00000,158.00000' style='6' fill='0'/>
+				<TEXT pos='96.00000,148.00000' direction='3' font='8' color='000000'>Antenna</TEXT>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='6'>
+			<NAME type='0'>M</NAME>
+			<REF type='0'>M?</REF>
+			<DESCRIPTION>Meter</DESCRIPTION>
+			<PPP>1</PPP>
+			<REF_POINT power='0' part='0' pos='48.00000,32.00000'/>
+			<TinyCAD>
+				<PIN pos='48.00000,18.00000' which='0' elec='0' direction='2' part='0' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='32.00000,18.00000' which='0' elec='0' direction='3' part='0' number='2' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<POLYGON pos='6.40000,31.80000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='1.80000,29.60000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='36.00000,18.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='8.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='40.00000,18.00000' style='7' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='38.00000,12.00000' style='7' fill='0'>
+					<POINT pos='2.00000,6.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<ELLIPSE a='35.00000,10.00000' b='45.00000,20.00000' style='7' fill='0'/>
+				<POLYGON pos='36.00000,12.00000' style='7' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='40.00000,12.00000' style='7' fill='0'>
+					<POINT pos='4.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='2'/>
+				</POLYGON>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='7'>
+			<NAME type='0'>SOLAR_PANEL</NAME>
+			<REF type='0'>U?</REF>
+			<DESCRIPTION>New symbol</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='56.00000,36.00000'/>
+			<TinyCAD>
+				<PIN pos='50.00000,36.00000' which='0' elec='4' direction='0' part='0' number='1' show='0' length='30' number_pos='18' centre_name='0'>-</PIN>
+				<PIN pos='50.00000,21.00000' which='0' elec='4' direction='1' part='0' number='2' show='0' length='30' number_pos='18' centre_name='1'>+</PIN>
+				<ELLIPSE a='45.00000,23.00000' b='55.00000,33.00000' style='7' fill='0'/>
+				<POLYGON pos='46.00000,27.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='8.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='48.00000,30.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='42.20000,26.20000' style='7' fill='1'>
+					<POINT pos='1.43000,0.45000' arc='0'/>
+					<POINT pos='0.08000,0.00000' arc='0'/>
+					<POINT pos='0.08000,0.85000' arc='0'/>
+					<POINT pos='1.43000,0.45000' arc='0'/>
+				</POLYGON>
+				<WIRE style='0' a='42.63000,26.65000' b='37.95096,26.65675'/>
+				<POLYGON pos='42.20000,27.80000' style='7' fill='2'>
+					<POINT pos='1.47000,0.45000' arc='0'/>
+					<POINT pos='0.12000,0.00000' arc='0'/>
+					<POINT pos='0.12000,0.85000' arc='0'/>
+					<POINT pos='1.47000,0.45000' arc='0'/>
+				</POLYGON>
+				<WIRE style='0' a='42.67000,28.25000' b='38.03653,28.25000'/>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='8'>
+			<NAME type='0'>SOLAR_PANEL</NAME>
+			<REF type='0'>U?</REF>
+			<DESCRIPTION>New symbol</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='56.00000,36.00000'/>
+			<TinyCAD>
+				<PIN pos='50.00000,36.00000' which='0' elec='4' direction='0' part='0' number='1' show='0' length='30' number_pos='18' centre_name='0'>-</PIN>
+				<PIN pos='50.00000,21.00000' which='0' elec='4' direction='1' part='0' number='2' show='0' length='30' number_pos='18' centre_name='1'>+</PIN>
+				<ELLIPSE a='45.00000,23.00000' b='55.00000,33.00000' style='7' fill='0'/>
+				<POLYGON pos='46.00000,27.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='8.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='48.00000,30.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='42.20000,26.20000' style='7' fill='1'>
+					<POINT pos='1.43000,0.45000' arc='0'/>
+					<POINT pos='0.08000,0.00000' arc='0'/>
+					<POINT pos='0.08000,0.85000' arc='0'/>
+					<POINT pos='1.43000,0.45000' arc='0'/>
+				</POLYGON>
+				<WIRE style='0' a='42.63000,26.65000' b='37.95096,26.65675'/>
+				<POLYGON pos='42.20000,27.80000' style='7' fill='2'>
+					<POINT pos='1.47000,0.45000' arc='0'/>
+					<POINT pos='0.12000,0.00000' arc='0'/>
+					<POINT pos='0.12000,0.85000' arc='0'/>
+					<POINT pos='1.47000,0.45000' arc='0'/>
+				</POLYGON>
+				<WIRE style='0' a='42.67000,28.25000' b='38.03653,28.25000'/>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='9'>
+			<NAME type='0'>SOLAR_PANEL</NAME>
+			<REF type='0'>U?</REF>
+			<DESCRIPTION>New symbol</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='56.00000,36.00000'/>
+			<TinyCAD>
+				<PIN pos='50.00000,36.00000' which='0' elec='4' direction='0' part='0' number='1' show='0' length='30' number_pos='18' centre_name='0'>-</PIN>
+				<PIN pos='50.00000,21.00000' which='0' elec='4' direction='1' part='0' number='2' show='0' length='30' number_pos='18' centre_name='1'>+</PIN>
+				<ELLIPSE a='45.00000,23.00000' b='55.00000,33.00000' style='7' fill='0'/>
+				<POLYGON pos='46.00000,27.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='8.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='48.00000,30.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='42.20000,26.20000' style='7' fill='1'>
+					<POINT pos='1.43000,0.45000' arc='0'/>
+					<POINT pos='0.08000,0.00000' arc='0'/>
+					<POINT pos='0.08000,0.85000' arc='0'/>
+					<POINT pos='1.43000,0.45000' arc='0'/>
+				</POLYGON>
+				<WIRE style='0' a='42.63000,26.65000' b='37.95096,26.65675'/>
+				<POLYGON pos='42.20000,27.80000' style='7' fill='2'>
+					<POINT pos='1.47000,0.45000' arc='0'/>
+					<POINT pos='0.12000,0.00000' arc='0'/>
+					<POINT pos='0.12000,0.85000' arc='0'/>
+					<POINT pos='1.47000,0.45000' arc='0'/>
+				</POLYGON>
+				<WIRE style='0' a='42.67000,28.25000' b='38.03653,28.25000'/>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='10'>
+			<NAME type='0'>SOLAR_PANEL</NAME>
+			<REF type='0'>U?</REF>
+			<DESCRIPTION>New symbol</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='56.00000,36.00000'/>
+			<TinyCAD>
+				<PIN pos='50.00000,36.00000' which='0' elec='4' direction='0' part='0' number='1' show='0' length='30' number_pos='18' centre_name='0'>-</PIN>
+				<PIN pos='50.00000,21.00000' which='0' elec='4' direction='1' part='0' number='2' show='0' length='30' number_pos='18' centre_name='1'>+</PIN>
+				<ELLIPSE a='45.00000,23.00000' b='55.00000,33.00000' style='7' fill='0'/>
+				<POLYGON pos='46.00000,27.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='8.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='48.00000,30.00000' style='6' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='4.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='42.20000,26.20000' style='7' fill='1'>
+					<POINT pos='1.43000,0.45000' arc='0'/>
+					<POINT pos='0.08000,0.00000' arc='0'/>
+					<POINT pos='0.08000,0.85000' arc='0'/>
+					<POINT pos='1.43000,0.45000' arc='0'/>
+				</POLYGON>
+				<WIRE style='0' a='42.63000,26.65000' b='37.95096,26.65675'/>
+				<POLYGON pos='42.20000,27.80000' style='7' fill='2'>
+					<POINT pos='1.47000,0.45000' arc='0'/>
+					<POINT pos='0.12000,0.00000' arc='0'/>
+					<POINT pos='0.12000,0.85000' arc='0'/>
+					<POINT pos='1.47000,0.45000' arc='0'/>
+				</POLYGON>
+				<WIRE style='0' a='42.67000,28.25000' b='38.03653,28.25000'/>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='11'>
+			<NAME type='1'>RESISTOR</NAME>
+			<REF type='1'>R?</REF>
+			<DESCRIPTION>Resistor</DESCRIPTION>
+			<PPP>1</PPP>
+			<REF_POINT power='0' part='0' pos='23.00000,28.00000'/>
+			<REF_POINT power='1' part='0' pos='23.00000,28.00000'/>
+			<TinyCAD>
+				<RECTANGLE a='20.60000,26.00000' b='20.60000,26.00000' style='4' fill='0'/>
+				<RECTANGLE a='20.60000,26.00000' b='21.60000,22.00000' style='4' fill='0'/>
+				<PIN pos='21.00000,20.00000' which='0' elec='0' direction='1' part='0' number='1' show='0' length='10' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='21.00000,28.00000' which='0' elec='0' direction='0' part='0' number='2' show='0' length='10' number_pos='0' centre_name='0'></PIN>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='12'>
+			<NAME type='0'>CE</NAME>
+			<REF type='0'>C?</REF>
+			<DESCRIPTION>Capacitor Electrolytic</DESCRIPTION>
+			<PPP>1</PPP>
+			<REF_POINT power='0' part='0' pos='92.00000,32.00000'/>
+			<TinyCAD>
+				<POLYGON pos='90.60000,26.80000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='1.20000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='91.20000,26.20000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.20000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='89.20000,28.00000' style='4' fill='0'>
+					<POINT pos='1.60000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='90.00000,29.00000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,3.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='90.00000,25.00000' style='4' fill='0'>
+					<POINT pos='0.00000,3.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='91.60000,28.00000' style='4' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='88.40000,28.00000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='88.40000,29.00000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='3.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<PIN pos='90.00000,32.00000' which='5' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='90.00000,25.00000' which='5' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='14'>
+			<NAME type='0'>HDR_2_1</NAME>
+			<REF type='0'>U?</REF>
+			<DESCRIPTION>New symbol</DESCRIPTION>
+			<PPP>25</PPP>
+			<FIELD>
+				<NAME>$$SPICE_PROLOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>$$SPICE_EPILOG_PRIORITY</NAME>
+				<DEFAULT>5</DEFAULT>
+				<FT>000002</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT>package name for PCB layout</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='51.00000,34.00000'/>
+			<TinyCAD>
+				<RECTANGLE a='46.00000,29.00000' b='48.00000,31.00000' style='4' fill='1'/>
+				<ELLIPSE a='48.00000,29.00000' b='50.00000,31.00000' style='4' fill='0'/>
+				<PIN pos='47.00000,34.00000' which='0' elec='4' direction='0' part='0' number='1' show='3' length='15' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='1' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='1' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='2' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='2' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='3' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='3' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='4' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='4' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='5' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='5' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='6' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='6' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='7' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='7' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='8' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='8' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='9' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='9' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='10' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='10' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='11' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='11' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='12' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='12' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='13' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='13' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='14' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='14' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='15' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='15' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='16' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='16' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='17' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='17' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='18' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='18' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='19' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='19' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='20' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='20' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='21' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='21' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='22' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='22' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='23' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='23' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,38.00000' which='0' elec='4' direction='0' part='24' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='46.00000,20.00000' which='0' elec='4' direction='1' part='24' number='1' show='1' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='49.00000,34.00000' which='0' elec='0' direction='0' part='0' number='2' show='1' length='15' number_pos='0' centre_name='0'></PIN>
+				<RECTANGLE a='46.00000,29.00000' b='50.00000,31.00000' style='4' fill='0'/>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='16'>
+			<NAME type='0'>T</NAME>
+			<REF type='0'>T?</REF>
+			<DESCRIPTION>Transformer</DESCRIPTION>
+			<PPP>1</PPP>
+			<REF_POINT power='0' part='0' pos='52.00000,56.00000'/>
+			<TinyCAD>
+				<POLYGON pos='46.00000,48.00000' style='4' fill='0'>
+					<POINT pos='1.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='46.00000,47.00000' style='4' fill='0'>
+					<POINT pos='1.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='46.00000,46.00000' style='4' fill='0'>
+					<POINT pos='1.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='46.00000,45.00000' style='4' fill='0'>
+					<POINT pos='1.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='46.00000,44.00000' style='4' fill='0'>
+					<POINT pos='1.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='46.00000,43.00000' style='4' fill='0'>
+					<POINT pos='1.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='46.00000,42.00000' style='4' fill='0'>
+					<POINT pos='1.00000,1.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='49.00000,47.00000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='1.00000,1.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='49.00000,46.00000' style='4' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='1.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='49.00000,45.00000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='1.00000,1.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='49.00000,44.00000' style='4' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='1.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='49.00000,43.00000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='1.00000,1.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='49.00000,42.00000' style='4' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='1.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='49.00000,49.00000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='1.00000,1.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='49.00000,48.00000' style='4' fill='0'>
+					<POINT pos='0.00000,1.00000' arc='0'/>
+					<POINT pos='1.00000,0.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='46.00000,49.00000' style='4' fill='0'>
+					<POINT pos='1.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,1.00000' arc='2'/>
+				</POLYGON>
+				<POLYGON pos='44.00000,42.00000' style='4' fill='0'>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='44.00000,50.00000' style='4' fill='0'>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='48.00000,42.00000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='0.00000,8.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='50.00000,50.00000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<POLYGON pos='50.00000,42.00000' style='4' fill='0'>
+					<POINT pos='0.00000,0.00000' arc='0'/>
+					<POINT pos='2.00000,0.00000' arc='0'/>
+				</POLYGON>
+				<PIN pos='52.00000,56.00000' which='0' elec='4' direction='0' part='0' number='4' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='44.00000,36.00000' which='0' elec='4' direction='1' part='0' number='1' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='44.00000,56.00000' which='0' elec='4' direction='0' part='0' number='2' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='52.00000,36.00000' which='0' elec='4' direction='1' part='0' number='3' show='0' length='30' number_pos='0' centre_name='0'></PIN>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<OPTIONS>
+			<GRID>0</GRID>
+			<UNITS>0</UNITS>
+			<COLOR_WIRE>FF0000</COLOR_WIRE>
+			<COLOR_BUS>0000FF</COLOR_BUS>
+			<COLOR_JUNCTION>000000</COLOR_JUNCTION>
+			<COLOR_NOCONNECT>000000</COLOR_NOCONNECT>
+			<COLOR_LABEL>208000</COLOR_LABEL>
+			<COLOR_POWER>000000</COLOR_POWER>
+			<COLOR_PIN>4040C0</COLOR_PIN>
+			<COLOR_HIDDEN_PIN>208020</COLOR_HIDDEN_PIN>
+			<COLOR_BACKGROUND>FFFFFF</COLOR_BACKGROUND>
+			<COLOR_NOTETEXT_FILL>AFFFFF</COLOR_NOTETEXT_FILL>
+			<COLOR_NOTETEXT_LINE>FF0000</COLOR_NOTETEXT_LINE>
+			<COLOR_NOTETEXT_TEXT>FF0000</COLOR_NOTETEXT_TEXT>
+		</OPTIONS>
+		<SYMBOL id='1' pos='104.00000,48.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='104.00000,54.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='104.00000,66.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='104.00000,72.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='104.00000,84.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='104.00000,90.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='142.00000,48.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='142.00000,54.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='142.00000,66.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='142.00000,72.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='142.00000,84.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='142.00000,90.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<RECTANGLE a='78.00000,28.00000' b='152.00000,100.00000' style='8' fill='0'/>
+		<TEXT pos='100.00000,34.00000' direction='3' font='3' color='000000'>Breaker box</TEXT>
+		<TEXT pos='86.00000,42.00000' direction='3' font='4' color='000000'>Main 2x60A</TEXT>
+		<TEXT pos='122.00000,42.00000' direction='3' font='11' color='000000'>Lights 2x20A</TEXT>
+		<TEXT pos='84.00000,60.00000' direction='3' font='10' color='000000'>Living2x40A</TEXT>
+		<TEXT pos='122.00000,60.00000' direction='3' font='12' color='000000'>Refrigerator 2x40A</TEXT>
+		<TEXT pos='84.00000,78.00000' direction='3' font='9' color='000000'>Kitchen 2x40A</TEXT>
+		<TEXT pos='122.00000,78.00000' direction='3' font='13' color='000000'>Bedroom 2x40A</TEXT>
+		<RECTANGLE a='80.00000,38.00000' b='106.00000,54.00000' style='7' fill='0'/>
+		<RECTANGLE a='80.00000,56.00000' b='106.00000,72.00000' style='7' fill='0'/>
+		<RECTANGLE a='80.00000,74.00000' b='106.00000,90.00000' style='7' fill='0'/>
+		<RECTANGLE a='122.00000,38.00000' b='148.00000,54.00000' style='7' fill='0'/>
+		<RECTANGLE a='122.00000,56.00000' b='148.00000,72.00000' style='7' fill='0'/>
+		<RECTANGLE a='122.00000,74.00000' b='148.00000,90.00000' style='7' fill='0'/>
+		<WIRE style='2' a='110.00000,64.00000' b='110.00000,82.00000'/>
+		<WIRE style='2' a='110.00000,82.00000' b='124.00000,82.00000'/>
+		<WIRE style='2' a='103.00000,82.00000' b='110.00000,82.00000'/>
+		<WIRE style='2' a='103.00000,64.00000' b='110.00000,64.00000'/>
+		<WIRE style='2' a='110.00000,46.00000' b='110.00000,64.00000'/>
+		<WIRE style='2' a='124.00000,64.00000' b='110.00000,64.00000'/>
+		<WIRE style='2' a='110.00000,46.00000' b='103.00000,46.00000'/>
+		<WIRE style='2' a='124.00000,46.00000' b='110.00000,46.00000'/>
+		<WIRE style='2' a='118.00000,52.00000' b='124.00000,52.00000'/>
+		<WIRE style='2' a='124.00000,70.00000' b='118.00000,70.00000'/>
+		<WIRE style='2' a='118.00000,70.00000' b='118.00000,52.00000'/>
+		<WIRE style='2' a='103.00000,52.00000' b='118.00000,52.00000'/>
+		<WIRE style='2' a='118.00000,88.00000' b='103.00000,88.00000'/>
+		<WIRE style='2' a='118.00000,70.00000' b='118.00000,88.00000'/>
+		<WIRE style='2' a='124.00000,88.00000' b='118.00000,88.00000'/>
+		<WIRE style='2' a='103.00000,70.00000' b='118.00000,70.00000'/>
+		<SYMBOL id='1' pos='244.00000,56.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<SYMBOL id='1' pos='244.00000,62.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='S?' show='0' pos='1.00000,0.40000'/>
+			<FIELD type='0' description='Name' value='SW_SPST' show='0' pos='1.00000,-2.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='1.00000,2.80000'/>
+		</SYMBOL>
+		<TEXT pos='230.00000,50.00000' direction='3' font='4' color='000000'>Solar</TEXT>
+		<RECTANGLE a='224.00000,46.00000' b='246.00000,62.00000' style='7' fill='0'/>
+		<RECTANGLE a='218.00000,28.00000' b='252.00000,68.00000' style='8' fill='0'/>
+		<TEXT pos='222.00000,36.00000' direction='3' font='3' color='000000'>Solar supply</TEXT>
+		<TEXT pos='222.00000,42.00000' direction='3' font='3' color='000000'>main switch</TEXT>
+		<RECTANGLE a='316.00000,44.00000' b='358.00000,66.00000' style='7' fill='0'/>
+		<TEXT pos='322.00000,52.00000' direction='3' font='3' color='000000'>Micro Inverter</TEXT>
+		<LABEL pos='160.00000,46.00000' direction='2' font='5' color='208000' style='3'>Lights L</LABEL>
+		<LABEL pos='160.00000,52.00000' direction='2' font='5' color='208000' style='3'>Lights N</LABEL>
+		<LABEL pos='160.00000,64.00000' direction='2' font='5' color='208000' style='3'>Ref L</LABEL>
+		<LABEL pos='160.00000,70.00000' direction='2' font='5' color='208000' style='3'>Ref N</LABEL>
+		<LABEL pos='160.00000,82.00000' direction='2' font='5' color='208000' style='3'>Bedroom L</LABEL>
+		<LABEL pos='160.00000,88.00000' direction='2' font='5' color='208000' style='3'>Bedroom N</LABEL>
+		<LABEL pos='66.00000,82.00000' direction='3' font='5' color='208000' style='3'>Kitchen L</LABEL>
+		<LABEL pos='66.00000,88.00000' direction='3' font='5' color='208000' style='3'>Kitchen N</LABEL>
+		<LABEL pos='66.00000,64.00000' direction='3' font='5' color='208000' style='3'>Living L</LABEL>
+		<LABEL pos='66.00000,70.00000' direction='3' font='5' color='208000' style='3'>Living N</LABEL>
+		<SYMBOL id='6' pos='26.00000,60.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='M?' show='0' pos='1.00000,-17.60000'/>
+			<FIELD type='0' description='Name' value='M' show='0' pos='1.00000,-20.00000'/>
+		</SYMBOL>
+		<ELLIPSE a='4.00000,30.00000' b='32.00000,60.00000' style='7' fill='0'/>
+		<WIRE a='86.00000,46.00000' b='26.00000,46.00000'/>
+		<WIRE a='86.00000,52.00000' b='10.00000,52.00000'/>
+		<WIRE a='86.00000,64.00000' b='66.00000,64.00000'/>
+		<WIRE a='86.00000,70.00000' b='66.00000,70.00000'/>
+		<WIRE a='74.00000,82.00000' b='66.00000,82.00000'/>
+		<WIRE a='70.00000,88.00000' b='66.00000,88.00000'/>
+		<WIRE a='141.00000,88.00000' b='160.00000,88.00000'/>
+		<WIRE a='141.00000,82.00000' b='160.00000,82.00000'/>
+		<WIRE a='156.00000,70.00000' b='160.00000,70.00000'/>
+		<WIRE a='156.00000,64.00000' b='160.00000,64.00000'/>
+		<WIRE a='141.00000,52.00000' b='160.00000,52.00000'/>
+		<WIRE a='141.00000,46.00000' b='160.00000,46.00000'/>
+		<WIRE a='226.00000,54.00000' b='198.00000,54.00000'/>
+		<WIRE a='156.00000,64.00000' b='156.00000,58.00000'/>
+		<WIRE a='141.00000,64.00000' b='156.00000,64.00000'/>
+		<WIRE a='198.00000,58.00000' b='198.00000,54.00000'/>
+		<WIRE a='156.00000,70.00000' b='156.00000,76.00000'/>
+		<WIRE a='141.00000,70.00000' b='156.00000,70.00000'/>
+		<WIRE a='156.00000,76.00000' b='206.00000,76.00000'/>
+		<WIRE a='206.00000,76.00000' b='206.00000,60.00000'/>
+		<WIRE a='206.00000,60.00000' b='226.00000,60.00000'/>
+		<WIRE a='243.00000,54.00000' b='316.00000,54.00000'/>
+		<WIRE a='243.00000,60.00000' b='316.00000,60.00000'/>
+		<TEXT pos='8.00000,26.00000' direction='3' font='3' color='000000'>Net meter</TEXT>
+		<SYMBOL id='2' pos='260.00000,138.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R1' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='330' show='1' pos='1.00000,-1.60000'/>
+		</SYMBOL>
+		<SYMBOL id='2' pos='270.00000,138.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R2' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='470k' show='1' pos='0.00000,-1.60000'/>
+		</SYMBOL>
+		<SYMBOL id='2' pos='270.00000,146.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R3' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='470k' show='1' pos='0.00000,-1.60000'/>
+		</SYMBOL>
+		<WIRE a='252.00000,138.00000' b='258.00000,138.00000'/>
+		<WIRE a='258.00000,126.00000' b='256.00000,126.00000'/>
+		<WIRE a='256.00000,126.00000' b='256.00000,136.00000'/>
+		<WIRE a='256.00000,136.00000' b='252.00000,136.00000'/>
+		<SYMBOL id='3' pos='280.00000,146.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C1' show='1' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='CE' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='3' description='Value' value='10uF' show='1' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='252.00000,140.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='CON2' show='1' pos='-6.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='HDR_2_1' show='1' pos='-6.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-6.00000,4.40000'/>
+		</SYMBOL>
+		<POWER pos='268.00000,124.00000' which='3' direction='0'>5V</POWER>
+		<POWER pos='268.00000,146.00000' which='0' direction='1'>GND</POWER>
+		<WIRE a='268.00000,130.00000' b='268.00000,124.00000'/>
+		<WIRE a='268.00000,146.00000' b='278.00000,146.00000'/>
+		<WIRE a='278.00000,139.00000' b='278.00000,138.00000'/>
+		<WIRE a='268.00000,138.00000' b='258.00000,138.00000'/>
+		<WIRE a='278.00000,138.00000' b='268.00000,138.00000'/>
+		<LABEL pos='288.00000,126.00000' direction='2' font='5' color='208000' style='3'>SPcurrent</LABEL>
+		<TEXT pos='246.00000,110.00000' direction='3' font='4' color='000000'>YHDC SCT013-000 current sensor</TEXT>
+		<TEXT pos='246.00000,114.00000' direction='3' font='6' color='000000'>Solar panel output measurement</TEXT>
+		<SYMBOL id='2' pos='260.00000,194.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R4' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='330' show='1' pos='1.00000,-1.60000'/>
+		</SYMBOL>
+		<SYMBOL id='2' pos='278.00000,194.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R6' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='470k' show='1' pos='0.00000,-1.60000'/>
+		</SYMBOL>
+		<SYMBOL id='2' pos='278.00000,202.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R7' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='470k' show='1' pos='0.00000,-1.60000'/>
+		</SYMBOL>
+		<WIRE a='252.00000,194.00000' b='258.00000,194.00000'/>
+		<WIRE a='256.00000,182.00000' b='256.00000,192.00000'/>
+		<WIRE a='256.00000,192.00000' b='252.00000,192.00000'/>
+		<SYMBOL id='3' pos='288.00000,202.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C2' show='1' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='CE' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='3' description='Value' value='10uF' show='1' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='4' pos='252.00000,196.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='CON3' show='1' pos='-6.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='HDR_2_1' show='1' pos='-6.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-6.00000,4.40000'/>
+		</SYMBOL>
+		<POWER pos='276.00000,180.00000' which='3' direction='0'>5V</POWER>
+		<POWER pos='276.00000,202.00000' which='0' direction='1'>GND</POWER>
+		<WIRE a='276.00000,186.00000' b='276.00000,180.00000'/>
+		<WIRE a='276.00000,202.00000' b='286.00000,202.00000'/>
+		<WIRE a='266.00000,194.00000' b='258.00000,194.00000'/>
+		<WIRE a='258.00000,186.00000' b='258.00000,182.00000'/>
+		<WIRE a='266.00000,182.00000' b='288.00000,182.00000'/>
+		<LABEL pos='288.00000,182.00000' direction='2' font='5' color='208000' style='3'>Mcurrent</LABEL>
+		<TEXT pos='246.00000,166.00000' direction='3' font='4' color='000000'>YHDC SCT013-000 current sensor</TEXT>
+		<TEXT pos='246.00000,170.00000' direction='3' font='6' color='000000'>Main circuitt measurement</TEXT>
+		<SYMBOL id='2' pos='268.00000,194.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R5' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='330' show='1' pos='1.00000,-1.60000'/>
+		</SYMBOL>
+		<WIRE a='276.00000,194.00000' b='286.00000,194.00000'/>
+		<WIRE a='286.00000,194.00000' b='286.00000,195.00000'/>
+		<WIRE a='266.00000,186.00000' b='266.00000,182.00000'/>
+		<WIRE a='258.00000,182.00000' b='266.00000,182.00000'/>
+		<WIRE a='256.00000,182.00000' b='258.00000,182.00000'/>
+		<WIRE a='258.00000,130.00000' b='258.00000,126.00000'/>
+		<WIRE a='288.00000,126.00000' b='258.00000,126.00000'/>
+		<WIRE a='276.00000,194.00000' b='266.00000,194.00000'/>
+		<SYMBOL id='5' pos='392.00000,242.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='U2' show='1' pos='-3.00000,-129.60000'/>
+			<FIELD type='0' description='Name' value='Arduino Y&#039;un' show='1' pos='-3.00000,-132.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='0.00000,0.00000'/>
+		</SYMBOL>
+		<POWER pos='360.00000,94.00000' which='3' direction='0'>5V</POWER>
+		<WIRE a='360.00000,94.00000' b='360.00000,100.00000'/>
+		<POWER pos='360.00000,244.00000' which='0' direction='1'>GND</POWER>
+		<WIRE a='360.00000,242.00000' b='360.00000,244.00000'/>
+		<WIRE a='354.00000,238.00000' b='354.00000,242.00000'/>
+		<WIRE a='354.00000,242.00000' b='360.00000,242.00000'/>
+		<WIRE a='360.00000,238.00000' b='360.00000,242.00000'/>
+		<WIRE a='366.00000,238.00000' b='366.00000,242.00000'/>
+		<WIRE a='366.00000,242.00000' b='360.00000,242.00000'/>
+		<WIRE a='400.00000,118.00000' b='392.00000,118.00000'/>
+		<WIRE a='400.00000,114.00000' b='392.00000,114.00000'/>
+		<LABEL pos='400.00000,114.00000' direction='2' font='5' color='208000' style='3'>SDA</LABEL>
+		<LABEL pos='400.00000,118.00000' direction='2' font='5' color='208000' style='3'>SCL</LABEL>
+		<WIRE a='330.00000,130.00000' b='324.00000,130.00000'/>
+		<WIRE a='330.00000,134.00000' b='324.00000,134.00000'/>
+		<LABEL pos='324.00000,130.00000' direction='3' font='5' color='208000' style='3'>SPcurrent</LABEL>
+		<LABEL pos='324.00000,134.00000' direction='3' font='5' color='208000' style='3'>Mcurrent</LABEL>
+		<ELLIPSE a='38.00000,42.00000' b='44.00000,48.00000' style='7' fill='0'/>
+		<ELLIPSE a='38.50196,42.00000' b='44.50196,48.00000' style='7' fill='0'/>
+		<ELLIPSE a='39.00391,42.00000' b='45.00391,48.00000' style='7' fill='0'/>
+		<ELLIPSE a='39.45086,42.02683' b='45.45086,48.02683' style='7' fill='0'/>
+		<ELLIPSE a='39.95282,42.02683' b='45.95282,48.02683' style='7' fill='0'/>
+		<ELLIPSE a='40.45477,42.02683' b='46.45477,48.02683' style='7' fill='0'/>
+		<ELLIPSE a='186.00000,56.00000' b='192.00000,62.00000' style='7' fill='0'/>
+		<ELLIPSE a='186.50196,56.00000' b='192.50196,62.00000' style='7' fill='0'/>
+		<ELLIPSE a='187.00391,56.00000' b='193.00391,62.00000' style='7' fill='0'/>
+		<ELLIPSE a='187.45086,56.02683' b='193.45086,62.02683' style='7' fill='0'/>
+		<ELLIPSE a='187.95282,56.02683' b='193.95282,62.02683' style='7' fill='0'/>
+		<ELLIPSE a='188.45477,56.02683' b='194.45477,62.02683' style='7' fill='0'/>
+		<JUNCTION pos='118.00000,52.00000'/>
+		<JUNCTION pos='110.00000,64.00000'/>
+		<JUNCTION pos='118.00000,70.00000'/>
+		<JUNCTION pos='110.00000,82.00000'/>
+		<JUNCTION pos='110.00000,46.00000'/>
+		<JUNCTION pos='118.00000,88.00000'/>
+		<JUNCTION pos='156.00000,64.00000'/>
+		<JUNCTION pos='156.00000,70.00000'/>
+		<RECTANGLE a='184.00000,54.00000' b='196.00000,64.00000' style='6' fill='0'/>
+		<RECTANGLE a='36.00000,40.00000' b='48.00000,50.00000' style='6' fill='0'/>
+		<TEXT pos='186.00000,54.00000' direction='3' font='3' color='000000'>CT 1</TEXT>
+		<TEXT pos='38.00000,40.00000' direction='3' font='3' color='000000'>CT 2</TEXT>
+		<WIRE a='192.00000,64.00000' b='192.00000,136.00000'/>
+		<WIRE a='192.00000,136.00000' b='248.00000,136.00000'/>
+		<WIRE a='248.00000,138.00000' b='188.00000,138.00000'/>
+		<WIRE a='188.00000,138.00000' b='188.00000,64.00000'/>
+		<WIRE a='44.00000,50.00000' b='44.00000,192.00000'/>
+		<WIRE a='248.00000,192.00000' b='44.00000,192.00000'/>
+		<WIRE a='248.00000,194.00000' b='40.00000,194.00000'/>
+		<WIRE a='40.00000,50.00000' b='40.00000,194.00000'/>
+		<RECTANGLE a='238.00000,84.00000' b='306.00000,256.00000' style='2' fill='0'/>
+		<TEXT pos='252.00000,94.00000' direction='3' font='3' color='000000'>CT connection shield</TEXT>
+		<RECTANGLE a='198.00000,82.00000' b='412.00000,258.00000' style='5' fill='0'/>
+		<TEXT pos='314.00000,78.00000' direction='3' font='3' color='000000'>Arduino in a box</TEXT>
+		<TEXT pos='322.00000,60.00000' direction='3' font='3' color='000000'>2x APS YC500</TEXT>
+		<SYMBOL id='7' pos='386.00000,26.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='U?' show='0' pos='-16.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='SOLAR_PANEL' show='0' pos='-16.00000,-20.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-16.00000,4.40000'/>
+		</SYMBOL>
+		<SYMBOL id='8' pos='386.00000,50.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='U?' show='0' pos='-16.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='SOLAR_PANEL' show='0' pos='-16.00000,-20.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-16.00000,4.40000'/>
+		</SYMBOL>
+		<SYMBOL id='9' pos='408.00000,26.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='U?' show='0' pos='-16.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='SOLAR_PANEL' show='0' pos='-16.00000,-20.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-16.00000,4.40000'/>
+		</SYMBOL>
+		<SYMBOL id='10' pos='408.00000,50.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='U?' show='0' pos='-16.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='SOLAR_PANEL' show='0' pos='-16.00000,-20.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-16.00000,4.40000'/>
+		</SYMBOL>
+		<WIRE a='371.00000,20.00000' b='362.00000,20.00000'/>
+		<WIRE a='362.00000,20.00000' b='362.00000,46.00000'/>
+		<WIRE a='362.00000,46.00000' b='358.00000,46.00000'/>
+		<WIRE a='386.00000,20.00000' b='386.00000,26.00000'/>
+		<WIRE a='386.00000,26.00000' b='364.00000,26.00000'/>
+		<WIRE a='364.00000,26.00000' b='364.00000,48.00000'/>
+		<WIRE a='364.00000,48.00000' b='358.00000,48.00000'/>
+		<WIRE a='393.00000,20.00000' b='392.00000,20.00000'/>
+		<WIRE a='392.00000,20.00000' b='392.00000,28.00000'/>
+		<WIRE a='392.00000,28.00000' b='366.00000,28.00000'/>
+		<WIRE a='366.00000,28.00000' b='366.00000,50.00000'/>
+		<WIRE a='366.00000,50.00000' b='358.00000,50.00000'/>
+		<WIRE a='408.00000,20.00000' b='408.00000,30.00000'/>
+		<WIRE a='408.00000,30.00000' b='368.00000,30.00000'/>
+		<WIRE a='368.00000,30.00000' b='368.00000,52.00000'/>
+		<WIRE a='368.00000,52.00000' b='358.00000,52.00000'/>
+		<WIRE a='371.00000,44.00000' b='370.00000,44.00000'/>
+		<WIRE a='370.00000,44.00000' b='370.00000,54.00000'/>
+		<WIRE a='370.00000,54.00000' b='358.00000,54.00000'/>
+		<WIRE a='386.00000,44.00000' b='386.00000,56.00000'/>
+		<WIRE a='386.00000,56.00000' b='358.00000,56.00000'/>
+		<WIRE a='393.00000,44.00000' b='392.00000,44.00000'/>
+		<WIRE a='392.00000,44.00000' b='392.00000,58.00000'/>
+		<WIRE a='392.00000,58.00000' b='358.00000,58.00000'/>
+		<WIRE a='408.00000,44.00000' b='408.00000,60.00000'/>
+		<WIRE a='408.00000,60.00000' b='358.00000,60.00000'/>
+		<TEXT pos='374.00000,68.00000' direction='3' font='3' color='000000'>Solar panel</TEXT>
+		<TEXT pos='374.00000,74.00000' direction='3' font='3' color='000000'>4x Hanover 250W</TEXT>
+		<WIRE a='156.00000,58.00000' b='198.00000,58.00000'/>
+		<SYMBOL id='14' pos='252.00000,226.00000' part='0' rotate='2' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='CON4' show='1' pos='-6.00000,2.00000'/>
+			<FIELD type='0' description='Name' value='HDR_2_1' show='1' pos='-6.00000,-6.00000'/>
+			<FIELD type='2' description='$$SPICE_PROLOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='2' description='$$SPICE_EPILOG_PRIORITY' value='5' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='1' description='Package' value='package name for PCB layout' show='0' pos='-6.00000,4.40000'/>
+		</SYMBOL>
+		<SYMBOL id='11' pos='262.00000,230.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R8' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='100k' show='1' pos='1.00000,-1.60000'/>
+		</SYMBOL>
+		<SYMBOL id='11' pos='262.00000,238.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R9' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='10k' show='1' pos='1.00000,-1.60000'/>
+		</SYMBOL>
+		<SYMBOL id='12' pos='262.00000,246.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='C3' show='1' pos='1.00000,-3.60000'/>
+			<FIELD type='0' description='Name' value='CE' show='0' pos='1.00000,-6.00000'/>
+			<FIELD type='3' description='Value' value='10uF' show='1' pos='1.00000,-1.20000'/>
+		</SYMBOL>
+		<SYMBOL id='11' pos='272.00000,238.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R10' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='470k' show='1' pos='0.00000,-1.60000'/>
+		</SYMBOL>
+		<SYMBOL id='11' pos='272.00000,246.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R11' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='470k' show='1' pos='0.00000,-1.60000'/>
+		</SYMBOL>
+		<POWER pos='270.00000,246.00000' which='0' direction='1'>GND</POWER>
+		<POWER pos='270.00000,218.00000' which='3' direction='0'>5V</POWER>
+		<WIRE a='252.00000,222.00000' b='260.00000,222.00000'/>
+		<WIRE a='260.00000,238.00000' b='256.00000,238.00000'/>
+		<WIRE a='256.00000,238.00000' b='256.00000,224.00000'/>
+		<WIRE a='256.00000,224.00000' b='252.00000,224.00000'/>
+		<WIRE a='260.00000,239.00000' b='260.00000,238.00000'/>
+		<WIRE a='260.00000,238.00000' b='270.00000,238.00000'/>
+		<WIRE a='270.00000,230.00000' b='270.00000,218.00000'/>
+		<WIRE a='270.00000,230.00000' b='288.00000,230.00000'/>
+		<WIRE a='260.00000,230.00000' b='270.00000,230.00000'/>
+		<WIRE a='260.00000,246.00000' b='270.00000,246.00000'/>
+		<LABEL pos='288.00000,230.00000' direction='2' font='5' color='208000' style='3'>Mvoltage</LABEL>
+		<SYMBOL id='16' pos='224.00000,234.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='0' description='Ref' value='T1' show='1' pos='1.00000,-15.60000'/>
+			<FIELD type='0' description='Name' value='220V/9V' show='1' pos='1.00000,-18.00000'/>
+		</SYMBOL>
+		<JUNCTION pos='354.00000,242.00000'/>
+		<JUNCTION pos='360.00000,242.00000'/>
+		<JUNCTION pos='366.00000,242.00000'/>
+		<JUNCTION pos='258.00000,138.00000'/>
+		<JUNCTION pos='258.00000,194.00000'/>
+		<JUNCTION pos='258.00000,182.00000'/>
+		<JUNCTION pos='258.00000,126.00000'/>
+		<JUNCTION pos='266.00000,182.00000'/>
+		<JUNCTION pos='260.00000,230.00000'/>
+		<JUNCTION pos='260.00000,238.00000'/>
+		<JUNCTION pos='270.00000,230.00000'/>
+		<JUNCTION pos='270.00000,238.00000'/>
+		<JUNCTION pos='270.00000,246.00000'/>
+		<JUNCTION pos='268.00000,146.00000'/>
+		<JUNCTION pos='266.00000,194.00000'/>
+		<JUNCTION pos='268.00000,138.00000'/>
+		<JUNCTION pos='276.00000,194.00000'/>
+		<JUNCTION pos='276.00000,202.00000'/>
+		<WIRE a='224.00000,214.00000' b='224.00000,210.00000'/>
+		<WIRE a='224.00000,210.00000' b='236.00000,210.00000'/>
+		<WIRE a='236.00000,210.00000' b='236.00000,222.00000'/>
+		<WIRE a='236.00000,222.00000' b='248.00000,222.00000'/>
+		<WIRE a='224.00000,234.00000' b='236.00000,234.00000'/>
+		<WIRE a='236.00000,234.00000' b='236.00000,224.00000'/>
+		<WIRE a='236.00000,224.00000' b='248.00000,224.00000'/>
+		<WIRE a='216.00000,214.00000' b='74.00000,214.00000'/>
+		<WIRE a='74.00000,214.00000' b='74.00000,82.00000'/>
+		<JUNCTION pos='74.00000,82.00000'/>
+		<WIRE a='86.00000,82.00000' b='74.00000,82.00000'/>
+		<WIRE a='216.00000,234.00000' b='70.00000,234.00000'/>
+		<WIRE a='70.00000,234.00000' b='70.00000,88.00000'/>
+		<JUNCTION pos='70.00000,88.00000'/>
+		<WIRE a='86.00000,88.00000' b='70.00000,88.00000'/>
+		<LABEL pos='324.00000,138.00000' direction='3' font='5' color='208000' style='3'>Mvoltage</LABEL>
+		<WIRE a='324.00000,138.00000' b='330.00000,138.00000'/>
+	</TinyCAD>
+</TinyCADSheets>

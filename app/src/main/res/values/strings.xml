@@ -6,12 +6,13 @@
     <string name="bt_cal2_txt">Cal 2</string>
     <string name="bt_status_txt">Status</string>
     <string name="et_cal1_txt">30</string>
-    <string name="tv_result_txt">Result</string>
+    <string name="tv_result_txt_ex">EXPORTING</string>
+    <string name="tv_result_txt_im">IMPORTING</string>
     <string name="tv_light_txt">Light:</string>
     <string name="tv_light_value_txt">000000lux</string>
-    <string name="tv_sens1_curr_txt">Solar:</string>
-    <string name="tv_sens_value_txt">00.00A 0000W</string>
-    <string name="tv_sens2_curr_txt">Consum:</string>
+    <string name="tv_sens1_curr_txt">SOLAR PV</string>
+    <string name="tv_sens_value_txt">0000W</string>
+    <string name="tv_sens2_curr_txt">POWER NOW</string>
     <string name="err_no_device">spMonitor device not found. Make sure it is switched on and is connected to the same WiFi network.</string>
     <string name="err_arduino">Communication with spMonitor (Arduino) failed. Make sure it is switched on and is connected to the same WiFi network.</string>
     <string name="err_linino">Communication with spMonitor (Linino) failed. Make sure it is switched on and is connected to the same WiFi network.</string>
@@ -42,6 +43,9 @@
     <string name="cb_cons_txt">Cons.</string>
     <string name="cb_light_txt">Light</string>
     <string name="bt_clear_txt">Clear</string>
+    <string name="tv_result">Info</string>
+    <string name="fast_mode_on">5s update activated</string>
+    <string name="fast_mode_off">60s update activated</string>
 
 
 </resources>

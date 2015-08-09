@@ -13,6 +13,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
         android:layout_gravity="center"
+        android:textSize="40sp"
         android:id="@+id/tv_splash"/>
 
     <TextView
@@ -22,10 +23,11 @@
         android:text="@string/search_device"
         android:id="@+id/tv_splash_status"
         android:layout_gravity="center_horizontal"
+        android:textSize="30sp"
         android:gravity="center_horizontal"/>
 
     <ProgressBar
-        style="?android:attr/progressBarStyle"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/pb_splash"
@@ -35,10 +37,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/tv_man_ip_hdr_txt"
         android:id="@+id/tv_man_ip_hdr"
         android:layout_gravity="center_horizontal"
+        android:textSize="20sp"
         android:gravity="center_horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"/>
