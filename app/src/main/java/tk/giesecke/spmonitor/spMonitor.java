@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -97,21 +99,21 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	/** Data series for the light sensor */
 	private static LineGraphSeries<DataPoint> lightSeries = null;
 	/** List to hold the timestamps for the chart from a log file */
-	private final ArrayList<Long> timeStamps = new ArrayList<>();
+	public static final ArrayList<Long> timeStamps = new ArrayList<>();
 	/** List to hold the measurements of the solar panel for the chart from a log file */
-	private final ArrayList<Float> solarPower = new ArrayList<>();
+	public static final ArrayList<Float> solarPower = new ArrayList<>();
 	/** List to hold the measurement of the consumption for the chart from a log file */
-	private final ArrayList<Float> consumPower = new ArrayList<>();
+	public static final ArrayList<Float> consumPower = new ArrayList<>();
 	/** List to hold the measurement of the light for the chart from a log file */
-	private final ArrayList<Long> lightValue = new ArrayList<>();
+	public static final ArrayList<Long> lightValue = new ArrayList<>();
 	/** List to hold the timestamps for the chart from a log file */
-	private final ArrayList<Long> timeStampsCont = new ArrayList<>();
+	public static final ArrayList<Long> timeStampsCont = new ArrayList<>();
 	/** List to hold the measurements of the solar panel for the chart from a log file */
-	private final ArrayList<Float> solarPowerCont = new ArrayList<>();
+	public static final ArrayList<Float> solarPowerCont = new ArrayList<>();
 	/** List to hold the measurement of the consumption for the chart from a log file */
-	private final ArrayList<Float> consumPowerCont = new ArrayList<>();
+	public static final ArrayList<Float> consumPowerCont = new ArrayList<>();
 	/** List to hold the measurement of the light for the chart from a log file */
-	private final ArrayList<Long> lightValueCont = new ArrayList<>();
+	public static final ArrayList<Long> lightValueCont = new ArrayList<>();
 	/** Counter for displayed data points */
 	private double graph2LastXValue = 0d;
 	/** Number of plot y values */
@@ -129,16 +131,16 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	private boolean showingLog = false;
 
 	/** Day stamp of data */
-	private String dayToShow;
+	public static String dayToShow;
 
 	/** Solar power received from spMonitor device as minute average */
 	private static Float solarPowerMin = 0.0f;
 	/** Solar energy generated up to now on the displayed day */
-	private static float solarEnergy = 0.0f;
+	public static float solarEnergy = 0.0f;
 	/** Consumption received from spMonitor device as minute average */
 	private static Float consPowerMin = 0.0f;
 	/** Consumed energy generated up to now on the displayed day */
-	private static float consEnergy = 0.0f;
+	public static float consEnergy = 0.0f;
 	/** Light received from spMonitor device as minute average */
 	private long lightValMin = 0;
 	/** Solar power received from spMonitor device as minute average */
@@ -186,8 +188,8 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		if (savedInstanceState == null) {
 			if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
 				Utilities.startRefreshAnim();
-				url = deviceIP;
-				new execSftp().execute(url, "ls");
+				new syncDB().execute();
+
 				/** Pointer to text views showing the consumed / produced energy */
 				TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
 				energyText.setVisibility(View.INVISIBLE);
@@ -276,6 +278,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				energyText.setVisibility(View.VISIBLE);
 				energyText.setText("Produced: " + String.format("%.3f", solarEnergy) + "kWh");
 
+				clearChart();
 				initChart(false);
 			} else {
 				/** Pointer to text views showing the consumed / produced energy */
@@ -283,6 +286,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				energyText.setVisibility(View.INVISIBLE);
 				energyText = (TextView) findViewById(R.id.tv_solar_energy);
 				energyText.setVisibility(View.INVISIBLE);
+				clearChart();
 				initChart(true);
 			}
 
@@ -432,6 +436,11 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		url = "";
 		client.setConnectTimeout(30, TimeUnit.SECONDS); // connect timeout
 		client.setReadTimeout(30, TimeUnit.SECONDS);    // socket timeout
+		/** Button to go to previous  log */
+		Button prevButton  = (Button) findViewById(R.id.bt_prevLog);
+		/** Button to go to next log */
+		Button nextButton  = (Button) findViewById(R.id.bt_nextLog);
+
 		switch (v.getId()) {
 			case R.id.bt_prevLog:
 				if (logFilesIndex > 0) {
@@ -444,21 +453,32 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					stopTimer();
 					isGet = false;
 					showingLog = true;
-					// Get file from Arduino via Async task
-					url = deviceIP;
 					Utilities.startRefreshAnim();
-					// Get file from Arduino via Async task
-					url = deviceIP;
-					new execSftp().execute(url, "get", logFiles.get(logFilesIndex));
-					/** Button to go to previous or next log */
-					Button prevNextButton  = (Button) findViewById(R.id.bt_prevLog);
+					// Get data from data base
+					/** String list with requested date info */
+					String[] requestedDate = logFiles.get(logFilesIndex).substring(0, 8).split("-");
+					/** Instance of DataBaseHelper */
+					DataBaseHelper dbHelper = new DataBaseHelper(appContext);
+					/** Instance of data base */
+					SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+
+					/** Cursor with new data from the database */
+					Cursor newDataSet = DataBaseHelper.getDay(dataBase, Integer.parseInt(requestedDate[2]),
+							Integer.parseInt(requestedDate[1]), Integer.parseInt(requestedDate[0]));
+					Utilities.fillSeries(newDataSet);
+					clearChart();
+					initChart(false);
+					newDataSet.close();
+					dataBase.close();
+					dbHelper.close();
+					Utilities.stopRefreshAnim();
+
 					if (logFilesIndex == 0) {
-						prevNextButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+						prevButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
 					} else {
-						prevNextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+						prevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
 					}
-					prevNextButton  = (Button) findViewById(R.id.bt_nextLog);
-					prevNextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+					nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
 				}
 				break;
 			case R.id.bt_nextLog:
@@ -472,21 +492,32 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					stopTimer();
 					isGet = false;
 					showingLog = true;
-					// Get file from Arduino via Async task
-					url = deviceIP;
 					Utilities.startRefreshAnim();
-					// Get file from Arduino via Async task
-					url = deviceIP;
-					new execSftp().execute(url, "get", logFiles.get(logFilesIndex));
-					/** Button to go to previous or next log */
-					Button nextPrevButton  = (Button) findViewById(R.id.bt_nextLog);
+					// Get data from data base
+					/** String list with requested date info */
+					String[] requestedDate = logFiles.get(logFilesIndex).substring(0, 8).split("-");
+					/** Instance of DataBaseHelper */
+					DataBaseHelper dbHelper = new DataBaseHelper(appContext);
+					/** Instance of data base */
+					SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+
+					/** Cursor with new data from the database */
+					Cursor newDataSet = DataBaseHelper.getDay(dataBase, Integer.parseInt(requestedDate[2]),
+							Integer.parseInt(requestedDate[1]), Integer.parseInt(requestedDate[0]));
+					Utilities.fillSeries(newDataSet);
+					clearChart();
+					initChart(false);
+					newDataSet.close();
+					dataBase.close();
+					dbHelper.close();
+					Utilities.stopRefreshAnim();
+
 					if (logFilesIndex == logFiles.size()-1) {
-						nextPrevButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+						nextButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
 					} else {
-						nextPrevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+						nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
 					}
-					nextPrevButton  = (Button) findViewById(R.id.bt_prevLog);
-					nextPrevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+					prevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
 				}
 				break;
 			case R.id.bt_stop:
@@ -500,20 +531,24 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				} else {
 					if (showingLog) {
 						showingLog = false;
-						graph2LastXValue = 0d;
+						Utilities.startRefreshAnim();
+						clearChart();
+						new syncDB().execute();
+
 						/** Pointer to text views showing the consumed / produced energy */
 						TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
 						energyText.setVisibility(View.INVISIBLE);
 						energyText = (TextView) findViewById(R.id.tv_solar_energy);
 						energyText.setVisibility(View.INVISIBLE);
 
-						clearChart();
-						initChart(true);
-					}
-					if (calModeOn) {
-						startTimer(1, 5000);
+						logFilesIndex = logFiles.size()-1;
+						nextButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
 					} else {
-						startTimer(1, 60000);
+						if (calModeOn) {
+							startTimer(1, 5000);
+						} else {
+							startTimer(1, 60000);
+						}
 					}
 					/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
 					Button stopButton = (Button) findViewById(R.id.bt_stop);
@@ -521,11 +556,10 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					stopButton.setText(getResources().getString(R.string.stop));
 					autoRefreshOn = true;
 				}
-				url = "";
 				break;
 			case R.id.bt_status:
-				client.setConnectTimeout(2, TimeUnit.MINUTES); // connect timeout
-				client.setReadTimeout(2, TimeUnit.MINUTES);    // socket timeout
+				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
+				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
 				url = deviceIP + "e";
 				thisCommand = "e";
 				break;
@@ -810,6 +844,150 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	}
 
 	/**
+	 * Async task class to contact Linino part of the spMonitor device
+	 */
+	private class syncDB extends AsyncTask<String, String, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+
+			/** URL to be called */
+			String urlString = deviceIP; // URL to call
+
+			/** Response from the spMonitor device or error message */
+			String resultToDisplay = getResources().getString(R.string.filesSyncFail);
+
+			// Make call only if valid url is given
+			if (urlString.startsWith("No")) {
+				resultToDisplay = getResources().getString(R.string.err_no_device);
+			} else {
+				/** IP address to connect to */
+				String ip[] = urlString.split("/");
+				/** Sftp session instance */
+				Session session = null;
+
+				try{
+					/** Jsch instance */
+					JSch sshChannel = new JSch();
+					session = sshChannel.getSession("root", ip[2], 22);
+					session.setPassword("spMonitor");
+					session.setConfig("StrictHostKeyChecking", "no");
+					session.connect();
+
+					if (session.isConnected()) {
+						/** Channel for session */
+						Channel channel = session.openChannel("sftp");
+						channel.connect();
+
+						if (channel.isConnected()) {
+							/** SFTP channel */
+							ChannelSftp sftp = (ChannelSftp) channel;
+
+							if (sftp.isConnected()) {
+								sftp.cd("/mnt/sda1/");
+								@SuppressWarnings("unchecked") Vector<ChannelSftp.LsEntry> list =
+										sftp.ls("/mnt/sda1/*.txt");
+								if (list.size() != 0) {
+									logFiles.clear();
+									for (int i=0; i<list.size();i++) {
+										logFiles.add(list.get(i).getFilename());
+									}
+									Collections.sort(logFiles, new Comparator<String>() {
+										@Override
+										public int compare(String text1, String text2) {
+											return text1.compareToIgnoreCase(text2);
+										}});
+
+									/** Instance of DataBaseHelper */
+									DataBaseHelper dbHelper = new DataBaseHelper(appContext);
+									/** Instance of data base */
+									SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
+
+									int checkYear = Integer.parseInt(logFiles.get(0).substring(0,2));
+									int checkMonth = Integer.parseInt(logFiles.get(0).substring(3,5));
+									int checkDay;
+									int lastCheckYear = checkYear;
+									int lastCheckMonth = checkMonth;
+									/** Array list with all year */
+									ArrayList<Integer> allYears = DataBaseHelper
+											.getEntries(dataBase, "year", 0, 0);
+									/** Array list with all months of year */
+									ArrayList<Integer> allMonths = DataBaseHelper
+											.getEntries(dataBase, "month", 0, checkYear);
+									/** Array list with all days of month */
+									ArrayList<Integer> allDays = DataBaseHelper
+											.getEntries(dataBase, "day", checkMonth, checkYear);
+									for (int i=0; i<logFiles.size(); i++) {
+										checkYear = Integer.parseInt(logFiles.get(i).substring(0,2));
+										checkMonth = Integer.parseInt(logFiles.get(i).substring(3,5));
+										checkDay = Integer.parseInt(logFiles.get(i).substring(6,8));
+
+										if (lastCheckYear != checkYear) {
+											allYears = DataBaseHelper
+													.getEntries(dataBase, "year", 0, 0);
+										}
+										if (!allYears.contains(checkYear)) {
+											DataBaseHelper.syncFileToDB(dataBase, logFiles.get(i), sftp, false);
+										} else {
+											if (lastCheckMonth != checkMonth) {
+												allMonths = DataBaseHelper
+														.getEntries(dataBase, "month", 0, checkYear);
+											}
+											if (!allMonths.contains(checkMonth)) {
+												DataBaseHelper.syncFileToDB(dataBase, logFiles.get(i), sftp, false);
+											} else {
+												if (lastCheckMonth != checkMonth) {
+													allDays = DataBaseHelper
+															.getEntries(dataBase, "day", checkMonth, checkYear);
+												}
+												if (!allDays.contains(checkDay)) {
+													DataBaseHelper.syncFileToDB(dataBase, logFiles.get(i), sftp, false);
+												} else if (i == logFiles.size() - 1) {
+													DataBaseHelper.deleteDay(dataBase,
+															checkDay, checkMonth, checkYear);
+													DataBaseHelper.syncFileToDB(dataBase, logFiles.get(i), sftp, true);
+												}
+											}
+										}
+										lastCheckYear = checkYear;
+										lastCheckMonth = checkMonth;
+									}
+									dataBase.close();
+									dbHelper.close();
+									resultToDisplay = getResources().getString(R.string.filesSynced);
+									logFilesIndex = logFiles.size()-1;
+								} else {
+									resultToDisplay = getResources().getString(R.string.noLogFile);
+								}
+								sftp.disconnect();
+							}
+							channel.disconnect();
+						}
+						session.disconnect();
+					}
+
+				} catch(JSchException | SftpException e){
+					e.printStackTrace();
+					if (session != null) {
+						session.disconnect();
+					}
+					resultToDisplay = e.getMessage();
+					if (resultToDisplay.contains("EHOSTUNREACH")) {
+						resultToDisplay = getApplicationContext().getString(R.string.err_linino);
+					}
+					return resultToDisplay;
+				}
+			}
+			return resultToDisplay;
+		}
+
+		protected void onPostExecute(String result) {
+			Toast.makeText(appContext, "Sync result: " + result, Toast.LENGTH_LONG).show();
+			updateSynced();
+		}
+	}
+
+	/**
 	 * Update UI with values received from spMonitor device (Arduino part)
 	 *
 	 * @param value
@@ -975,7 +1153,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 								} catch (Exception excError) {
 									lightValMin = lastLightValMin;
 								}
-								/** Temporary buffr for last read light value */
+								/** Temporary buffer for last read light value */
 								long oldLight = lightValSec;
 								try {
 									lightValSec = Long.parseLong(jsonValues.getString("l"));
@@ -1159,6 +1337,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 							maxPowerText = (TextView) findViewById(R.id.tv_solar_max);
 							maxPowerText.setText("(" + String.format("%.0f", Collections.max(solarPower)) + "W)");
 
+							clearChart();
 							initChart(false);
 							Utilities.stopRefreshAnim();
 						}
@@ -1200,6 +1379,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 								consumPowerCont.add(solarPowerVal + consPowerVal);
 							}
 
+							clearChart();
 							initChart(true);
 							Utilities.stopRefreshAnim();
 						}
@@ -1209,6 +1389,19 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					resultTextView.setText(value);
 					Utilities.stopRefreshAnim();
 				}
+			}
+		});
+	}
+
+	/**
+	 * Update UI with values received from spMonitor device (Linino part)
+	 */
+	private void updateSynced() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				initChart(true);
+				Utilities.stopRefreshAnim();
 			}
 		});
 	}
@@ -1283,7 +1476,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		currentPlot.getGridLabelRenderer().setNumVerticalLabels(10);
 
 		/** Instance of display */
-		Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+		Display display = ((WindowManager) appContext.getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 		/** Orientation of the display */
 		int orientation = display.getRotation();
 
@@ -1500,23 +1693,8 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	 * Clean up chart for a new initialization
 	 */
 	private void clearChart() {
-		/** Gregorian calendar to create a time stamp */
-		Calendar cal = new GregorianCalendar();
-		cal.set(1970, 1, 1);
-		/** Current time in milli seconds */
-		long timeInMillis = cal.getTimeInMillis();
-		timeStampsCont.add(timeInMillis);
-
 		graph2LastXValue = 1d;
-
-		/* New data  point to refresh the series */
-		DataPoint[] values = new DataPoint[1];
-		values[0] = new DataPoint(timeInMillis, solarPowerMin);
-		solarSeries.resetData(values);
-		values[0] = new DataPoint(timeInMillis, consPowerMin);
-		consSeries.resetData(values);
-		values[0] = new DataPoint(timeInMillis, lightValMin);
-		lightSeries.resetData(values);
+		currentPlot.removeAllSeries();
 		currentPlot.onDataChanged(false, false);
 	}
 }

@@ -2,11 +2,13 @@ package tk.giesecke.spmonitor;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -18,6 +20,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 /** spMonitor - Utilities
@@ -202,5 +207,68 @@ class Utilities {
 			minMax[1] = spMonitor.consSeries.getHighestValueY();
 		}
 		return minMax;
+	}
+
+	/**
+	 * Load plot series with data received from database
+	 * visible
+	 *
+	 * @param data
+	 *        database cursor with recorded values
+	 *        each cursor entry has 8 values
+	 *        cursor[0] = year stamp
+	 *        cursor[1] = month stamp
+	 *        cursor[2] = day stamp
+	 *        cursor[3] = hour stamp
+	 *        cursor[4] = minute stamp
+	 *        cursor[5] = sensor power
+	 *        cursor[6] = consumed power
+	 *        cursor[7] = light value
+	 */
+	public static void fillSeries(Cursor data) {
+
+		data.moveToFirst();
+		spMonitor.solarEnergy = 0f;
+		spMonitor.consEnergy = 0f;
+		spMonitor.timeStamps.clear();
+		spMonitor.lightValue.clear();
+		spMonitor.solarPower.clear();
+		spMonitor.consumPower.clear();
+		for (int cursorIndex=0; cursorIndex<data.getCount(); cursorIndex++) {
+			/** Gregorian calender to calculate the time stamp */
+			Calendar timeCal = new GregorianCalendar(
+					1970,
+					1,
+					1,
+					data.getInt(3),
+					data.getInt(4),
+					0);
+			spMonitor.timeStamps.add(timeCal.getTimeInMillis());
+			spMonitor.dayToShow = String.valueOf(data.getInt(0)) + "/" +
+					String.valueOf(data.getInt(1)) + "/" +
+					String.valueOf(data.getInt(2));
+			spMonitor.lightValue.add(data.getLong(7));
+			spMonitor.solarPower.add(data.getFloat(5));
+			spMonitor.consumPower.add(data.getFloat(6));
+			spMonitor.solarEnergy += data.getFloat(5)/60/1000;
+			spMonitor.consEnergy += data.getFloat(6)/60/1000;
+			data.moveToNext();
+		}
+
+		Log.d("spMonitorDB", "size of timeStamps = "+spMonitor.timeStamps.size());
+		Log.d("spMonitorDB", "size of lightValue = "+spMonitor.lightValue.size());
+		Log.d("spMonitorDB", "size of solarPower = "+spMonitor.solarPower.size());
+		Log.d("spMonitorDB", "size of consumPower = "+spMonitor.consumPower.size());
+		TextView energyText = (TextView) spMonitor.appView.findViewById(R.id.tv_cons_energy);
+		energyText.setVisibility(View.VISIBLE);
+		energyText.setText("Consumed: " + String.format("%.3f", spMonitor.consEnergy) + "kWh");
+		energyText = (TextView) spMonitor.appView.findViewById(R.id.tv_solar_energy);
+		energyText.setVisibility(View.VISIBLE);
+		energyText.setText("Produced: " + String.format("%.3f", spMonitor.solarEnergy) + "kWh");
+							/* Txt view to show max consumed / produced power */
+		TextView maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_cons_max);
+		maxPowerText.setText("(" + String.format("%.0f", Collections.max(spMonitor.consumPower)) + "W)");
+		maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_solar_max);
+		maxPowerText.setText("(" + String.format("%.0f", Collections.max(spMonitor.solarPower)) + "W)");
 	}
 }
