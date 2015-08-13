@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * Shows splash screen when app is started
  *
  * @author Bernd Giesecke
- * @version 0 beta July 12, 2015.
+ * @version 0.1 beta August 13, 2015.
  */
 public class SplashActivity extends Activity implements View.OnClickListener {
 
@@ -88,7 +88,7 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.bt_man_ip:
-				/** Progressbar that will be shown instead of image button during refresh */
+				/** Progressbar shown during search */
 				ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
 				refreshRot.setVisibility(View.INVISIBLE);
 
@@ -166,7 +166,6 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 				for (int i=0; i<3; i++) { //try three times before giving up
 					result = Utilities.checkDeviceIP(ip);
 					if (result.startsWith("F ")) {
-						Utilities.setCalValues(result);
 						spMonitor.deviceIP = "http://"+ip+"/arduino/";
 						spMonitor.mPrefs.edit().putString("spMonitorIP", spMonitor.deviceIP).apply();
 						return "true";
@@ -174,7 +173,7 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 				}
 				/* spMonitor device not found on the stored IP address */
 				/* First try to find in the range of the old stored IP address */
-				/** Last part of IP address the spMonitor was found at last start */
+				/** Last part of IP address at which spMonitor was found at last start */
 				int oldIP = Integer.parseInt(ip.substring(ip.lastIndexOf(".")+1));
 				/** Subnet without last part */
 				String subnet = ip.substring(0, ip.lastIndexOf("."));
@@ -187,7 +186,6 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 					for (i=0; i<3; i++) { //try three times before giving up
 						result = Utilities.checkDeviceIP(ip);
 						if (result.startsWith("F ")) {
-							Utilities.setCalValues(result);
 							spMonitor.deviceIP = "http://"+ip+"/arduino/";
 							spMonitor.mPrefs.edit().putString("spMonitorIP", spMonitor.deviceIP).apply();
 							return "true";
@@ -210,7 +208,7 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 		protected void onPostExecute(String result) {
 
 			if (result.equalsIgnoreCase("true")) {
-				/** Progressbar that will be shown instead of image button during refresh */
+				/** Progressbar shown during search */
 				ProgressBar refreshRot = (ProgressBar) findViewById(R.id.pb_splash);
 				refreshRot.setVisibility(View.INVISIBLE);
 
@@ -221,7 +219,7 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 				// start main activity
 				startMain();
 			} else {
-				/** Progressbar that will be shown instead of image button during refresh */
+				/** Progressbar shown during search */
 				ProgressBar refreshRot = (ProgressBar) findViewById(R.id.pb_splash);
 				refreshRot.setVisibility(View.INVISIBLE);
 

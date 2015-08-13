@@ -6,16 +6,46 @@
  * Optional additional measurement of in/output to electricity grid
  *
  * @author Bernd Giesecke
- * @version 0.1 July 02, 2015.
+ * @version 0.1 beta August 13, 2015.
  */
+
+/**
+ * Puts values over the bridge for easy access from external
+ *
+ * @param index
+ *          Index for sensor to read
+ *          0 = solar CT
+ *          1 = mains CT
+ */
+void getCTValues (int index) {
+  /* Get the measured current from the solar panel */
+  emon[index].calcVI(20, 2000);
+
+  /** Measured power in W */
+  double power = emon[index].realPower;
+  /** String for prefix */
+  String prefix = "c";
+  if (index == 0) {
+    prefix = "s";
+    /** Sensor 1 is measuring the solar panel, if it is less than 20W then mostlikely that is the standby current drawn by the inverters */
+    if ( emon[index].Irms < 0.5 ) {
+      power = 0.0;
+    }
+  }
+  collPower[index] = collPower[index] + power;
+  collCount[index] += 1;
+
+  Bridge.put ( prefix, String ( emon[index].Irms ) );
+  Bridge.put ( prefix + "r", String ( power )  );
+  Bridge.put ( prefix + "v", String ( emon[index].Vrms ) );
+  Bridge.put ( prefix + "a", String ( emon[index].apparentPower ) );
+  Bridge.put ( prefix + "p", String ( emon[index].powerFactor ) );
+}
 
 /**
  * Called every minute by "eventTimer"
  * Reads values from analog input 0 (current produced by solar panel)
  * and analog input 3 (measured luminosity)
- *
- *@param context
- *          Pointer to application context
  */
 void getMeasures () {
   /* Activity LED on */
@@ -23,41 +53,13 @@ void getMeasures () {
 
   wdt_reset();
   /* Get the light measurement if a sensor is attached */
-  //readLux();
+  readLux();
 
-  wdt_reset();
   /* Get the measured current from the solar panel */
-  /** Measured current from current sensor 1 */
-  emon[0].calcVI(20, 2000);
+  getCTValues(0);
 
-  /** Sensor 1 is measuring the solar panel, if it is less than 20W then mostlikely that is the standby current drawn by the inverters */
-  if ( emon[0].Irms < 0.5 ) {
-    collPower[0] = collPower[0] + 0;
-    Bridge.put ( "sr", "0" );
-  } else {
-    collPower[0] = collPower[0] + emon[0].realPower;
-    Bridge.put ( "sr", String ( emon[0].realPower ) );
-  }
-  collCount[0] += 1;
-
-  Bridge.put ( "s", String ( emon[0].Irms ) );
-  Bridge.put ( "sv", String ( emon[0].Vrms ) );
-  Bridge.put ( "sa", String ( emon[0].apparentPower ) );
-  Bridge.put ( "sp", String ( emon[0].powerFactor ) );
-
-  wdt_reset();
-  /** Get the measured current from sensor 2 which can be attached to anything */
-  /** Measured current from current sensor 2 */
-  emon[1].calcVI(20, 2000);
-
-  collPower[1] = collPower[1] + emon[1].realPower;
-  collCount[1] += 1;
-
-  Bridge.put ( "c", String ( emon[1].Irms ) );
-  Bridge.put ( "cr", String ( emon[1].realPower ) );
-  Bridge.put ( "cv", String ( emon[1].Vrms ) );
-  Bridge.put ( "ca", String ( emon[1].apparentPower ) );
-  Bridge.put ( "cp", String ( emon[1].powerFactor ) );
+  /** Get the measured current from mains */
+  getCTValues(1);
 
   /* Activity LED off */
   digitalWrite ( activityLED, LOW );

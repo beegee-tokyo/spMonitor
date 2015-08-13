@@ -123,7 +123,8 @@
         android:layout_alignParentBottom="false"
         android:textColor="@android:color/white"
         android:layout_above="@+id/tv_light_value"
-        android:layout_alignLeft="@+id/tv_light_value"/>
+        android:layout_alignLeft="@+id/tv_light_value"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -138,7 +139,7 @@
         android:layout_alignParentRight="true"
         android:textColor="@android:color/white"
         android:layout_above="@+id/sv_result"
-        />
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -254,7 +255,8 @@
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_below="@+id/bt_close"
-        android:layout_alignLeft="@+id/cb_cons"/>
+        android:layout_alignLeft="@+id/cb_cons"
+        android:visibility="invisible"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -267,7 +269,8 @@
         android:textColor="@android:color/white"
         android:layout_below="@+id/cb_solar"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:visibility="invisible"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -281,7 +284,8 @@
         android:layout_below="@+id/cb_cons"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignLeft="@+id/cb_cons"/>
+        android:layout_alignLeft="@+id/cb_cons"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="wrap_content"

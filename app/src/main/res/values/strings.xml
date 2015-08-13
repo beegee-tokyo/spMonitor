@@ -1,17 +1,14 @@
 <resources>
     <string name="app_name">spMonitor</string>
-
-    <string name="bt_show_txt">Show log</string>
-    <string name="bt_cal1_txt">Cal 1</string>
-    <string name="bt_cal2_txt">Cal 2</string>
+    <string name="bt_prev_txt" translatable="false">&lt;&lt;</string>
+    <string name="bt_next_txt" translatable="false">&gt;&gt;</string>
     <string name="bt_status_txt">Status</string>
-    <string name="et_cal1_txt">30</string>
     <string name="tv_result_txt_ex">EXPORTING</string>
     <string name="tv_result_txt_im">IMPORTING</string>
     <string name="tv_light_txt">Light:</string>
-    <string name="tv_light_value_txt">000000lux</string>
+    <string name="tv_light_value_txt" translatable="false">000000lux</string>
     <string name="tv_sens1_curr_txt">SOLAR PV</string>
-    <string name="tv_sens_value_txt">0000W</string>
+    <string name="tv_sens_value_txt" translatable="false">0000W</string>
     <string name="tv_sens2_curr_txt">POWER NOW</string>
     <string name="err_no_device">spMonitor device not found. Make sure it is switched on and is connected to the same WiFi network.</string>
     <string name="err_arduino">Communication with spMonitor (Arduino) failed. Make sure it is switched on and is connected to the same WiFi network.</string>
@@ -23,20 +20,15 @@
     <string name="no_wifi">No Wifi connection. spMonitor needs a WiFi connection to communicate with the spMonitor device!</string>
     <string name="bt_man_id_txt">Enter IP address</string>
     <string name="tv_ip_header_txt">Enter IP address</string>
-    <string name="et_ip1_txt">192</string>
-    <string name="et_ip2_txt">168</string>
-    <string name="et_ip3_txt">0</string>
-    <string name="et_ip4_txt">122</string>
+    <string name="et_ip1_txt" translatable="false">192</string>
+    <string name="et_ip2_txt" translatable="false">168</string>
+    <string name="et_ip3_txt" translatable="false">0</string>
+    <string name="et_ip4_txt" translatable="false">122</string>
     <string name="tv_col_txt">:</string>
     <string name="tv_man_ip_hdr_txt">Or enter IP address manually.</string>
     <string name="bt_stop_txt">Close</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
-    <string name="log_select_title">Available log files</string>
-    <string name="sbGetLog">Get log file</string>
-    <string name="bGet">Read log file</string>
-    <string name="errorAlertTitle">Error</string>
-    <string name="noFileSelected">Please select a log file that you want to load.</string>
     <string name="noLogFile">Could not find any log file.</string>
     <string name="log_rm_title">%1$s deleted</string>
     <string name="cb_solar_txt">Solar</string>
@@ -46,6 +38,4 @@
     <string name="tv_result">Info</string>
     <string name="fast_mode_on">5s update activated</string>
     <string name="fast_mode_off">60s update activated</string>
-
-
 </resources>

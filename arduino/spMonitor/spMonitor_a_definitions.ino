@@ -6,7 +6,7 @@
  * Optional additional measurement of in/output to electricity grid
  *
  * @author Bernd Giesecke
- * @version 0.1 July 02, 2015.
+ * @version 0.1 beta August 13, 2015.
  */
 
 #include <Wire.h>
@@ -23,11 +23,13 @@
 
 #include <avr/wdt.h>
 
-/** Timer for measurements and saving */
+/** Timer for measurements */
 unsigned long lastMeasure;
+/** Timer for saving */
 unsigned long lastSave;
-unsigned long lastReset;
- 
+/** Timer for reset */
+//unsigned long lastReset;
+
 /** Constant value for activity LED port */
 #define activityLED 8
 
@@ -40,21 +42,27 @@ long collLight = 0;
 
 /** Create an instance to emon for CT sensors */
 EnergyMonitor emon[2];
-/** Used current calibration value for current sensors */
-double iCal[2];
-/** Currently used solar calibration value */
-double vCal = 255;
-/** Currently used consumption calibration value */
-#define iCalVal1 5.7
-/** Currently used voltage calibration value */
-#define iCalVal2 11.5
-/** Collector for average power per minute CT sensors */
+
+/** iCal definition for CT 1 (solar) */
+#define iCal1 5.7
+/** iCal definition for CT 2 (mains) */
+#define iCal2 11.5
+/** vCal definition for voltage measurement */
+#define vCal 255
+
+/** Collector for average power per minute CT sensors
+ [0] = solar CT sensor
+ [1] = mains CT sensor */
 double collPower[2];
-/** Counter for measurements per minute from sensors 
- [0] = solar CT sensor 
+/** Counter for measurements per minute from sensors
+ [0] = solar CT sensor
  [1] = mains CT sensor
  [2] = light sensor */
 int collCount[3];
+/** Collector for energy of 1 minute
+ [0] = solar energy
+ [1] = mains energy */
+double collEnergy[2];
 
 /** Listen to the default port 5555, the Yún webserver
    will forward there all the HTTP requests you send */

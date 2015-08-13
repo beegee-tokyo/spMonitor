@@ -7,7 +7,7 @@
  * Optional additional measurement of in/output to electricity grid
  *
  * @author Bernd Giesecke
- * @version 0.1 July 02, 2015.
+ * @version 0.1 beta August 13, 2015.
  */
 
 /* spMonitor_a_definitions => includes and global variables */

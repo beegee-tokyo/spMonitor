@@ -6,7 +6,7 @@
  * Optional additional measurement of in/output to electricity grid
  *
  * @author Bernd Giesecke
- * @version 0.1 July 02, 2015.
+ * @version 0.1 beta August 13, 2015.
  */
 
 /**************************************************************************/
@@ -102,7 +102,6 @@ void readLux () {
         tsl.setIntegrationTime ( TSL2561_INTEGRATIONTIME_13MS ); /* fast but low resolution */
         wdt_reset();
         tsl.getEvent ( &event );
-
         if ( event.light != 0 ) { /* Got a result now? */
           accLux += event.light;
           lightOk++; /* Increase counter of successful measurements */

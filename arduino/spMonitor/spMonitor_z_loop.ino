@@ -6,7 +6,7 @@
  * Optional additional measurement of in/output to electricity grid
  *
  * @author Bernd Giesecke
- * @version 0.1 July 02, 2015.
+ * @version 0.1 beta August 13, 2015.
  */
 
 /**
@@ -17,9 +17,9 @@
  * Main program loop
  */
 void loop() {
-  wdt_reset();
+  /** Actual time in milliseconds since start of spMonitor */
   unsigned long now = millis();
-  if ( now - lastMeasure >= 5000 ) { /* initiate measurement every 5 seconds */
+  if ( now - lastMeasure >= 1000 ) { /* initiate measurement every 1 seconds */
     lastMeasure = now;
     wdt_reset();
     getMeasures();
@@ -31,24 +31,26 @@ void loop() {
     saveData();
   }
 
-  if ( now - lastReset >= 600000 ) { /* Reset every hour */
-    /* Wait for watchdog reset */
-    wdt_disable();
-    wdt_enable(WDTO_15MS);
-    delay (500);
-  }
-  
+  //if ( now - lastReset >= 600000 ) { /* Reset every hour */
+  /* Wait for watchdog reset */
+  //  wdt_disable();
+  //  wdt_enable(WDTO_15MS);
+  //  delay (500);
+  //}
+
   /** Get clients coming from server */
   client = server.accept();
 
   /* There is a new client? */
   if ( client ) {
-    /* read the command */
+    wdt_reset();
+    /** Character holding the command that was sent */
     char command = client.read();
 
     /** Only for claibration needed */
     //if ( command == 'c' ) { /* Set the CT calibration value e.g. c16.060606 => value 6.060606 for sensor 1 */
     //  command = client.read(); /* get the sensor number */
+        /** Calibration factor that was sent */
     //  double readCal = client.parseFloat();
 
     //  if ( command == '1' ) {
@@ -65,9 +67,9 @@ void loop() {
     //} else
     if ( command == 'e' ) { /* Get the actual settings */
       client.println ( "F 3s" );
-      client.println ( "C1 " + String ( iCal[0], 6 ) );
-      client.println ( "C2 " + String ( iCal[1], 6 ) );
-      client.println ( "V " + String ( vCal, 6 ) );
+      client.println ( "C1 " + String ( iCal1, 6 ) );
+      client.println ( "C2 " + String ( iCal2, 6 ) );
+      client.println ( "V " + String ( vCal ) );
     }
 
     /* Close connection and free resources. */

@@ -1,8 +1,6 @@
 package tk.giesecke.spmonitor;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
@@ -27,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * Utilities used by SplashActivity and/or spMonitor
  *
  * @author Bernd Giesecke
- * @version 0 beta July 12, 2015.
+ * @version 0.1 beta August 13, 2015.
  */
 class Utilities {
 
@@ -115,29 +113,12 @@ class Utilities {
 			ip = hosts.get(i);
 			/** Result of check if spMonitor is on this IP address */
 			String result = Utilities.checkDeviceIP(ip);
-			if (result.startsWith("Freq")) {
-				setCalValues(result);
+			if (result.startsWith("F ")) {
 				spMonitor.deviceIP = "http://"+ip+"/arduino/";
 				return spMonitor.deviceIP;
 			}
 		}
 		return spMonitor.deviceIP;
-	}
-
-	/**
-	 * Preset calibration values with the values received from spMonitor
-	 *
-	 * @param result
-	 *            String including the calibration values
-	 */
-	public static void setCalValues(String result) {
-		/** Response string split by lines */
-		String[] resultSplit = result.split("\r\n");
-		/** Line of response string split by spaces */
-		String[] calib = resultSplit[1].split(" ");
-		spMonitor.calValue1 = calib[1];
-		calib = resultSplit[2].split(" ");
-		spMonitor.calValue2 = calib[1];
 	}
 
 	/**
@@ -160,44 +141,6 @@ class Utilities {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * Customized alert
-	 *
-	 * @param context
-	 *            Context of app
-	 * @param title
-	 *            Title of alert dialog
-	 * @param message
-	 *            Message in alert dialog
-	 */
-	public static void myAlert(Context context, String title, String message) {
-
-		/** Builder for alert dialog */
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-				context);
-
-		// set title
-		alertDialogBuilder.setTitle(title);
-
-		// set dialog message
-		alertDialogBuilder
-				.setMessage(message)
-				.setCancelable(false)
-				.setPositiveButton(context.getResources().getString(android.R.string.ok),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
-
-		// create alert dialog
-		/** Alert dialog to be shown */
-		AlertDialog alertDialog = alertDialogBuilder.create();
-
-		// show it
-		alertDialog.show();
 	}
 
 	/**

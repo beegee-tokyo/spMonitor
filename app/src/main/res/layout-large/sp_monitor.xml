@@ -11,16 +11,42 @@
                 android:focusableInTouchMode="true"
                 android:focusable="true">
 
+    <ProgressBar
+        android:id="@+id/pb_refresh_rot"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bt_show_txt"
-        android:id="@+id/bt_getLog"
+        android:text="@string/bt_prev_txt"
+        android:id="@+id/bt_prevLog"
         android:onClick="onClick"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/holo_blue_dark"
         android:background="@color/bg_very_dark_grey"
-        android:layout_below="@+id/tv_cons_val"/>
+        android:layout_below="@+id/tv_cons_max"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_next_txt"
+        android:id="@+id/bt_nextLog"
+        android:onClick="onClick"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/holo_red_light"
+        android:background="@color/bg_very_dark_grey"
+        android:layout_below="@+id/tv_cons_max"
+        android:layout_toRightOf="@+id/bt_prevLog"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -29,10 +55,12 @@
         android:id="@+id/bt_status"
         android:onClick="onClick"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_toRightOf="@+id/bt_getLog"
-        android:layout_below="@+id/tv_cons_val"
-        android:textColor="@android:color/white"
-        android:background="@color/bg_very_dark_grey"/>
+        android:layout_toRightOf="@+id/bt_nextLog"
+        android:layout_below="@+id/tv_cons_max"
+        android:textColor="@android:color/holo_blue_dark"
+        android:background="@color/bg_very_dark_grey"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -45,7 +73,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/tv_cons_val"/>
+        android:layout_below="@+id/tv_solar_max"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -56,8 +84,10 @@
         android:textColor="@android:color/holo_red_light"
         android:background="@color/bg_very_dark_grey"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/tv_cons_val"
-        android:layout_toRightOf="@+id/bt_clear"/>
+        android:layout_below="@+id/tv_cons_max"
+        android:layout_toRightOf="@+id/bt_clear"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -69,7 +99,9 @@
         android:background="@color/bg_very_dark_grey"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_toRightOf="@+id/bt_status"
-        android:layout_below="@+id/tv_cons_val"/>
+        android:layout_below="@+id/tv_cons_max"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -93,8 +125,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/graph"
-        android:layout_below="@+id/bt_getLog"
-        android:layout_above="@+id/sv_result"/>
+        android:layout_below="@+id/bt_prevLog"
+        android:layout_above="@+id/sv_result"
+        android:background="@android:color/transparent"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -115,9 +148,9 @@
         android:layout_alignParentBottom="true"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignParentRight="false"
-        android:layout_alignParentEnd="false"
-        android:layout_toLeftOf="@+id/pb_refresh_rot"/>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -176,7 +209,8 @@
         android:layout_toLeftOf="@+id/tv_solar_txt"
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
-        android:textSize="30sp"/>
+        android:textSize="30sp"
+        android:background="@android:color/transparent"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -191,17 +225,6 @@
         android:layout_below="@+id/tv_result_txt"
         android:textSize="70sp"
         android:background="@android:color/transparent"/>
-
-    <ProgressBar
-        android:id="@+id/pb_refresh_rot"
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -234,5 +257,57 @@
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignParentBottom="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_result"
+        android:id="@+id/tv_solar_energy"
+        android:layout_alignParentRight="false"
+        android:textColor="@android:color/holo_orange_light"
+        android:background="@android:color/transparent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_below="@+id/tv_cons_energy"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_result"
+        android:id="@+id/tv_cons_energy"
+        android:textColor="@android:color/holo_blue_light"
+        android:background="@android:color/transparent"
+        android:layout_alignTop="@+id/graph"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_result"
+        android:id="@+id/tv_solar_max"
+        android:textColor="@android:color/holo_orange_light"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/tv_solar_val"
+        android:layout_alignLeft="@+id/tv_solar_val"
+        android:layout_alignRight="@+id/tv_solar_val"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_result"
+        android:id="@+id/tv_cons_max"
+        android:textColor="@android:color/holo_blue_light"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/tv_cons_val"
+        android:layout_alignLeft="@+id/tv_cons_val"
+        android:layout_alignRight="@+id/tv_cons_val"
+        android:gravity="center_horizontal"/>
 
 </RelativeLayout>
