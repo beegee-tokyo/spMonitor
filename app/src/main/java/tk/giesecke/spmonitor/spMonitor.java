@@ -98,6 +98,8 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	public static LineGraphSeries<DataPoint> consSeries = null;
 	/** Data series for the light sensor */
 	private static LineGraphSeries<DataPoint> lightSeries = null;
+	/** Data series for the 0 liner */
+	private static LineGraphSeries<DataPoint> zeroSeries = null;
 	/** List to hold the timestamps for the chart from a log file */
 	public static final ArrayList<Long> timeStamps = new ArrayList<>();
 	/** List to hold the measurements of the solar panel for the chart from a log file */
@@ -584,11 +586,11 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				}
 
 				minMaxVal = Utilities.getMinMax();
-				if (minMaxVal[0] - 10 <= 0) {
-					currentPlot.getViewport().setMinY(0f);
-				} else {
+				//if (minMaxVal[0] - 10 <= 0) {
+				//	currentPlot.getViewport().setMinY(0f);
+				//} else {
 					currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-				}
+				//}
 				currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
 
 				currentPlot.onDataChanged(false, false);
@@ -607,11 +609,11 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				}
 
 				minMaxVal = Utilities.getMinMax();
-				if (minMaxVal[0] - 10 <= 0) {
-					currentPlot.getViewport().setMinY(0f);
-				} else {
+				//if (minMaxVal[0] - 10 <= 0) {
+				//	currentPlot.getViewport().setMinY(0f);
+				//} else {
 					currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-				}
+				//}
 				currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
 
 				currentPlot.onDataChanged(false, false);
@@ -1203,13 +1205,15 @@ public class spMonitor extends Activity implements View.OnClickListener {
 												lightValMin), true, plotValues);
 										lightValueCont.add(lightValMin);
 									}
+									zeroSeries.appendData(new DataPoint(timeInMillis,
+											0), true, plotValues);
 
 									minMaxVal = Utilities.getMinMax();
-									if (minMaxVal[0] - 10 <= 0) {
-										currentPlot.getViewport().setMinY(0f);
-									} else {
+									//if (minMaxVal[0] - 10 <= 0) {
+									//	currentPlot.getViewport().setMinY(0f);
+									//} else {
 										currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-									}
+									//}
 									currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
 									currentPlot.getSecondScale().setMinY(lightSeries.getLowestValueY());
 									currentPlot.getSecondScale().setMaxY(lightSeries.getHighestValueY());
@@ -1229,6 +1233,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 											stopTimer();
 											startTimer(5000, 5000);
 										}
+										currentPlot.addSeries(zeroSeries);
 									}
 
 									/** Text view to show min and max poser values */
@@ -1472,6 +1477,8 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		consSeries = new LineGraphSeries<>();
 		// setup and format sensor 3 data series
 		lightSeries = new LineGraphSeries<>();
+		// setup and format 0-line data series
+		zeroSeries = new LineGraphSeries<>();
 
 		currentPlot.getGridLabelRenderer().setNumVerticalLabels(10);
 
@@ -1520,6 +1527,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		solarSeries.setColor(0xFFFFBB33);
 		consSeries.setColor(0xFF33B5E5);
 		lightSeries.setColor(Color.GREEN);
+		zeroSeries.setColor(Color.RED);
 		solarSeries.setBackgroundColor(0x55FFBB33);
 		consSeries.setBackgroundColor(0xFF33B5E5);
 		solarSeries.setDrawBackground(true);
@@ -1563,13 +1571,16 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			for (int i= 0; i<lightValue.size(); i++) {
 				lightSeries.appendData(new DataPoint(timeStamps.get(i), lightValue.get(i)), true, timeStamps.size());
 			}
+			for (int i= 0; i<lightValue.size(); i++) {
+				zeroSeries.appendData(new DataPoint(timeStamps.get(i), 0), true, timeStamps.size());
+			}
 
 			minMaxVal = Utilities.getMinMax();
-			if (minMaxVal[0] - 10 <= 0) {
-				currentPlot.getViewport().setMinY(0f);
-			} else {
+			//if (minMaxVal[0] - 10 <= 0) {
+			//	currentPlot.getViewport().setMinY(0f);
+			//} else {
 				currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-			}
+			//}
 			currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
 			currentPlot.getSecondScale().setMinY(lightSeries.getLowestValueY());
 			currentPlot.getSecondScale().setMaxY(lightSeries.getHighestValueY());
@@ -1580,6 +1591,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			currentPlot.getSecondScale().addSeries(lightSeries);
 			if (!showLight) lightSeries.setColor(Color.TRANSPARENT);
 			currentPlot.addSeries(solarSeries);
+			currentPlot.addSeries(zeroSeries);
 		} else {
 			if (timeStampsCont.size() != 0) {
 				for (int i=0; i<solarPowerCont.size(); i++) {
@@ -1594,13 +1606,17 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					lightSeries.appendData(new DataPoint(timeStampsCont.get(i),
 							lightValueCont.get(i)), true, timeStampsCont.size());
 				}
+				for (int i=0; i<lightValueCont.size(); i++) {
+					zeroSeries.appendData(new DataPoint(timeStampsCont.get(i),
+							0), true, timeStampsCont.size());
+				}
 
 				minMaxVal = Utilities.getMinMax();
-				if (minMaxVal[0] - 10 <= 0) {
-					currentPlot.getViewport().setMinY(0f);
-				} else {
+				//if (minMaxVal[0] - 10 <= 0) {
+				//	currentPlot.getViewport().setMinY(0f);
+				//} else {
 					currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-				}
+				//}
 				currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
 
 				if (showCons) currentPlot.addSeries(consSeries);
@@ -1609,6 +1625,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				if (!showLight) lightSeries.setColor(Color.TRANSPARENT);
 
 				if (showSolar) currentPlot.addSeries(solarSeries);
+				currentPlot.addSeries((zeroSeries));
 
 				graph2LastXValue = timeStampsCont.size();
 			} else {
@@ -1620,7 +1637,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 
 		currentPlot.getViewport().setScalable(true);
 		currentPlot.getViewport().setScrollable(true);
-		currentPlot.getViewport().setXAxisBoundsManual(true);
+		//currentPlot.getViewport().setXAxisBoundsManual(true);
 		currentPlot.getViewport().setYAxisBoundsManual(true);
 		currentPlot.setTitle(dayToShow);
 
