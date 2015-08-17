@@ -84,8 +84,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bt_clear_txt"
-        android:id="@+id/bt_clear"
+        android:text="@string/bt_sync_txt"
+        android:id="@+id/bt_sync"
         android:onClick="onClick"
         android:textColor="@android:color/holo_orange_light"
         android:background="@color/bg_very_dark_grey"
@@ -96,13 +96,13 @@
         android:layout_marginRight="2dp"/>
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sv_result"
-        android:layout_above="@+id/cb_solar"
-        android:layout_toLeftOf="@+id/pb_refresh_rot"
+        android:layout_above="@+id/bt_close"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentLeft="true"
+        >
 
         <TextView
             android:layout_width="wrap_content"

@@ -28,7 +28,7 @@ void getCTValues (int index) {
   if (index == 0) {
     prefix = "s";
     /** Sensor 1 is measuring the solar panel, if it is less than 20W then mostlikely that is the standby current drawn by the inverters */
-    if ( emon[index].Irms < 0.5 ) {
+    if ( emon[index].Irms < 0.55 ) {
       power = 0.0;
     }
   }

@@ -85,15 +85,15 @@
         android:background="@color/bg_very_dark_grey"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_below="@+id/tv_cons_max"
-        android:layout_toRightOf="@+id/bt_clear"
+        android:layout_toRightOf="@+id/bt_sync"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bt_clear_txt"
-        android:id="@+id/bt_clear"
+        android:text="@string/bt_sync_txt"
+        android:id="@+id/bt_sync"
         android:onClick="onClick"
         android:textColor="@android:color/holo_orange_light"
         android:background="@color/bg_very_dark_grey"

@@ -19,7 +19,7 @@
 void loop() {
   /** Actual time in milliseconds since start of spMonitor */
   unsigned long now = millis();
-  if ( now - lastMeasure >= 1000 ) { /* initiate measurement every 1 seconds */
+  if ( now - lastMeasure >= measureFreq ) { /* initiate measurement every 1 seconds */
     lastMeasure = now;
     wdt_reset();
     getMeasures();
@@ -42,7 +42,7 @@ void loop() {
   client = server.accept();
 
   /* There is a new client? */
-  if ( client ) {
+  if ( client.available() ) {
     wdt_reset();
     /** Character holding the command that was sent */
     char command = client.read();
@@ -66,14 +66,15 @@ void loop() {
     //  client.println ( readCal, 6 );
     //} else
     if ( command == 'e' ) { /* Get the actual settings */
-      client.println ( "F 3s" );
-      client.println ( "C1 " + String ( iCal1, 6 ) );
-      client.println ( "C2 " + String ( iCal2, 6 ) );
-      client.println ( "V " + String ( vCal ) );
+      client.print ( "F " + String ( measureFreq ) + "s" );
+      client.println ( " V " + String ( vCal ) );
+      client.print ( "C1 " + String ( iCal1, 1 ) );
+      client.println ( " C2 " + String ( iCal2, 1 ) );
     }
 
     /* Close connection and free resources. */
     wdt_reset();
+    client.flush();
     client.stop();
   }
 }

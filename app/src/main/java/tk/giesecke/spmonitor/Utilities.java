@@ -48,11 +48,11 @@ class Utilities {
 
 		subnet = subnet.substring(0, subnet.lastIndexOf("."));
 		subnet += ".";
-		/** IP address under test */
-		InetAddress inetAddress;
 		for(int i=0; i<255; i++){
 			try {
-				inetAddress = InetAddress.getByName(subnet + String.valueOf(i));
+				/** IP address under test */
+				/** IP address under test */
+				InetAddress inetAddress = InetAddress.getByName(subnet + String.valueOf(i));
 				if(inetAddress.isReachable(500)){
 					hosts.add(inetAddress.getHostName());
 					Log.d("spMonitor", inetAddress.getHostName());
@@ -155,6 +155,7 @@ class Utilities {
 		/** Progressbar that will be shown instead of image button during refresh */
 		ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
 		refreshRot.setVisibility(View.VISIBLE);
+		spMonitor.isCommunicating = true;
 	}
 
 	/**
@@ -164,6 +165,7 @@ class Utilities {
 		/** Progressbar that will be shown instead of image button during refresh */
 		ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
 		refreshRot.setVisibility(View.INVISIBLE);
+		spMonitor.isCommunicating = false;
 	}
 
 	/**
@@ -211,7 +213,6 @@ class Utilities {
 
 	/**
 	 * Load plot series with data received from database
-	 * visible
 	 *
 	 * @param data
 	 *        database cursor with recorded values
@@ -230,10 +231,26 @@ class Utilities {
 		data.moveToFirst();
 		spMonitor.solarEnergy = 0f;
 		spMonitor.consEnergy = 0f;
-		spMonitor.timeStamps.clear();
-		spMonitor.lightValue.clear();
-		spMonitor.solarPower.clear();
-		spMonitor.consumPower.clear();
+
+		ArrayList<Long> tempTimeStamps;
+		ArrayList<Float> tempSolarStamps;
+		ArrayList<Float> tempConsStamps;
+		ArrayList<Long> tempLightStamps;
+		if (spMonitor.showingLog) {
+			tempTimeStamps = spMonitor.timeStamps;
+			tempSolarStamps = spMonitor.solarPower;
+			tempConsStamps = spMonitor.consumPower;
+			tempLightStamps = spMonitor.lightValue;
+		} else {
+			tempTimeStamps = spMonitor.timeStampsCont;
+			tempSolarStamps = spMonitor.solarPowerCont;
+			tempConsStamps = spMonitor.consumPowerCont;
+			tempLightStamps = spMonitor.lightValueCont;
+		}
+		tempTimeStamps.clear();
+		tempSolarStamps.clear();
+		tempConsStamps.clear();
+		tempLightStamps.clear();
 		for (int cursorIndex=0; cursorIndex<data.getCount(); cursorIndex++) {
 			/** Gregorian calender to calculate the time stamp */
 			Calendar timeCal = new GregorianCalendar(
@@ -243,32 +260,58 @@ class Utilities {
 					data.getInt(3),
 					data.getInt(4),
 					0);
-			spMonitor.timeStamps.add(timeCal.getTimeInMillis());
+			tempTimeStamps.add(timeCal.getTimeInMillis());
 			spMonitor.dayToShow = String.valueOf(data.getInt(0)) + "/" +
 					String.valueOf(data.getInt(1)) + "/" +
 					String.valueOf(data.getInt(2));
-			spMonitor.lightValue.add(data.getLong(7));
-			spMonitor.solarPower.add(data.getFloat(5));
-			spMonitor.consumPower.add(data.getFloat(6));
+			tempSolarStamps.add(data.getFloat(5));
+			tempConsStamps.add(data.getFloat(6));
+			tempLightStamps.add(data.getLong(7));
 			spMonitor.solarEnergy += data.getFloat(5)/60/1000;
 			spMonitor.consEnergy += data.getFloat(6)/60/1000;
 			data.moveToNext();
 		}
 
-		Log.d("spMonitorDB", "size of timeStamps = "+spMonitor.timeStamps.size());
-		Log.d("spMonitorDB", "size of lightValue = "+spMonitor.lightValue.size());
-		Log.d("spMonitorDB", "size of solarPower = "+spMonitor.solarPower.size());
-		Log.d("spMonitorDB", "size of consumPower = "+spMonitor.consumPower.size());
-		TextView energyText = (TextView) spMonitor.appView.findViewById(R.id.tv_cons_energy);
-		energyText.setVisibility(View.VISIBLE);
-		energyText.setText("Consumed: " + String.format("%.3f", spMonitor.consEnergy) + "kWh");
-		energyText = (TextView) spMonitor.appView.findViewById(R.id.tv_solar_energy);
-		energyText.setVisibility(View.VISIBLE);
-		energyText.setText("Produced: " + String.format("%.3f", spMonitor.solarEnergy) + "kWh");
-							/* Txt view to show max consumed / produced power */
+		if (spMonitor.showingLog) {
+			/** Text view to show consumed / produced energy */
+			TextView energyText = (TextView) spMonitor.appView.findViewById(R.id.tv_cons_energy);
+			energyText.setVisibility(View.VISIBLE);
+			energyText.setText("Consumed: " + String.format("%.3f", spMonitor.consEnergy) + "kWh");
+			energyText = (TextView) spMonitor.appView.findViewById(R.id.tv_solar_energy);
+			energyText.setVisibility(View.VISIBLE);
+			energyText.setText("Produced: " + String.format("%.3f", spMonitor.solarEnergy) + "kWh");
+		}
+		/** Text view to show max consumed / produced power */
 		TextView maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_cons_max);
-		maxPowerText.setText("(" + String.format("%.0f", Collections.max(spMonitor.consumPower)) + "W)");
+		maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempConsStamps)) + "W)");
 		maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_solar_max);
-		maxPowerText.setText("(" + String.format("%.0f", Collections.max(spMonitor.solarPower)) + "W)");
+		maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempSolarStamps)) + "W)");
+	}
+
+	/**
+	 * Get current date & time as string
+	 *
+	 * @return <code>int[]</code>
+	 *            Date and time as integer values
+	 *            int[0] = year
+	 *            int[1] = month
+	 *            int[2] = day
+	 */
+	public static int[] getCurrentDate() {
+		/** Integer array for return values */
+		int[] currTime = new int[3];
+		/** Calendar to get current time and date */
+		Calendar cal = Calendar.getInstance();
+
+		/** Today's month */
+		currTime[1] = cal.get(Calendar.MONTH) + 1;
+
+		/** Today's year */
+		currTime[0] = cal.get(Calendar.YEAR);
+
+		/** Today's day */
+		currTime[2] = cal.get(Calendar.DATE);
+
+		return currTime;
 	}
 }

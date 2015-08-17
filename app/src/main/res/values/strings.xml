@@ -12,8 +12,7 @@
     <string name="tv_sens2_curr_txt">POWER NOW</string>
     <string name="err_no_device">spMonitor device not found. Make sure it is switched on and is connected to the same WiFi network.</string>
     <string name="err_arduino">Communication with spMonitor (Arduino) failed. Make sure it is switched on and is connected to the same WiFi network.</string>
-    <string name="err_linino">Communication with spMonitor (Linino) failed. Make sure it is switched on and is connected to the same WiFi network.</string>
-    <string name="found_device">spMonitor device found on IP: %1$s. Now syncing data with the device!</string>
+    <string name="found_device">spMonitor device found on IP: %1$s. \nNow syncing data with the device!</string>
     <string name="manual_ip">spMonitor IP set to : %1$s</string>
     <string name="search_device">Searching for spMonitor device. This can take up to 5 Minutes.</string>
     <string name="no_device_ip">no IP saved</string>
@@ -29,12 +28,10 @@
     <string name="bt_stop_txt">Close</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
-    <string name="noLogFile">Could not find any log file.</string>
-    <string name="log_rm_title">%1$s deleted</string>
     <string name="cb_solar_txt">Solar</string>
     <string name="cb_cons_txt">Cons.</string>
     <string name="cb_light_txt">Light</string>
-    <string name="bt_clear_txt">Clear</string>
+    <string name="bt_sync_txt">Refresh</string>
     <string name="tv_result">Info</string>
     <string name="fast_mode_on">5s update activated</string>
     <string name="fast_mode_off">60s update activated</string>

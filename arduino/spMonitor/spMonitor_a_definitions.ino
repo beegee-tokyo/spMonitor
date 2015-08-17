@@ -33,6 +33,9 @@ unsigned long lastSave;
 /** Constant value for activity LED port */
 #define activityLED 8
 
+/** Constant value for measurement frequency in ms */
+#define measureFreq 1000
+
 /** Instance of the Adafruit TSL2561 sensor */
 Adafruit_TSL2561_Unified tsl = Adafruit_TSL2561_Unified ( TSL2561_ADDR_FLOAT, 1 );
 /** Currently used integration time for light sensor, 0 = 13.7ms, 1 = 101ms, 2 = 402ms */
@@ -47,6 +50,10 @@ EnergyMonitor emon[2];
 #define iCal1 5.7
 /** iCal definition for CT 2 (mains) */
 #define iCal2 11.5
+/** Phase shift definition for voltage (solar) */
+#define pShift1 1.3
+/** Phase shift definition for voltage (mains) */
+#define pShift2 6.1
 /** vCal definition for voltage measurement */
 #define vCal 255
 

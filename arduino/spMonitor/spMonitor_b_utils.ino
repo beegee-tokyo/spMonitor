@@ -16,7 +16,7 @@
  *
  * @return *result
  *          Pointer to String with date and time
- *          format "yy,mm,dd,hh:mm,ss"
+ *          format "yy,mm,dd,hh:mm"
  */
 String getTimeStamp() {
   /** String for date time to be returned */
@@ -27,7 +27,7 @@ String getTimeStamp() {
   /* date is a command line utility to get the date and the time */
   /* in different formats depending on the additional parameter */
   time.begin ( "date" );
-  time.addParameter ( "+%y,%m,%d,%H:%M,%S" );
+  time.addParameter ( "+%y,%m,%d,%H:%M" );
   wdt_reset();
   time.run();  /* run the command */
 
@@ -69,7 +69,7 @@ void saveData () {
   Bridge.put ( "C", String ( cons ) );
 
   /* Write measurment to log file on SDcard */
-  dataString = getTimeStamp().substring(0, 14);
+  dataString = getTimeStamp();
   dataString += ",";
   dataString += String ( light );
   dataString += ",";
@@ -91,51 +91,35 @@ void saveData () {
     dataFile.close();
   }
 
-  if ( dataString.substring( 9, 14).equalsIgnoreCase("23:59") ) {
+  if ( dataString.substring( 9).equalsIgnoreCase("23:59") ) {
     collEnergy[0] = collEnergy[1] = 0.0;
   }
 
   /* Write current data into sqlite database */
   /** Instance to Linino process */
-  //Process sqLite;
-  //fileName = getTimeStamp();
-  //dataString = "sqlite3 -line /mnt/sda1/s.db 'insert into s (d,s,c,l) Values ("
-  //             + fileName + ","
-  //             + String ( solar ) + ","
-  //             + String ( cons ) + ","
-  //             + String ( light ) + ");'";
+  Process sqLite;
+  fileName = getTimeStamp();
+  fileName.replace(',', '-');
+  dataString = "sqlite3 /mnt/sda1/s.db 'insert into s (d,s,c,l) Values (\""
+               + fileName + "\","
+               + String ( solar ) + ","
+               + String ( cons ) + ","
+               + String ( light ) + ");'";
 
-  //sqLite.runShellCommand ( dataString );
+  sqLite.runShellCommand ( dataString );
 
   wdt_reset();
-  // Emoncms configurations
-  //  fileName = "emoncms.org";
-  //  if (client.connect(fileName.c_str(), 80)) {
-  // send the HTTP GET request:
-  //    client.print("GET /api/post?apikey=e778b92fc1f06d7e94a94bcc2a969664&json={s:");
-  //    client.print(solar);
-  //    client.print(",c:");
-  //    client.print(cons);
-  //    client.print(",l:");
-  //    client.print(light);
-  //    client.println("} HTTP/1.1");
-  //    client.println("Host:emoncms.org");
-  //    client.println("User-Agent: Arduino-ethernet");
-  //    client.println("Connection: close");
-  //    client.println();
-  //  }
-
   /* Send current data to emonCMS */
   /** Instance to Linino process */
-  Process emonCMS;
-  dataString = "curl \"http://emoncms.org/api/post?apikey=e778b92fc1f06d7e94a94bcc2a969664&json={s:";
-  dataString += String ( solar );
-  dataString += ",c:";
-  dataString += String ( cons );
-  dataString += ",l:";
-  dataString += String ( light );
-  dataString += "}\"";
-  emonCMS.runShellCommand ( dataString );
+  //Process emonCMS;
+  //dataString = "curl \"http://emoncms.org/api/post?apikey=e778b92fc1f06d7e94a94bcc2a969664&json={s:";
+  //dataString += String ( solar );
+  //dataString += ",c:";
+  //dataString += String ( cons );
+  //dataString += ",l:";
+  //dataString += String ( light );
+  //dataString += "}\"";
+  //emonCMS.runShellCommand ( dataString );
 
   collPower[0] = collPower[1] = 0.0;
   collCount[0] = collCount[1] = collCount[2] = 0;

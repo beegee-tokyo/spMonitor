@@ -46,10 +46,10 @@ void setup() {
 
   /* Configure the YHDC SCT013-000 current sensors */
   /* Initialise the current sensor 1 */
-  emon[0].voltage( 2, vCal, 1.3 ); // AD2, Vcal = 255, phase shift = 1.3
+  emon[0].voltage( 2, vCal, pShift1 ); // AD2, Vcal = 255, phase shift = 1.3
   emon[0].current ( 0, iCal1 ); // AD0, Ical = 5.7
   /* Initialise the current sensor 2 */
-  emon[1].voltage( 2, vCal, 2 ); // AD2, Vcal = 255, phase shift = 2
+  emon[1].voltage( 2, vCal, pShift2 ); // AD2, Vcal = 255, phase shift = 6.1
   emon[1].current ( 1, iCal2 ); // AD1, Ical = 11.5
 
   /* Get initial reading to setup the low pass filter */

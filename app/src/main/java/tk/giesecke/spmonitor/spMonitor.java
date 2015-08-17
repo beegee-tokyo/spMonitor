@@ -21,12 +21,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
@@ -39,22 +33,19 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 /** spMonitor - Main UI activity
@@ -74,8 +65,10 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	public static View appView;
 	/** The timer to refresh the UI */
 	private Timer timer;
-	//we are going to use a handler to be able to run in our TimerTask
+	/**we are going to use a handler to be able to run in our TimerTask */
 	private final Handler handler = new Handler();
+	/** Flag for communication active */
+	public static boolean isCommunicating = false;
 
 	/** The url to access the spMonitor device */
 	private String url = "";
@@ -88,8 +81,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	private static TextView resultTextView;
 	/** Flag if UI auto refresh is on or off */
 	private boolean autoRefreshOn = true;
-	/** Command sent to the spMonitor device */
-	private String thisCommand = "";
 	/** XYPlot view for the current chart */
 	private static GraphView currentPlot;
 	/** Data series for the solar current sensor */
@@ -116,21 +107,15 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	public static final ArrayList<Float> consumPowerCont = new ArrayList<>();
 	/** List to hold the measurement of the light for the chart from a log file */
 	public static final ArrayList<Long> lightValueCont = new ArrayList<>();
-	/** Counter for displayed data points */
-	private double graph2LastXValue = 0d;
 	/** Number of plot y values */
 	private static final int plotValues = 720;
 
-	/** Array with existing log files on the Arduino */
-	private static final List<String> logFiles = new ArrayList<>();
-	/** Pointer to current displayed log in logFiles array */
-	private static int logFilesIndex = 0;
-	/** Flag for SFTP command to get a log file*/
-	private boolean isGet = false;
-	/** Flag for SFTP command to fill chart with existing data*/
-	private boolean isFill = false;
+	/** Array with existing log dates on the Arduino */
+	private static final List<String> logDates = new ArrayList<>();
+	/** Pointer to current displayed log in logDates array */
+	private static int logDatesIndex = 0;
 	/** Flag for showing a log */
-	private boolean showingLog = false;
+	public static boolean showingLog = false;
 
 	/** Day stamp of data */
 	public static String dayToShow;
@@ -190,7 +175,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		if (savedInstanceState == null) {
 			if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
 				Utilities.startRefreshAnim();
-				new syncDB().execute();
+				new syncDBtoDB().execute();
 
 				/** Pointer to text views showing the consumed / produced energy */
 				TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
@@ -203,7 +188,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
 				Utilities.startRefreshAnim();
 				url = deviceIP;
-				new execSftp().execute(url, "ls");
+				new syncDBtoDB().execute();
 			}
 
 			/** List to get saved time stamp values from saved instance */
@@ -443,22 +428,23 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		/** Button to go to next log */
 		Button nextButton  = (Button) findViewById(R.id.bt_nextLog);
 
+		if (isCommunicating) return;
+
 		switch (v.getId()) {
 			case R.id.bt_prevLog:
-				if (logFilesIndex > 0) {
-					logFilesIndex--;
+				if (logDatesIndex > 0) {
+					Utilities.startRefreshAnim();
+					logDatesIndex--;
 					/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
 					Button stopButton = (Button) findViewById(R.id.bt_stop);
 					stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
 					stopButton.setText(getResources().getString(R.string.start));
 					autoRefreshOn = false;
 					stopTimer();
-					isGet = false;
 					showingLog = true;
-					Utilities.startRefreshAnim();
 					// Get data from data base
 					/** String list with requested date info */
-					String[] requestedDate = logFiles.get(logFilesIndex).substring(0, 8).split("-");
+					String[] requestedDate = logDates.get(logDatesIndex).substring(0, 8).split("-");
 					/** Instance of DataBaseHelper */
 					DataBaseHelper dbHelper = new DataBaseHelper(appContext);
 					/** Instance of data base */
@@ -473,31 +459,30 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					newDataSet.close();
 					dataBase.close();
 					dbHelper.close();
-					Utilities.stopRefreshAnim();
 
-					if (logFilesIndex == 0) {
+					if (logDatesIndex == 0) {
 						prevButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
 					} else {
 						prevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
 					}
 					nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+					Utilities.stopRefreshAnim();
 				}
 				break;
 			case R.id.bt_nextLog:
-				if (logFilesIndex < logFiles.size()-1) {
-					logFilesIndex++;
+				if (logDatesIndex < logDates.size()-1) {
+					Utilities.startRefreshAnim();
+					logDatesIndex++;
 					/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
 					Button stopButton = (Button) findViewById(R.id.bt_stop);
 					stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
 					stopButton.setText(getResources().getString(R.string.start));
 					autoRefreshOn = false;
 					stopTimer();
-					isGet = false;
 					showingLog = true;
-					Utilities.startRefreshAnim();
 					// Get data from data base
 					/** String list with requested date info */
-					String[] requestedDate = logFiles.get(logFilesIndex).substring(0, 8).split("-");
+					String[] requestedDate = logDates.get(logDatesIndex).substring(0, 8).split("-");
 					/** Instance of DataBaseHelper */
 					DataBaseHelper dbHelper = new DataBaseHelper(appContext);
 					/** Instance of data base */
@@ -512,14 +497,14 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					newDataSet.close();
 					dataBase.close();
 					dbHelper.close();
-					Utilities.stopRefreshAnim();
 
-					if (logFilesIndex == logFiles.size()-1) {
+					if (logDatesIndex == logDates.size()-1) {
 						nextButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
 					} else {
 						nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
 					}
 					prevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+					Utilities.stopRefreshAnim();
 				}
 				break;
 			case R.id.bt_stop:
@@ -533,9 +518,9 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				} else {
 					if (showingLog) {
 						showingLog = false;
-						Utilities.startRefreshAnim();
 						clearChart();
-						new syncDB().execute();
+						Utilities.startRefreshAnim();
+						new syncDBtoDB().execute();
 
 						/** Pointer to text views showing the consumed / produced energy */
 						TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
@@ -543,7 +528,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 						energyText = (TextView) findViewById(R.id.tv_solar_energy);
 						energyText.setVisibility(View.INVISIBLE);
 
-						logFilesIndex = logFiles.size()-1;
+						logDatesIndex = logDates.size()-1;
 						nextButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
 					} else {
 						if (calModeOn) {
@@ -563,16 +548,16 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
 				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
 				url = deviceIP + "e";
-				thisCommand = "e";
 				break;
 			case R.id.bt_close:
+				stopTimer();
 				finish();
 				break;
-			case R.id.bt_clear:
+			case R.id.bt_sync:
 				if (!showingLog) {
-					clearChart();
+					Utilities.startRefreshAnim();
+					new syncDBtoDB().execute();
 				}
-				url = "";
 				break;
 			case R.id.cb_solar:
 				/** Checkbox to show or hide solar graph */
@@ -586,11 +571,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				}
 
 				minMaxVal = Utilities.getMinMax();
-				//if (minMaxVal[0] - 10 <= 0) {
-				//	currentPlot.getViewport().setMinY(0f);
-				//} else {
-					currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-				//}
+				currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
 				currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
 
 				currentPlot.onDataChanged(false, false);
@@ -609,11 +590,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				}
 
 				minMaxVal = Utilities.getMinMax();
-				//if (minMaxVal[0] - 10 <= 0) {
-				//	currentPlot.getViewport().setMinY(0f);
-				//} else {
-					currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-				//}
+				currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
 				currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
 
 				currentPlot.onDataChanged(false, false);
@@ -640,7 +617,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		}
 
 		if (!url.isEmpty()) {
-			//if (autoRefreshOn) stopTimer();
 			new callArduino().execute(url);
 		}
 	}
@@ -681,6 +657,9 @@ public class spMonitor extends Activity implements View.OnClickListener {
 							if (resultToDisplay.contains("EHOSTUNREACH")) {
 								resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
 							}
+							if (resultToDisplay.equalsIgnoreCase("")) {
+								resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
+							}
 							return resultToDisplay;
 						} catch (NullPointerException en) {
 							resultToDisplay = getResources().getString(R.string.err_no_device);
@@ -690,15 +669,13 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				}
 			}
 
+			if (resultToDisplay.equalsIgnoreCase("")) {
+				resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
+			}
 			return resultToDisplay;
 		}
 
 		protected void onPostExecute(String result) {
-			/** Length of spMonitor device response */
-			int strLen = result.length();
-			if ((strLen > 2) && (url.endsWith("g"))) {
-				result = result.substring(0, strLen - 2);
-			}
 			updateUI(result);
 			if (timer == null) {
 				if (calModeOn) {
@@ -712,280 +689,132 @@ public class spMonitor extends Activity implements View.OnClickListener {
 
 	/**
 	 * Async task class to contact Linino part of the spMonitor device
+	 * and sync spMonitor database with local Android database
 	 */
-	private class execSftp extends AsyncTask<String, String, String> {
+	private class syncDBtoDB extends AsyncTask<String, String, String> {
 
 		@Override
 		protected String doInBackground(String... params) {
 
 			/** URL to be called */
-			String urlString = params[0]; // URL to call
-			/** SFTP command to be send */
-			String sftpCommand = params[1]; // What to do
-			/** LOG file name to get */
-			String logFileName = "";
-			if (sftpCommand.equalsIgnoreCase("get") || sftpCommand.equalsIgnoreCase("rm")) {
-				logFileName = params[2]; // Which log file to get
-			}
-
-			/** Response from the spMonitor device or error message */
-			String resultToDisplay = "";
-
-			// Make call only if valid url is given
-			if (urlString.startsWith("No")) {
-				resultToDisplay = getResources().getString(R.string.err_no_device);
-			} else {
-				/** IP address to connect to */
-				String ip[] = urlString.split("/");
-				/** Sftp session instance */
-				Session session = null;
-
-				try{
-					/** Jsch instance */
-					JSch sshChannel = new JSch();
-					session = sshChannel.getSession("root", ip[2], 22);
-					session.setPassword("spMonitor");
-					session.setConfig("StrictHostKeyChecking", "no");
-					session.connect();
-
-					if (session.isConnected()) {
-						/** Channel for session */
-						Channel channel = session.openChannel("sftp");
-						channel.connect();
-
-						if (channel.isConnected()) {
-							/** SFTP channel */
-							ChannelSftp sftp = (ChannelSftp) channel;
-
-							if (sftp.isConnected()) {
-								sftp.cd("/mnt/sda1/");
-								if (sftpCommand.equalsIgnoreCase("get")) {
-									/* Buffered reader to get file from spMonitor device */
-									BufferedReader buffInput = new BufferedReader
-											(new InputStreamReader(sftp.get(logFileName)));
-									/* Buffer for a single line */
-									String line;
-									while ((line = buffInput.readLine()) != null) {
-										resultToDisplay += line;
-										resultToDisplay += "\n";
-									}
-									buffInput.close();
-									isGet = true;
-								// TODO add function to delete log files on the Arduino Yun
-								} else if (sftpCommand.equalsIgnoreCase("rm")) {
-									sftp.rm(logFileName);
-									resultToDisplay = getResources().getString(R.string.log_rm_title, logFileName);
-								} else if (sftpCommand.equalsIgnoreCase("ls")) {
-									@SuppressWarnings("unchecked") Vector<ChannelSftp.LsEntry> list =
-											sftp.ls("/mnt/sda1/*.txt");
-									if (list.size() != 0) {
-										logFiles.clear();
-										for (int i=0; i<list.size();i++) {
-											logFiles.add(list.get(i).getFilename());
-										}
-										if (logFiles.size() != 0) {
-											Collections.sort(logFiles, new Comparator<String>() {
-												@Override
-												public int compare(String text1, String text2) {
-													return text1.compareToIgnoreCase(text2);
-												}});
-
-											logFileName = logFiles.get(logFiles.size()-1);
-											/* Buffered reader to get file from spMonitor device */
-											BufferedReader buffInput = new BufferedReader
-													(new InputStreamReader(sftp.get(logFileName)));
-											/* Buffer for a single line */
-											String line;
-											while ((line = buffInput.readLine()) != null) {
-												resultToDisplay += line;
-												resultToDisplay += "\n";
-											}
-											buffInput.close();
-											logFilesIndex = logFiles.size()-1;
-											isFill = true;
-											dayToShow = logFileName.substring(0,2) + "/" +
-													logFileName.substring(3,5) + "/" +
-													logFileName.substring(6,8);
-										}
-									} else {
-										resultToDisplay = getResources().getString(R.string.noLogFile);
-									}
-								}
-								sftp.disconnect();
-							}
-							channel.disconnect();
-						}
-						session.disconnect();
-					}
-
-				} catch(JSchException | IOException | SftpException e){
-					e.printStackTrace();
-					if (session != null) {
-						session.disconnect();
-					}
-					resultToDisplay = e.getMessage();
-					if (resultToDisplay.contains("EHOSTUNREACH")) {
-						resultToDisplay = getApplicationContext().getString(R.string.err_linino);
-					}
-					return resultToDisplay;
-				}
-			}
-			return resultToDisplay;
-		}
-
-		protected void onPostExecute(String result) {
-			displayLog(result);
-			if (timer == null) {
-				if (calModeOn) {
-					if (autoRefreshOn) startTimer(5000, 5000);
-				} else {
-					if (autoRefreshOn) startTimer(5000, 60000);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Async task class to contact Linino part of the spMonitor device
-	 */
-	private class syncDB extends AsyncTask<String, String, String> {
-
-		@Override
-		protected String doInBackground(String... params) {
-
-			/** URL to be called */
-			String urlString = deviceIP; // URL to call
+			String urlString = "http://192.168.0.140/sd/spMonitor/query.php"; // URL to call
 
 			/** Response from the spMonitor device or error message */
 			String resultToDisplay = getResources().getString(R.string.filesSyncFail);
 
+			// Check for last entry in the local database
+			/** Instance of DataBaseHelper */
+			DataBaseHelper dbHelper = new DataBaseHelper(appContext);
+			/** Instance of data base */
+			SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+			/** Cursor with data from database */
+			Cursor dbCursor = DataBaseHelper.getLastRow(dataBase);
+			if (dbCursor.getCount() != 0) { // local database not empty, need to sync only missing
+				dbCursor.moveToFirst();
+
+				int lastMinute =  dbCursor.getInt(4)+1;
+				int lastHour = dbCursor.getInt(3);
+				int lastDay = dbCursor.getInt(2);
+				if (lastMinute == 60) {
+					lastMinute = 0;
+					lastHour += 1;
+					if (lastHour == 24) {
+						lastHour = 0;
+						lastDay += 1;
+					}
+				}
+
+				urlString += "?date=" + dbCursor.getString(0); // add year
+				urlString += "-" + ("00" +
+						dbCursor.getString(1)).substring(dbCursor.getString(1).length()); // add month
+				//urlString += "-" + dbCursor.getString(1); // add month
+				urlString += "-" + ("00" +
+						String.valueOf(lastDay))
+						.substring(String.valueOf(lastDay).length()); // add day
+				//urlString += "-" + dbCursor.getString(2); // add day
+				urlString += "-" + ("00" +
+						String.valueOf(lastHour))
+						.substring(String.valueOf(lastHour).length()); // add hour
+				//urlString += "-" + dbCursor.getString(3); // add hour
+				urlString += ":" + ("00" +
+						String.valueOf(lastMinute))
+						.substring(String.valueOf(lastMinute).length()); // add minute
+				//urlString += ":" + String.valueOf(lastMinute); // add minute
+				urlString += "&get=all";
+			} // else {} local database is empty, need to sync all data
+			dbCursor.close();
+			dataBase.close();
+			dbHelper.close();
 			// Make call only if valid url is given
 			if (urlString.startsWith("No")) {
 				resultToDisplay = getResources().getString(R.string.err_no_device);
 			} else {
-				/** IP address to connect to */
-				String ip[] = urlString.split("/");
-				/** Sftp session instance */
-				Session session = null;
+				/** Request to spMonitor device */
+				Request request = new Request.Builder()
+						.url(urlString)
+						.build();
 
-				try{
-					/** Jsch instance */
-					JSch sshChannel = new JSch();
-					session = sshChannel.getSession("root", ip[2], 22);
-					session.setPassword("spMonitor");
-					session.setConfig("StrictHostKeyChecking", "no");
-					session.connect();
-
-					if (session.isConnected()) {
-						/** Channel for session */
-						Channel channel = session.openChannel("sftp");
-						channel.connect();
-
-						if (channel.isConnected()) {
-							/** SFTP channel */
-							ChannelSftp sftp = (ChannelSftp) channel;
-
-							if (sftp.isConnected()) {
-								sftp.cd("/mnt/sda1/");
-								@SuppressWarnings("unchecked") Vector<ChannelSftp.LsEntry> list =
-										sftp.ls("/mnt/sda1/*.txt");
-								if (list.size() != 0) {
-									logFiles.clear();
-									for (int i=0; i<list.size();i++) {
-										logFiles.add(list.get(i).getFilename());
-									}
-									Collections.sort(logFiles, new Comparator<String>() {
-										@Override
-										public int compare(String text1, String text2) {
-											return text1.compareToIgnoreCase(text2);
-										}});
-
-									/** Instance of DataBaseHelper */
-									DataBaseHelper dbHelper = new DataBaseHelper(appContext);
-									/** Instance of data base */
-									SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
-
-									int checkYear = Integer.parseInt(logFiles.get(0).substring(0,2));
-									int checkMonth = Integer.parseInt(logFiles.get(0).substring(3,5));
-									int checkDay;
-									int lastCheckYear = checkYear;
-									int lastCheckMonth = checkMonth;
-									/** Array list with all year */
-									ArrayList<Integer> allYears = DataBaseHelper
-											.getEntries(dataBase, "year", 0, 0);
-									/** Array list with all months of year */
-									ArrayList<Integer> allMonths = DataBaseHelper
-											.getEntries(dataBase, "month", 0, checkYear);
-									/** Array list with all days of month */
-									ArrayList<Integer> allDays = DataBaseHelper
-											.getEntries(dataBase, "day", checkMonth, checkYear);
-									for (int i=0; i<logFiles.size(); i++) {
-										checkYear = Integer.parseInt(logFiles.get(i).substring(0,2));
-										checkMonth = Integer.parseInt(logFiles.get(i).substring(3,5));
-										checkDay = Integer.parseInt(logFiles.get(i).substring(6,8));
-
-										if (lastCheckYear != checkYear) {
-											allYears = DataBaseHelper
-													.getEntries(dataBase, "year", 0, 0);
-										}
-										if (!allYears.contains(checkYear)) {
-											DataBaseHelper.syncFileToDB(dataBase, logFiles.get(i), sftp, false);
-										} else {
-											if (lastCheckMonth != checkMonth) {
-												allMonths = DataBaseHelper
-														.getEntries(dataBase, "month", 0, checkYear);
-											}
-											if (!allMonths.contains(checkMonth)) {
-												DataBaseHelper.syncFileToDB(dataBase, logFiles.get(i), sftp, false);
-											} else {
-												if (lastCheckMonth != checkMonth) {
-													allDays = DataBaseHelper
-															.getEntries(dataBase, "day", checkMonth, checkYear);
-												}
-												if (!allDays.contains(checkDay)) {
-													DataBaseHelper.syncFileToDB(dataBase, logFiles.get(i), sftp, false);
-												} else if (i == logFiles.size() - 1) {
-													DataBaseHelper.deleteDay(dataBase,
-															checkDay, checkMonth, checkYear);
-													DataBaseHelper.syncFileToDB(dataBase, logFiles.get(i), sftp, true);
-												}
-											}
-										}
-										lastCheckYear = checkYear;
-										lastCheckMonth = checkMonth;
-									}
-									dataBase.close();
-									dbHelper.close();
-									resultToDisplay = getResources().getString(R.string.filesSynced);
-									logFilesIndex = logFiles.size()-1;
-								} else {
-									resultToDisplay = getResources().getString(R.string.noLogFile);
-								}
-								sftp.disconnect();
-							}
-							channel.disconnect();
+				if (request != null) {
+					try {
+						/** Response from spMonitor device */
+						Response response = client.newCall(request).execute();
+						if (response != null) {
+							resultToDisplay = response.body().string();
 						}
-						session.disconnect();
+					} catch (IOException e) {
+						e.printStackTrace();
+						resultToDisplay = e.getMessage();
+						try {
+							if (resultToDisplay.contains("EHOSTUNREACH")) {
+								resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
+							}
+							if (resultToDisplay.equalsIgnoreCase("")) {
+								resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
+							}
+							return resultToDisplay;
+						} catch (NullPointerException en) {
+							resultToDisplay = getResources().getString(R.string.err_no_device);
+							return resultToDisplay;
+						}
 					}
+					if (Utilities.isJSONValid(resultToDisplay)) {
+						try {
+							/** JSON array with the data received from spMonitor device */
+							JSONArray jsonFromDevice = new JSONArray(resultToDisplay);
+							/** Instance of DataBaseHelper */
+							dbHelper = new DataBaseHelper(appContext);
+							/** Instance of data base */
+							dataBase = dbHelper.getWritableDatabase();
 
-				} catch(JSchException | SftpException e){
-					e.printStackTrace();
-					if (session != null) {
-						session.disconnect();
+							for (int i=0; i<jsonFromDevice.length(); i++) {
+								/** JSONObject with a single record */
+								JSONObject jsonRecord = jsonFromDevice.getJSONObject(i);
+								String record = jsonRecord.getString("d");
+								record = record.replace("-",",");
+								record += ","+jsonRecord.getString("l");
+								record += ","+jsonRecord.getString("s");
+								record += ","+jsonRecord.getString("c");
+								DataBaseHelper.addDay(dataBase, record);
+							}
+							resultToDisplay = getResources().getString(R.string.filesSynced);
+						} catch (JSONException e) {
+							resultToDisplay = getResources().getString(R.string.filesSyncFail);
+							dataBase.close();
+							dbHelper.close();
+						}
+						dataBase.close();
+						dbHelper.close();
+					} else {
+						resultToDisplay = getResources().getString(R.string.filesSyncFail);
 					}
-					resultToDisplay = e.getMessage();
-					if (resultToDisplay.contains("EHOSTUNREACH")) {
-						resultToDisplay = getApplicationContext().getString(R.string.err_linino);
-					}
-					return resultToDisplay;
 				}
 			}
+
 			return resultToDisplay;
 		}
 
 		protected void onPostExecute(String result) {
-			Toast.makeText(appContext, "Sync result: " + result, Toast.LENGTH_LONG).show();
-			updateSynced();
+			updateSynced(result);
 		}
 	}
 
@@ -1005,7 +834,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				String result;
 
 				if (value.length() != 0) {
-					if (thisCommand.equalsIgnoreCase("s")) {
+					if (url.endsWith("get")) {
 						// decode JSON
 						if (Utilities.isJSONValid(value)) {
 							try {
@@ -1045,80 +874,79 @@ public class spMonitor extends Activity implements View.OnClickListener {
 								/** Double for the result of solar current and consumption used at 5sec updates */
 								double resultPowerSec = solarPowerSec + consPowerSec;
 
+								result = "S=" + String.valueOf(solarPowerMin) + "W ";
+								result += "s=";
+								try {
+									result += jsonValues.getString("s");
+								} catch (Exception excError) {
+									result += "---";
+								}
+								result += "A sv=";
+								try {
+									result += jsonValues.getString("sv");
+								} catch (Exception excError) {
+									result += "---";
+								}
+								result += "V sr=";
+								try {
+									result += jsonValues.getString("sr");
+								} catch (Exception excError) {
+									result += "---";
+								}
+								result += "W sa=";
+								try {
+									result += jsonValues.getString("sa");
+								} catch (Exception excError) {
+									result += "---";
+								}
+								result += "W sp=";
+								try {
+									result += jsonValues.getString("sp");
+								} catch (Exception excError) {
+									result += "---";
+								}
+								result += "\nC=" + String.valueOf(consPowerMin) + "W c=";
+								try {
+									result += jsonValues.getString("c");
+								} catch (Exception excError) {
+									result += "---";
+								}
+								result += "A cv=";
+								try {
+									result += jsonValues.getString("cv");
+								} catch (Exception excError) {
+									result += "---";
+								}
+								result += "V cr=";
+								try {
+									result += jsonValues.getString("cr");
+								} catch (Exception excError) {
+									result += "---";
+								}
+								result += "W ca=";
+								try {
+									result += jsonValues.getString("ca");
+								} catch (Exception excError) {
+									result += "---";
+								}
+								result += "W cp=";
+								try {
+									result += jsonValues.getString("cp") + "\n";
+								} catch (Exception excError) {
+									result += "---" + "\n";
+								}
+
 								valueFields = (TextView) findViewById(R.id.tv_solar_val);
 								if (calModeOn) {
-									result = "s=";
-									try {
-										result += jsonValues.getString("s");
-									} catch (Exception excError) {
-										result += "---";
-									}
-									result += "A sv=";
-									try {
-										result += jsonValues.getString("sv");
-									} catch (Exception excError) {
-										result += "---";
-									}
-									result += "V sr=";
-									try {
-										result += jsonValues.getString("sr");
-									} catch (Exception excError) {
-										result += "---";
-									}
-									result += "W sa=";
-									try {
-										result += jsonValues.getString("sa");
-									} catch (Exception excError) {
-										result += "---";
-									}
-									result += "W sp=";
-									try {
-										result += jsonValues.getString("sp");
-									} catch (Exception excError) {
-										result += "---";
-									}
-									result += "\nc=";
-									try {
-										result += jsonValues.getString("c");
-									} catch (Exception excError) {
-										result += "---";
-									}
-									result += "A cv=";
-									try {
-										result += jsonValues.getString("cv");
-									} catch (Exception excError) {
-										result += "---";
-									}
-									result += "V cr=";
-									try {
-										result += jsonValues.getString("cr");
-									} catch (Exception excError) {
-										result += "---";
-									}
-									result += "W ca=";
-									try {
-										result += jsonValues.getString("ca");
-									} catch (Exception excError) {
-										result += "---";
-									}
-									result += "W cp=";
-									try {
-										result += jsonValues.getString("cp") + "\n";
-									} catch (Exception excError) {
-										result += "---" + "\n";
-									}
 									valueFields.setText(String.format("%.0f", solarPowerSec) + "W");
 									valueFields = (TextView) findViewById(R.id.tv_cons_val);
 									valueFields.setText(String.format("%.0f", resultPowerSec) + "W");
 								} else {
 									valueFields.setText(String.format("%.0f", solarPowerMin) + "W");
-									result = "S=" + String.valueOf(solarPowerMin) + "W C=" +
-											String.valueOf(consPowerMin) + "W\n";
 									valueFields = (TextView) findViewById(R.id.tv_cons_val);
 									valueFields.setText(String.format("%.0f", resultPowerMin) + "W");
 								}
 								resultTextView.setText(result);
-
 
 								valueFields = (TextView) findViewById(R.id.tv_result_txt);
 								if (calModeOn) {
@@ -1174,7 +1002,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 									Calendar cal = new GregorianCalendar();
 									/* Set date to Jan 1st, 1970 to get smaller values for faster graph response */
 									cal.set(1970, 1, 1);
-									graph2LastXValue += 1d;
 									/** current time in milli seconds */
 									long timeInMillis = cal.getTimeInMillis();
 									timeStampsCont.add(timeInMillis);
@@ -1189,12 +1016,12 @@ public class spMonitor extends Activity implements View.OnClickListener {
 									}
 									if (calModeOn) {
 										consSeries.appendData(new DataPoint(timeInMillis,
-												resultPowerSec), true, plotValues);
-										consumPowerCont.add((float) resultPowerSec);
+												consPowerSec), true, plotValues);
+										consumPowerCont.add(consPowerSec);
 									} else {
 										consSeries.appendData(new DataPoint(timeInMillis,
-												resultPowerMin), true, plotValues);
-										consumPowerCont.add((float) resultPowerMin);
+												consPowerMin), true, plotValues);
+										consumPowerCont.add(consPowerMin);
 									}
 									if (calModeOn) {
 										lightSeries.appendData(new DataPoint(timeInMillis,
@@ -1209,32 +1036,12 @@ public class spMonitor extends Activity implements View.OnClickListener {
 											0), true, plotValues);
 
 									minMaxVal = Utilities.getMinMax();
-									//if (minMaxVal[0] - 10 <= 0) {
-									//	currentPlot.getViewport().setMinY(0f);
-									//} else {
-										currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-									//}
+									currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
 									currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
 									currentPlot.getSecondScale().setMinY(lightSeries.getLowestValueY());
 									currentPlot.getSecondScale().setMaxY(lightSeries.getHighestValueY());
 									currentPlot.getViewport().setMinX(solarSeries.getLowestValueX());
 									currentPlot.getViewport().setMaxX(solarSeries.getHighestValueX());
-
-									if (graph2LastXValue == 2) {
-										if (showCons) currentPlot.addSeries(consSeries);
-										// TODO for series using second scale -- cannot be removed
-										currentPlot.getSecondScale().addSeries(lightSeries);
-										if (!showLight) lightSeries.setColor(Color.TRANSPARENT);
-										if (showSolar) currentPlot.addSeries(solarSeries);
-										if (!calModeOn) {
-											stopTimer();
-											startTimer(60000, 60000);
-										} else {
-											stopTimer();
-											startTimer(5000, 5000);
-										}
-										currentPlot.addSeries(zeroSeries);
-									}
 
 									/** Text view to show min and max poser values */
 									TextView maxPowerText = (TextView) findViewById(R.id.tv_cons_max);
@@ -1264,147 +1071,57 @@ public class spMonitor extends Activity implements View.OnClickListener {
 
 	/**
 	 * Update UI with values received from spMonitor device (Linino part)
-	 *
-	 * @param value
-	 *                result sent by spMonitor
 	 */
-	private void displayLog(final String value) {
+	private void updateSynced(final String result) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (isGet) {
-					if (value.length() != 0) {
-						timeStamps.clear();
-						lightValue.clear();
-						solarPower.clear();
-						consumPower.clear();
-						/** String list with single lines from received log file */
-						String[] recordLines = value.split("\n");
-						if (recordLines.length != 0) {
-							/* Text view to show produced / consumed energy */
-							TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
-							energyText.setVisibility(View.VISIBLE);
-							energyText = (TextView) findViewById(R.id.tv_solar_energy);
-							energyText.setVisibility(View.VISIBLE);
-							solarEnergy = 0f;
-							consEnergy = 0f;
-							for (String recordLine : recordLines) {
-								/** String list with single values from a line from received log file */
-								String[] valuesPerLine = recordLine.split(",");
-								dayToShow = valuesPerLine[0] + "/" + valuesPerLine[1] + "/" + valuesPerLine[2];
-								/** String list with hour & minute values */
-								String[] hourSplit = valuesPerLine[3].split(":");
+				resultTextView.setText(result);
 
-								/** Gregorian calender to calculate the time stamp */
-								Calendar timeCal = new GregorianCalendar(
-										1970,
-										1,
-										1,
-										Integer.parseInt(hourSplit[0]),
-										Integer.parseInt(hourSplit[1]),
-										0);
-								timeStamps.add(timeCal.getTimeInMillis());
-								/** Light value from the log file */
-								long lightVal = Long.parseLong(valuesPerLine[4]);
-
-								lightValue.add(lightVal);
-								/** Float for the result of solar current used at 1min updates */
-								Float solarPowerVal = Float.parseFloat(valuesPerLine[5]);
-								/** Float for the result of consumption used at 1min updates */
-								Float consPowerVal = Float.parseFloat(valuesPerLine[6]);
-								try {
-									solarPower.add(solarPowerVal);
-								} catch (NumberFormatException ignore) {
-									solarPower.add(0f);
-								}
-								try {
-									consumPower.add(solarPowerVal + consPowerVal);
-								} catch (NumberFormatException ignore) {
-									consumPower.add(0f);
-								}
-
-								if (valuesPerLine.length > 7) {
-									try {
-										solarEnergy = Float.parseFloat(valuesPerLine[7]) / 1000;
-										consEnergy = Float.parseFloat(valuesPerLine[8]) / 1000;
-									} catch (NumberFormatException ignore) {
-									}
-								}
+				if (!showingLog) {
+					/** Today split into 3 integers for the database query */
+					int[] todayDate = Utilities.getCurrentDate();
+					/** Instance of DataBaseHelper */
+					DataBaseHelper dbHelper = new DataBaseHelper(appContext);
+					/** Instance of data base */
+					SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+					/** Cursor with new data from the database */
+					Cursor newDataSet = DataBaseHelper.getDay(dataBase, todayDate[2],
+							todayDate[1], todayDate[0] - 2000);
+					Utilities.fillSeries(newDataSet);
+					newDataSet.close();
+					logDates.clear();
+					/** List with years in the database */
+					ArrayList<Integer> yearsAvail = DataBaseHelper.getEntries(dataBase, "year", 0, 0);
+					for (int year = 0; year < yearsAvail.size(); year++) {
+						/** List with months of year in the database */
+						ArrayList<Integer> monthsAvail = DataBaseHelper.getEntries(dataBase, "month", 0, yearsAvail.get(year));
+						for (int month = 0; month < monthsAvail.size(); month++) {
+							/** List with days of month of year in the database */
+							ArrayList<Integer> daysAvail = DataBaseHelper.getEntries(dataBase, "day", monthsAvail.get(month), yearsAvail.get(year));
+							for (int day = 0; day < daysAvail.size(); day++) {
+								logDates.add(("00" + String.valueOf(yearsAvail.get(year)))
+										.substring(String.valueOf(yearsAvail.get(year)).length()) +
+										"-" + ("00" + String.valueOf(monthsAvail.get(month)))
+										.substring(String.valueOf(monthsAvail.get(month)).length()) +
+										"-" + ("00" + String.valueOf(daysAvail.get(day)))
+										.substring(String.valueOf(daysAvail.get(day)).length()));
 							}
-
-							energyText = (TextView) findViewById(R.id.tv_cons_energy);
-							energyText.setText("Consumed: " + String.format("%.3f", consEnergy) + "kWh");
-							energyText = (TextView) findViewById(R.id.tv_solar_energy);
-							energyText.setText("Produced: " + String.format("%.3f", solarEnergy) + "kWh");
-							/* Txt view to show max consumed / produced power */
-							TextView maxPowerText = (TextView) findViewById(R.id.tv_cons_max);
-							maxPowerText.setText("(" + String.format("%.0f", Collections.max(consumPower)) + "W)");
-							maxPowerText = (TextView) findViewById(R.id.tv_solar_max);
-							maxPowerText.setText("(" + String.format("%.0f", Collections.max(solarPower)) + "W)");
-
-							clearChart();
-							initChart(false);
-							Utilities.stopRefreshAnim();
 						}
 					}
-					isGet = false;
-				} else if (isFill) {
-					if (value.length() != 0) {
-						timeStampsCont.clear();
-						lightValueCont.clear();
-						solarPowerCont.clear();
-						consumPowerCont.clear();
-						/** String list with single lines from received log file */
-						String[] recordLines = value.split("\n");
-						if (recordLines.length != 0) {
-							for (String recordLine : recordLines) {
-								/** String list with single values from a line from received log file */
-								String[] valuesPerLine = recordLine.split(",");
-								dayToShow = valuesPerLine[0] + "/" + valuesPerLine[1] + "/" + valuesPerLine[2];
-								/** String list with hour & minute values */
-								String[] hourSplit = valuesPerLine[3].split(":");
-								/** Gregorian calender to calculate the time stamp */
-								Calendar timeCal = new GregorianCalendar(
-										1970,
-										1,
-										1,
-										Integer.parseInt(hourSplit[0]),
-										Integer.parseInt(hourSplit[1]),
-										0);
-								timeStampsCont.add(timeCal.getTimeInMillis());
-								/** Light value from the log file */
-								long lightVal = Long.parseLong(valuesPerLine[4]);
+					logDatesIndex = logDates.size() - 1;
 
-								lightValueCont.add(lightVal);
-								/** Produced solar power */
-								Float solarPowerVal = Float.parseFloat(valuesPerLine[5]);
-								/** Consumed power */
-								Float consPowerVal = Float.parseFloat(valuesPerLine[6]);
-								solarPowerCont.add(solarPowerVal);
-								consumPowerCont.add(solarPowerVal + consPowerVal);
-							}
+					dataBase.close();
+					dbHelper.close();
 
-							clearChart();
-							initChart(true);
-							Utilities.stopRefreshAnim();
+					if (timer == null) {
+						if (calModeOn) {
+							if (autoRefreshOn) startTimer(5000, 5000);
+						} else {
+							if (autoRefreshOn) startTimer(5000, 60000);
 						}
 					}
-					isFill = false;
-				} else {
-					resultTextView.setText(value);
-					Utilities.stopRefreshAnim();
 				}
-			}
-		});
-	}
-
-	/**
-	 * Update UI with values received from spMonitor device (Linino part)
-	 */
-	private void updateSynced() {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
 				initChart(true);
 				Utilities.stopRefreshAnim();
 			}
@@ -1455,7 +1172,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		/** String list with parts of the URL */
 		String[] ipValues = deviceIP.split("/");
 		url = "http://"+ipValues[2]+"/data/get";
-		thisCommand = "s";
 		new callArduino().execute(url);
 	}
 
@@ -1576,22 +1292,13 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			}
 
 			minMaxVal = Utilities.getMinMax();
-			//if (minMaxVal[0] - 10 <= 0) {
-			//	currentPlot.getViewport().setMinY(0f);
-			//} else {
-				currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-			//}
+			currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
 			currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
 			currentPlot.getSecondScale().setMinY(lightSeries.getLowestValueY());
 			currentPlot.getSecondScale().setMaxY(lightSeries.getHighestValueY());
 			currentPlot.getViewport().setMinX(solarSeries.getLowestValueX());
 			currentPlot.getViewport().setMaxX(solarSeries.getHighestValueX());
 			currentPlot.addSeries(consSeries);
-			// TODO Workaround for series using second scale -- cannot be removed
-			currentPlot.getSecondScale().addSeries(lightSeries);
-			if (!showLight) lightSeries.setColor(Color.TRANSPARENT);
-			currentPlot.addSeries(solarSeries);
-			currentPlot.addSeries(zeroSeries);
 		} else {
 			if (timeStampsCont.size() != 0) {
 				for (int i=0; i<solarPowerCont.size(); i++) {
@@ -1612,11 +1319,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				}
 
 				minMaxVal = Utilities.getMinMax();
-				//if (minMaxVal[0] - 10 <= 0) {
-				//	currentPlot.getViewport().setMinY(0f);
-				//} else {
-					currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-				//}
+				currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
 				currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
 
 				if (showCons) currentPlot.addSeries(consSeries);
@@ -1626,8 +1329,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 
 				if (showSolar) currentPlot.addSeries(solarSeries);
 				currentPlot.addSeries((zeroSeries));
-
-				graph2LastXValue = timeStampsCont.size();
 			} else {
 				currentPlot.getViewport().setMinY(0f);
 				currentPlot.getViewport().setMaxY(3000f);
@@ -1635,9 +1336,14 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			currentPlot.setTitle("");
 		}
 
+		// TODO Workaround for series using second scale -- cannot be removed
+		currentPlot.getSecondScale().addSeries(lightSeries);
+		if (!showLight) lightSeries.setColor(Color.TRANSPARENT);
+		currentPlot.addSeries(solarSeries);
+		currentPlot.addSeries(zeroSeries);
+
 		currentPlot.getViewport().setScalable(true);
 		currentPlot.getViewport().setScrollable(true);
-		//currentPlot.getViewport().setXAxisBoundsManual(true);
 		currentPlot.getViewport().setYAxisBoundsManual(true);
 		currentPlot.setTitle(dayToShow);
 
@@ -1710,7 +1416,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	 * Clean up chart for a new initialization
 	 */
 	private void clearChart() {
-		graph2LastXValue = 1d;
 		currentPlot.removeAllSeries();
 		currentPlot.onDataChanged(false, false);
 	}

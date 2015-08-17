@@ -5,16 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.SftpException;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 /** spMonitor - Main UI activity
  *
@@ -39,7 +30,8 @@ class DataBaseHelper extends SQLiteOpenHelper {
 
 		db.execSQL("CREATE TABLE " + TABLE_NAME + " (" +
 				"year INTEGER, month INTEGER, day INTEGER, hour INTEGER, minute INTEGER, " +
-				"solar DOUBLE, cons DOUBLE, light LONG);");
+				"solar DOUBLE, cons DOUBLE, light LONG, " +
+				"id INTEGER PRIMARY KEY AUTOINCREMENT);");
 	}
 
 	@Override
@@ -59,7 +51,7 @@ class DataBaseHelper extends SQLiteOpenHelper {
 	 *            format: yy,mm,dd,hh:mm,light,solar,consumption
 	 *            e.g.: "15,08,13,13:54,35000,613.456,-120.22"
 	 */
-	private static void addDay(SQLiteDatabase db, String recordLine) {
+	public static void addDay(SQLiteDatabase db, String recordLine) {
 
 		/* Parse the string into its single values */
 		String[] valuesPerLine = recordLine.split(",");
@@ -119,8 +111,9 @@ class DataBaseHelper extends SQLiteOpenHelper {
 	 * @param requestField
 	 *            requested row from db
 	 *            "year" returns all year values found
-	 *            "month" returns all month values found in year <code>requestLimiter</code>
-	 *            "day" returns all day values found in month <code>requestLimiter</code>
+	 *            "month" returns all month values found in year <code>requestLimiterYear</code>
+	 *            "day" returns all day values found in month <code>requestLimiterMonth</code>
+	 *                                              and year <code>requestLimiterYear</code>
 	 * @param requestLimiterMonth
 	 *            limiter for request
 	 *            unused if requestField is "year"
@@ -163,97 +156,23 @@ class DataBaseHelper extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * Deletes all entries where day is deleteDay in month deleteMonth from year deleteYear
+	 * Read data of day "dayNumber" and returns the data as a cursor
 	 *
 	 * @param db
 	 *            pointer to database
-	 * @param deleteDay
-	 *            day to be removed from database
-	 * @param deleteMonth
-	 *            month where day should be deleted
-	 * @param deleteYear
-	 *            year where day should be deleted
+	 * @return <code>Cursor</code> dayStamp
+	 *            Cursor with the data of the last row
+	 *            Entry is
+	 *            cursor[0] = year stamp
+	 *            cursor[1] = month stamp
+	 *            cursor[2] = day stamp
+	 *            cursor[3] = hour stamp
+	 *            cursor[4] = minute stamp
+	 *            cursor[5] = sensor power
+	 *            cursor[6] = consumed power
+	 *            cursor[7] = light value
 	 */
-	public static void deleteDay(SQLiteDatabase db, int deleteDay, int deleteMonth, int deleteYear) {
-		db.delete(TABLE_NAME, "day=" + deleteDay + " AND month=" + deleteMonth +
-				" AND year=" + deleteYear, null);
-	}
-
-	/**
-	 * Add records from file fileName into database
-	 *
-	 * @param db
-	 *            pointer to database
-	 * @param fileName
-	 *            pointer to database
-	 * @param sftp
-	 *            sftp channel used to read the file
-	 * @param updatePlot
-	 *            true -> use data to update plot series
-	 *            false -> update only data base
-	 */
-	public static void syncFileToDB(SQLiteDatabase db, String fileName, ChannelSftp sftp, boolean updatePlot ) {
-		/** Buffered reader to get file from spMonitor device */
-		BufferedReader buffInput;
-		try {
-			buffInput = new BufferedReader
-					(new InputStreamReader(sftp.get(fileName)));
-		} catch (SftpException e) {
-			return;
-		}
-		/* Buffer for a file */
-		String fileBuffer = "";
-		/* Buffer for a single line */
-		String line;
-		try {
-			while ((line = buffInput.readLine()) != null) {
-				fileBuffer += line;
-				fileBuffer += "\n";
-			}
-			buffInput.close();
-		} catch (IOException e) {
-			return;
-		}
-
-		if (updatePlot) {
-			spMonitor.timeStampsCont.clear();
-			spMonitor.lightValueCont.clear();
-			spMonitor.solarPowerCont.clear();
-			spMonitor.consumPowerCont.clear();
-		}
-
-		/** String list with single lines from received log file */
-		String[] recordLines = fileBuffer.split("\n");
-		if (recordLines.length != 0) {
-			for (String recordLine : recordLines) {
-				addDay(db, recordLine);
-				if (updatePlot) {
-					/** String list with single values from a line from received log file */
-					String[] valuesPerLine = recordLine.split(",");
-					spMonitor.dayToShow = valuesPerLine[0] + "/" + valuesPerLine[1] + "/" + valuesPerLine[2];
-					/** String list with hour & minute values */
-					String[] hourSplit = valuesPerLine[3].split(":");
-					/** Gregorian calender to calculate the time stamp */
-					Calendar timeCal = new GregorianCalendar(
-							1970,
-							1,
-							1,
-							Integer.parseInt(hourSplit[0]),
-							Integer.parseInt(hourSplit[1]),
-							0);
-					spMonitor.timeStampsCont.add(timeCal.getTimeInMillis());
-					/** Light value from the log file */
-					long lightVal = Long.parseLong(valuesPerLine[4]);
-
-					spMonitor.lightValueCont.add(lightVal);
-					/** Produced solar power */
-					Float solarPowerVal = Float.parseFloat(valuesPerLine[5]);
-					/** Consumed power */
-					Float consPowerVal = Float.parseFloat(valuesPerLine[6]);
-					spMonitor.solarPowerCont.add(solarPowerVal);
-					spMonitor.consumPowerCont.add(solarPowerVal + consPowerVal);
-				}
-			}
-		}
+	public static Cursor getLastRow(SQLiteDatabase db) {
+		return db.rawQuery("select * from " + TABLE_NAME + " order by id desc LIMIT 1", null);
 	}
 }
