@@ -42,7 +42,6 @@ void setup() {
   /* Initialize counters and accumulators */
   collPower[0] = collPower[1] = 0.0;
   collCount[0] = collCount[1] = collCount[2] = 0;
-  collEnergy[0] = collEnergy[1] = 0.0;
 
   /* Configure the YHDC SCT013-000 current sensors */
   /* Initialise the current sensor 1 */

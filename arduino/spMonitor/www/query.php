@@ -49,6 +49,7 @@ if (!empty($syncRest)) {
 	$lastID = $json[$lastIndex-1]['id'];
 
 	$query = "SELECT * FROM s where id>" . $lastID;
+
 	$sth = $dbh->query($query);
 
 	while($row = $sth->fetch(PDO::FETCH_ASSOC)) {

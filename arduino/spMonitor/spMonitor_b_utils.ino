@@ -48,8 +48,10 @@ String getTimeStamp() {
  * This function saves the average of 1 minute of measurements to the log file on the SDcard
  */
 void saveData () {
-  /** Sensor log to be written to SDcard */
+  /** Sensor log to be saved */
   String dataString;
+  /** Time stamp of sensor log */
+  String timeString;
 
   /** Light value collected since last saving */
   long light = 0;
@@ -61,47 +63,40 @@ void saveData () {
   /** Consumed power value collected since last saving */
   double cons = collPower[1] / collCount[1];
 
-  collEnergy[0] += solar / 60;
-  collEnergy[1] += cons / 60;
-
   Bridge.put ( "L", String ( light ) );
   Bridge.put ( "S", String ( solar ) );
   Bridge.put ( "C", String ( cons ) );
 
-  /* Write measurment to log file on SDcard */
-  dataString = getTimeStamp();
-  dataString += ",";
-  dataString += String ( light );
-  dataString += ",";
-  dataString += String ( solar );
-  dataString += ",";
-  dataString += String ( cons );
+//  /* Write measurment to log file on SDcard */
+//  dataString = getTimeStamp();
+//  dataString += ",";
+//  dataString += String ( light );
+//  dataString += ",";
+//  dataString += String ( solar );
+//  dataString += ",";
+//  dataString += String ( cons );
 
-  /** Instance to the log file on the SDcard */
-  String fileName = "/mnt/sda1/";
-  fileName += dataString.substring ( 0, 8 );
-  fileName.replace(',', '-');
-  fileName += ".txt";
+//  /** Instance to the log file on the SDcard */
+//  String fileName = "/mnt/sda1/";
+//  fileName += dataString.substring ( 0, 8 );
+//  fileName.replace(',', '-');
+//  fileName += ".txt";
 
-  /** Pointer to log file */
-  File dataFile = FileSystem.open ( fileName.c_str(), FILE_APPEND );
+//  /** Pointer to log file */
+//  File dataFile = FileSystem.open ( fileName.c_str(), FILE_APPEND );
 
-  if ( dataFile ) {
-    dataFile.println ( dataString );
-    dataFile.close();
-  }
-
-  if ( dataString.substring( 9).equalsIgnoreCase("23:59") ) {
-    collEnergy[0] = collEnergy[1] = 0.0;
-  }
+//  if ( dataFile ) {
+//    dataFile.println ( dataString );
+//    dataFile.close();
+//  }
 
   /* Write current data into sqlite database */
   /** Instance to Linino process */
   Process sqLite;
-  fileName = getTimeStamp();
-  fileName.replace(',', '-');
+  timeString = getTimeStamp();
+  timeString.replace(',', '-');
   dataString = "sqlite3 /mnt/sda1/s.db 'insert into s (d,s,c,l) Values (\""
-               + fileName + "\","
+               + timeString + "\","
                + String ( solar ) + ","
                + String ( cons ) + ","
                + String ( light ) + ");'";
@@ -111,15 +106,15 @@ void saveData () {
   wdt_reset();
   /* Send current data to emonCMS */
   /** Instance to Linino process */
-  //Process emonCMS;
-  //dataString = "curl \"http://emoncms.org/api/post?apikey=e778b92fc1f06d7e94a94bcc2a969664&json={s:";
-  //dataString += String ( solar );
-  //dataString += ",c:";
-  //dataString += String ( cons );
-  //dataString += ",l:";
-  //dataString += String ( light );
-  //dataString += "}\"";
-  //emonCMS.runShellCommand ( dataString );
+  Process emonCMS;
+  dataString = "curl \"http://emoncms.org/api/post?apikey=e778b92fc1f06d7e94a94bcc2a969664&json={s:";
+  dataString += String ( solar );
+  dataString += ",c:";
+  dataString += String ( cons );
+  dataString += ",l:";
+  dataString += String ( light );
+  dataString += "}\"";
+  emonCMS.runShellCommand ( dataString );
 
   collPower[0] = collPower[1] = 0.0;
   collCount[0] = collCount[1] = collCount[2] = 0;

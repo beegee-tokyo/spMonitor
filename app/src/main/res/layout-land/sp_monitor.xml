@@ -123,7 +123,9 @@
         android:layout_alignParentBottom="false"
         android:textColor="@android:color/white"
         android:layout_above="@+id/tv_light_value"
-        android:layout_alignLeft="@+id/tv_light_value"/>
+        android:layout_toRightOf="@+id/graph"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -132,13 +134,11 @@
         android:text="@string/tv_light_value_txt"
         android:id="@+id/tv_light_value"
         android:layout_alignParentBottom="false"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:textColor="@android:color/white"
         android:layout_above="@+id/sv_result"
-        />
+        android:layout_toRightOf="@+id/graph"/>
 
     <TextView
         android:layout_width="wrap_content"

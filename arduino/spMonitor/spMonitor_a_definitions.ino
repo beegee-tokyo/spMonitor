@@ -66,10 +66,6 @@ double collPower[2];
  [1] = mains CT sensor
  [2] = light sensor */
 int collCount[3];
-/** Collector for energy of 1 minute
- [0] = solar energy
- [1] = mains energy */
-double collEnergy[2];
 
 /** Listen to the default port 5555, the Yún webserver
    will forward there all the HTTP requests you send */

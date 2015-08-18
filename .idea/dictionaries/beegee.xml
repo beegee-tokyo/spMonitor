@@ -7,6 +7,9 @@
       <w>ehostunreach</w>
       <w>jsch</w>
       <w>linino</w>
+      <w>pwidget</w>
+      <w>spmonitor</w>
+      <w>spwidget</w>
     </words>
   </dictionary>
 </component>

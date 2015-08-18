@@ -37,4 +37,7 @@
     <string name="fast_mode_off">60s update activated</string>
     <string name="filesSynced">Sync successful</string>
     <string name="filesSyncFail">Sync failed</string>
+    <string name="widgetCommError1">Conn.</string>
+    <string name="widgetCommError2">failed</string>
+    <string name="widgetCommError3"> </string>
 </resources>

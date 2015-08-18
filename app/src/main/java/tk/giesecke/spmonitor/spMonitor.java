@@ -172,143 +172,18 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		resultTextView = (TextView) findViewById(R.id.tv_result);
 		deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
 
-		if (savedInstanceState == null) {
-			if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
-				Utilities.startRefreshAnim();
-				new syncDBtoDB().execute();
-
-				/** Pointer to text views showing the consumed / produced energy */
-				TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
-				energyText.setVisibility(View.INVISIBLE);
-				energyText = (TextView) findViewById(R.id.tv_solar_energy);
-				energyText.setVisibility(View.INVISIBLE);
-			}
+		if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
+			Utilities.startRefreshAnim();
+			new syncDBtoDB().execute();
 		} else {
-			showingLog = savedInstanceState.getBoolean("showingLog");
-			if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
-				Utilities.startRefreshAnim();
-				url = deviceIP;
-				new syncDBtoDB().execute();
-			}
-
-			/** List to get saved time stamp values from saved instance */
-			long[] timeStampsList = savedInstanceState.getLongArray("timeStampsCont");
-			/** List to get saved solar current values from saved instance */
-			float[] solarPowerList = savedInstanceState.getFloatArray("solarPowerCont");
-			/** List to get saved consumption current values from saved instance */
-			float[] consumPowerList = savedInstanceState.getFloatArray("consumPowerCont");
-			/** List to get saved light values from saved instance */
-			long[] lightValueList = savedInstanceState.getLongArray("lightValueCont");
-
-			timeStampsCont.clear();
-			solarPowerCont.clear();
-			consumPowerCont.clear();
-			lightValueCont.clear();
-			for (long aTimeStampsListCont : timeStampsList != null ? timeStampsList : new long[0]) {
-				timeStampsCont.add(aTimeStampsListCont);
-			}
-			for (float aSolarPowerListCont : solarPowerList != null ? solarPowerList : new float[0]) {
-				solarPowerCont.add(aSolarPowerListCont);
-			}
-			for (float aConsumPowerListCont : consumPowerList != null ? consumPowerList : new float[0]) {
-				consumPowerCont.add(aConsumPowerListCont);
-			}
-			for (long aLightValueListCont : lightValueList != null ? lightValueList : new long[0]) {
-				lightValueCont.add(aLightValueListCont);
-			}
-			if (showingLog) {
-				solarEnergy = 0f;
-				consEnergy = 0f;
-
-				/** List to get saved time stamp log values from saved instance */
-				timeStampsList = savedInstanceState.getLongArray("timeStamps");
-				/** List to get saved solar current log values from saved instance */
-				solarPowerList = savedInstanceState.getFloatArray("solarPower");
-				/** List to get saved consumption current log values from saved instance */
-				consumPowerList = savedInstanceState.getFloatArray("consumPower");
-				/** List to get saved light values from log saved instance */
-				lightValueList = savedInstanceState.getLongArray("lightValue");
-
-				timeStamps.clear();
-				solarPower.clear();
-				consumPower.clear();
-				lightValue.clear();
-				for (long aTimeStampsList : timeStampsList != null ? timeStampsList : new long[0]) {
-					timeStamps.add(aTimeStampsList);
-				}
-				for (float aSolarPowerList : solarPowerList != null ? solarPowerList : new float[0]) {
-					solarPower.add(aSolarPowerList);
-				}
-				for (float aConsumPowerList : consumPowerList != null ? consumPowerList : new float[0]) {
-					consumPower.add(aConsumPowerList);
-				}
-				for (long aLightValueList : lightValueList != null ? lightValueList : new long[0]) {
-					lightValue.add(aLightValueList);
-				}
-
-				for (int i=0; i<solarPower.size()-1; i++) {
-					/** Value of solar power to calculate produced energy */
-					float solarPowerVal = solarPower.get(i);
-					/** Value of consumed power to calculate consumed energy */
-					float consPowerVal = consumPower.get(i);
-					/** Double for the result of solar current and consumption used at 1min updates */
-					double resultPowerMin = solarPowerVal + consPowerVal;
-					solarEnergy += solarPowerVal * 1f / 60f /1000f;
-					consEnergy += resultPowerMin * 1f / 60f / 1000f;
-				}
-
-				/** Pointer to text views showing the consumed / produced energy */
-				TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
-				energyText.setVisibility(View.VISIBLE);
-				energyText.setText("Consumed: " + String.format("%.3f", consEnergy) + "kWh");
-				energyText = (TextView) findViewById(R.id.tv_solar_energy);
-				energyText.setVisibility(View.VISIBLE);
-				energyText.setText("Produced: " + String.format("%.3f", solarEnergy) + "kWh");
-
-				clearChart();
-				initChart(false);
-			} else {
-				/** Pointer to text views showing the consumed / produced energy */
-				TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
-				energyText.setVisibility(View.INVISIBLE);
-				energyText = (TextView) findViewById(R.id.tv_solar_energy);
-				energyText.setVisibility(View.INVISIBLE);
-				clearChart();
-				initChart(true);
-			}
-
-			showSolar = savedInstanceState.getBoolean("showSolar");
-			showCons = savedInstanceState.getBoolean("showCons");
-			showLight = savedInstanceState.getBoolean("showLight");
-			calModeOn = savedInstanceState.getBoolean("calModeOn");
-
-			/* Pointer to check box for showing/hiding solar, consumption and light graph */
-			CheckBox cbShowSeries = (CheckBox)findViewById(R.id.cb_solar);
-			if (showSolar) {
-				cbShowSeries.setChecked(true);
-			} else {
-				cbShowSeries.setChecked(false);
-			}
-			cbShowSeries = (CheckBox)findViewById(R.id.cb_cons);
-			if (showCons) {
-				cbShowSeries.setChecked(true);
-			} else {
-				cbShowSeries.setChecked(false);
-			}
-			cbShowSeries = (CheckBox)findViewById(R.id.cb_light);
-			if (showLight) {
-				cbShowSeries.setChecked(true);
-			} else {
-				cbShowSeries.setChecked(false);
-			}
-			if (calModeOn) {
-				stopTimer();
-				startTimer(1, 5000);
-			} else {
-				stopTimer();
-				startTimer(1, 60000);
-			}
+			resultTextView.setText(getString(R.string.err_no_device));
 		}
+
+		/** Pointer to text views showing the consumed / produced energy */
+		TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
+		energyText.setVisibility(View.INVISIBLE);
+		energyText = (TextView) findViewById(R.id.tv_solar_energy);
+		energyText.setVisibility(View.INVISIBLE);
 
 		/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
 		Button btStop = (Button) findViewById(R.id.bt_stop);
@@ -333,7 +208,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				stopButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
 				stopButton.setText(getResources().getString(R.string.stop));
 				autoRefreshOn = true;
-
 				return true;
 			}
 		});
@@ -360,62 +234,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	public void onPause() {
 		super.onPause();
 		stopTimer();
-	}
-
-	@Override
-	protected void onSaveInstanceState(@SuppressWarnings("NullableProblems") Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putBoolean("showingLog", showingLog);
-		/** temporary holder for time stamps */
-		long[] timeStampsList = new long[timeStamps.size()];
-		/** temporary holder for solar current */
-		float[] solarPowerList = new float[solarPower.size()];
-		/** temporary holder for consumption current */
-		float[] consumPowerList = new float[consumPower.size()];
-		/** temporary holder for light values */
-		long[] lightValueList = new long[lightValue.size()];
-		for (int i=0; i<timeStamps.size(); i++) {
-			timeStampsList[i] = timeStamps.get(i);
-		}
-		for (int i=0; i<solarPower.size(); i++) {
-			solarPowerList[i] = solarPower.get(i);
-		}
-		for (int i=0; i<consumPower.size(); i++) {
-			consumPowerList[i] = consumPower.get(i);
-		}
-		for (int i=0; i<lightValue.size(); i++) {
-			lightValueList[i] = lightValue.get(i);
-		}
-		savedInstanceState.putLongArray("timeStamps", timeStampsList);
-		savedInstanceState.putFloatArray("solarPower", solarPowerList);
-		savedInstanceState.putFloatArray("consumPower", consumPowerList);
-		savedInstanceState.putLongArray("lightValue", lightValueList);
-
-		timeStampsList = new long[timeStampsCont.size()];
-		solarPowerList = new float[timeStampsCont.size()];
-		consumPowerList = new float[timeStampsCont.size()];
-		lightValueList = new long[timeStampsCont.size()];
-		for (int i=0; i<timeStampsCont.size(); i++) {
-			timeStampsList[i] = timeStampsCont.get(i);
-		}
-		for (int i=0; i<solarPowerCont.size(); i++) {
-			solarPowerList[i] = solarPowerCont.get(i);
-		}
-		for (int i=0; i<consumPowerCont.size(); i++) {
-			consumPowerList[i] = consumPowerCont.get(i);
-		}
-		for (int i=0; i<lightValueCont.size(); i++) {
-			lightValueList[i] = lightValueCont.get(i);
-		}
-		savedInstanceState.putLongArray("timeStampsCont", timeStampsList);
-		savedInstanceState.putFloatArray("solarPowerCont", solarPowerList);
-		savedInstanceState.putFloatArray("consumPowerCont", consumPowerList);
-		savedInstanceState.putLongArray("lightValueCont", lightValueList);
-
-		savedInstanceState.putBoolean("showSolar", showSolar);
-		savedInstanceState.putBoolean("showCons", showCons);
-		savedInstanceState.putBoolean("showLight", showLight);
-		savedInstanceState.putBoolean("calModeOn", calModeOn);
 	}
 
 	@Override
