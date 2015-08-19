@@ -21,8 +21,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-/**
+/** spMonitor - SPwidget
+ *
  * Implementation of App Widget functionality.
+ *
+ * @author Bernd Giesecke
+ * @version 0.2 beta August 19, 2015.
  */
 public class SPwidget extends AppWidgetProvider {
 
@@ -78,6 +82,7 @@ public class SPwidget extends AppWidgetProvider {
 
 	@Override
 	public void onDisabled(Context context) {
+		/** Instance of the shared preferences */
 		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor",0);
 		mPrefs.edit().putInt("wNums",0).apply();
 		/** Intent to start scheduled update of the widgets */
@@ -116,6 +121,7 @@ public class SPwidget extends AppWidgetProvider {
 
 		/** Access to shared preferences of app widget */
 		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
+		/** URL of the spMonitor device */
 		String deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
 
 		// 1) Check if we have an IP address

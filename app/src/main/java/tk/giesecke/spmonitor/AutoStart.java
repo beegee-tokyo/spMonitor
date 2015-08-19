@@ -8,6 +8,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 
+/** spMonitor - AutoStart
+ *
+ * Start refresh timer for app widgets (if widgets are placed
+ *
+ * @author Bernd Giesecke
+ * @version 0.2 beta August 19, 2015.
+ */
 public class AutoStart extends BroadcastReceiver {
 
 	public AutoStart() {

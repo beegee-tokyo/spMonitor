@@ -113,13 +113,21 @@
 
     </ScrollView>
 
-        <com.jjoe64.graphview.GraphView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/graph"
-            android:layout_above="@+id/sv_result"
-            android:layout_below="@+id/bt_prevLog"
-            android:background="@android:color/transparent"/>
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/graph"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sv_result"
+        android:layout_below="@+id/bt_prevLog" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_result"
+        android:id="@+id/tv_plotTitle"
+        android:layout_alignTop="@+id/graph"
+        android:layout_marginTop="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"

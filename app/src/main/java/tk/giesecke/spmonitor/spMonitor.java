@@ -1,6 +1,5 @@
 package tk.giesecke.spmonitor;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,24 +10,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.Surface;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.jjoe64.graphview.DefaultLabelFormatter;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.DataPointInterface;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.OnDataPointTapListener;
-import com.jjoe64.graphview.series.Series;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -38,11 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -53,7 +44,7 @@ import java.util.concurrent.TimeUnit;
  * Shows life or logged data from the spMonitor
  *
  * @author Bernd Giesecke
- * @version 0.1 beta August 13, 2015.
+ * @version 0.2 beta August 19, 2015.
  */
 public class spMonitor extends Activity implements View.OnClickListener {
 
@@ -81,34 +72,43 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	private static TextView resultTextView;
 	/** Flag if UI auto refresh is on or off */
 	private boolean autoRefreshOn = true;
-	/** XYPlot view for the current chart */
-	private static GraphView currentPlot;
-	/** Data series for the solar current sensor */
-	public static LineGraphSeries<DataPoint> solarSeries = null;
-	/** Data series for the consumption current sensor */
-	public static LineGraphSeries<DataPoint> consSeries = null;
-	/** Data series for the light sensor */
-	private static LineGraphSeries<DataPoint> lightSeries = null;
-	/** Data series for the 0 liner */
-	private static LineGraphSeries<DataPoint> zeroSeries = null;
+
+	/** MPAndroid chart view for the current chart */
+	private static LineChart lineChart;
+	/** LineData for the plot */
+	private LineData plotData;
 	/** List to hold the timestamps for the chart from a log file */
-	public static final ArrayList<Long> timeStamps = new ArrayList<>();
+	private static final ArrayList<String> timeSeries = new ArrayList<>();
 	/** List to hold the measurements of the solar panel for the chart from a log file */
+	private static final ArrayList<Entry> solarSeries = new ArrayList<>();
+	/** List to hold the measurement of the consumption for the chart from a log file */
+	private static final ArrayList<Entry> consSeries = new ArrayList<>();
+	/** List to hold the measurement of the light for the chart from a log file */
+	private static final ArrayList<Entry> lightSeries = new ArrayList<>();
+	/** List for zero line in the chart */
+	private static final ArrayList<Entry> zeroSeries = new ArrayList<>();
+	/** List to hold the timestamps for a continuously updated chart */
+	public static final ArrayList<String> timeStamps = new ArrayList<>();
+	/** List to hold the measurements of the solar panel for a continuously updated chart */
 	public static final ArrayList<Float> solarPower = new ArrayList<>();
-	/** List to hold the measurement of the consumption for the chart from a log file */
+	/** List to hold the measurement of the consumption for a continuously updated chart */
 	public static final ArrayList<Float> consumPower = new ArrayList<>();
-	/** List to hold the measurement of the light for the chart from a log file */
+	/** List to hold the measurement of the light for a continuously updated chart */
 	public static final ArrayList<Long> lightValue = new ArrayList<>();
-	/** List to hold the timestamps for the chart from a log file */
-	public static final ArrayList<Long> timeStampsCont = new ArrayList<>();
-	/** List to hold the measurements of the solar panel for the chart from a log file */
+	/** List to hold the timestamps for a chart from logged data */
+	public static final ArrayList<String> timeStampsCont = new ArrayList<>();
+	/** List to hold the measurements of the solar panel for a chart from logged data */
 	public static final ArrayList<Float> solarPowerCont = new ArrayList<>();
-	/** List to hold the measurement of the consumption for the chart from a log file */
+	/** List to hold the measurement of the consumption for a chart from logged data */
 	public static final ArrayList<Float> consumPowerCont = new ArrayList<>();
-	/** List to hold the measurement of the light for the chart from a log file */
+	/** List to hold the measurement of the light for a chart from logged data */
 	public static final ArrayList<Long> lightValueCont = new ArrayList<>();
-	/** Number of plot y values */
-	private static final int plotValues = 720;
+	/** Line data set for solar data */
+	private LineDataSet solar;
+	/** Line data set for consumption data */
+	private LineDataSet cons;
+	/** Line data set for light data */
+	private LineDataSet light;
 
 	/** Array with existing log dates on the Arduino */
 	private static final List<String> logDates = new ArrayList<>();
@@ -143,15 +143,13 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	/** Light received from spMonitor device as 5 seconds average */
 	private long lightValSec = 0;
 	/** Flag for showing solar power data */
-	public static boolean showSolar = true;
+	private static boolean showSolar = true;
 	/** Flag for showing consumption data */
-	public static boolean showCons = true;
+	private static boolean showCons = true;
 	/** Flag for showing light data */
 	private static boolean showLight = false;
 	/** Flag for calibration mode. Update every 5 secs instead of 60 seconds */
 	private static boolean calModeOn = false;
-	/** List for min and max values to show on the scale */
-	private double[] minMaxVal;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -272,7 +270,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					Cursor newDataSet = DataBaseHelper.getDay(dataBase, Integer.parseInt(requestedDate[2]),
 							Integer.parseInt(requestedDate[1]), Integer.parseInt(requestedDate[0]));
 					Utilities.fillSeries(newDataSet);
-					clearChart();
 					initChart(false);
 					newDataSet.close();
 					dataBase.close();
@@ -310,7 +307,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					Cursor newDataSet = DataBaseHelper.getDay(dataBase, Integer.parseInt(requestedDate[2]),
 							Integer.parseInt(requestedDate[1]), Integer.parseInt(requestedDate[0]));
 					Utilities.fillSeries(newDataSet);
-					clearChart();
 					initChart(false);
 					newDataSet.close();
 					dataBase.close();
@@ -336,7 +332,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				} else {
 					if (showingLog) {
 						showingLog = false;
-						clearChart();
 						Utilities.startRefreshAnim();
 						new syncDBtoDB().execute();
 
@@ -381,56 +376,61 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				/** Checkbox to show or hide solar graph */
 				CheckBox cbSolar = (CheckBox)findViewById(R.id.cb_solar);
 				if (cbSolar.isChecked()) {
-					currentPlot.addSeries(solarSeries);
+					solar.setColor(0xFFFFBB33);
+					solar.setCircleColor(0xFFFFBB33);
+					solar.setHighLightColor(0xFFFFBB33);
+					solar.setFillColor(0xAAFFBB33);
 					showSolar = true;
 				} else {
-					currentPlot.removeSeries(solarSeries);
+					solar.setColor(Color.TRANSPARENT);
+					solar.setCircleColor(Color.TRANSPARENT);
+					solar.setHighLightColor(Color.TRANSPARENT);
+					solar.setFillColor(Color.TRANSPARENT);
 					showSolar = false;
 				}
-
-				minMaxVal = Utilities.getMinMax();
-				currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-				currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
-
-				currentPlot.onDataChanged(false, false);
+				// let the chart know it's data has changed
+				lineChart.notifyDataSetChanged();
+				lineChart.invalidate();
 				break;
 			case R.id.cb_cons:
 				/** Checkbox to show or hide consumption graph */
 				CheckBox cbCons = (CheckBox)findViewById(R.id.cb_cons);
 				if (cbCons.isChecked()) {
-					currentPlot.removeSeries(solarSeries); // Remove and add again to have it on top
-					currentPlot.addSeries(consSeries);
-					currentPlot.addSeries(solarSeries);
+					cons.setColor(0xFF33B5E5);
+					cons.setCircleColor(0xFF33B5E5);
+					cons.setHighLightColor(0xFF33B5E5);
+					cons.setFillColor(0xAA33B5E5);
 					showCons = true;
 				} else {
-					currentPlot.removeSeries(consSeries);
+					cons.setColor(Color.TRANSPARENT);
+					cons.setCircleColor(Color.TRANSPARENT);
+					cons.setHighLightColor(Color.TRANSPARENT);
+					cons.setFillColor(Color.TRANSPARENT);
 					showCons = false;
 				}
-
-				minMaxVal = Utilities.getMinMax();
-				currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-				currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
-
-				currentPlot.onDataChanged(false, false);
+				// let the chart know it's data has changed
+				lineChart.notifyDataSetChanged();
+				lineChart.invalidate();
 				break;
 			case R.id.cb_light:
 				/** Checkbox to show or hide light graph */
 				CheckBox cbLight = (CheckBox)findViewById(R.id.cb_light);
 				if (cbLight.isChecked()) {
-					currentPlot.getSecondScale().addSeries(lightSeries);
-					lightSeries.setColor(Color.GREEN);
+					light.setColor(Color.GREEN);
+					light.setCircleColor(Color.GREEN);
+					light.setHighLightColor(Color.GREEN);
+					light.setFillColor(Color.GREEN);
 					showLight = true;
 				} else {
-					currentPlot.removeSeries(lightSeries);
-					// TODO Workaround for series using second scale -- cannot be removed
-					lightSeries.setColor(Color.TRANSPARENT);
+					light.setColor(Color.TRANSPARENT);
+					light.setCircleColor(Color.TRANSPARENT);
+					light.setHighLightColor(Color.TRANSPARENT);
+					light.setFillColor(Color.TRANSPARENT);
 					showLight = false;
 				}
-
-				currentPlot.getSecondScale().setMinY(lightSeries.getLowestValueY());
-				currentPlot.getSecondScale().setMaxY(lightSeries.getHighestValueY());
-
-				currentPlot.onDataChanged(false, false);
+				// let the chart know it's data has changed
+				lineChart.notifyDataSetChanged();
+				lineChart.invalidate();
 				break;
 		}
 
@@ -514,8 +514,10 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		@Override
 		protected String doInBackground(String... params) {
 
+			/** String list with parts of the URL */
+			String[] ipValues = deviceIP.split("/");
 			/** URL to be called */
-			String urlString = "http://192.168.0.140/sd/spMonitor/query.php"; // URL to call
+			String urlString = "http://"+ipValues[2]+"/sd/spMonitor/query.php"; // URL to call
 
 			/** Response from the spMonitor device or error message */
 			String resultToDisplay = getResources().getString(R.string.filesSyncFail);
@@ -530,17 +532,9 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			if (dbCursor.getCount() != 0) { // local database not empty, need to sync only missing
 				dbCursor.moveToFirst();
 
-				int lastMinute =  dbCursor.getInt(4)+1;
+				int lastMinute =  dbCursor.getInt(4);
 				int lastHour = dbCursor.getInt(3);
 				int lastDay = dbCursor.getInt(2);
-				if (lastMinute == 60) {
-					lastMinute = 0;
-					lastHour += 1;
-					if (lastHour == 24) {
-						lastHour = 0;
-						lastDay += 1;
-					}
-				}
 
 				urlString += "?date=" + dbCursor.getString(0); // add year
 				urlString += "-" + ("00" +
@@ -604,7 +598,9 @@ public class spMonitor extends Activity implements View.OnClickListener {
 							/** Instance of data base */
 							dataBase = dbHelper.getWritableDatabase();
 
-							for (int i=0; i<jsonFromDevice.length(); i++) {
+							// Get received data into local database
+							// skip first data record from device, it is already in the database
+							for (int i=1; i<jsonFromDevice.length(); i++) {
 								/** JSONObject with a single record */
 								JSONObject jsonRecord = jsonFromDevice.getJSONObject(i);
 								String record = jsonRecord.getString("d");
@@ -640,7 +636,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	 * Update UI with values received from spMonitor device (Arduino part)
 	 *
 	 * @param value
-	 *                result sent by spMonitor
+	 *        result sent by spMonitor
 	 */
 	private void updateUI(final String value) {
 		runOnUiThread(new Runnable() {
@@ -816,56 +812,38 @@ public class spMonitor extends Activity implements View.OnClickListener {
 								}
 
 								if (autoRefreshOn) {
-									/** Gregorian calendar to calculate the time stamp */
-									Calendar cal = new GregorianCalendar();
-									/* Set date to Jan 1st, 1970 to get smaller values for faster graph response */
-									cal.set(1970, 1, 1);
-									/** current time in milli seconds */
-									long timeInMillis = cal.getTimeInMillis();
-									timeStampsCont.add(timeInMillis);
+									/** Current time as string */
+									String nowTime = Utilities.getCurrentTime();
+									plotData.addXValue(nowTime);
+									timeStampsCont.add(nowTime);
 									if (calModeOn) {
-										solarSeries.appendData(new DataPoint(timeInMillis,
-												solarPowerSec), true, plotValues);
+										solarSeries.add(new Entry(solarPowerSec, solarSeries.size()));
 										solarPowerCont.add(solarPowerSec);
-									} else {
-										solarSeries.appendData(new DataPoint(timeInMillis,
-												solarPowerMin), true, plotValues);
-										solarPowerCont.add(solarPowerMin);
-									}
-									if (calModeOn) {
-										consSeries.appendData(new DataPoint(timeInMillis,
-												consPowerSec), true, plotValues);
+										consSeries.add(new Entry(consPowerSec, consSeries.size()));
 										consumPowerCont.add(consPowerSec);
-									} else {
-										consSeries.appendData(new DataPoint(timeInMillis,
-												consPowerMin), true, plotValues);
-										consumPowerCont.add(consPowerMin);
-									}
-									if (calModeOn) {
-										lightSeries.appendData(new DataPoint(timeInMillis,
-												lightValSec), true, plotValues);
+										lightSeries.add(new Entry(lightValSec, lightSeries.size()));
 										lightValueCont.add(lightValSec);
 									} else {
-										lightSeries.appendData(new DataPoint(timeInMillis,
-												lightValMin), true, plotValues);
+										solarSeries.add(new Entry(solarPowerMin, solarSeries.size()));
+										solarPowerCont.add(solarPowerMin);
+										consSeries.add(new Entry(consPowerMin, consSeries.size()));
+										consumPowerCont.add(consPowerMin);
+										lightSeries.add(new Entry(lightValMin, lightSeries.size()));
 										lightValueCont.add(lightValMin);
 									}
-									zeroSeries.appendData(new DataPoint(timeInMillis,
-											0), true, plotValues);
-
-									minMaxVal = Utilities.getMinMax();
-									currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-									currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
-									currentPlot.getSecondScale().setMinY(lightSeries.getLowestValueY());
-									currentPlot.getSecondScale().setMaxY(lightSeries.getHighestValueY());
-									currentPlot.getViewport().setMinX(solarSeries.getLowestValueX());
-									currentPlot.getViewport().setMaxX(solarSeries.getHighestValueX());
+									zeroSeries.add(new Entry(0, zeroSeries.size()));
 
 									/** Text view to show min and max poser values */
 									TextView maxPowerText = (TextView) findViewById(R.id.tv_cons_max);
-									maxPowerText.setText("(" + String.format("%.0f", consSeries.getHighestValueY()) + "W)");
+									maxPowerText.setText("(" + String.format("%.0f",
+											Collections.max(consumPowerCont)) + "W)");
 									maxPowerText = (TextView) findViewById(R.id.tv_solar_max);
-									maxPowerText.setText("(" + String.format("%.0f", solarSeries.getHighestValueY()) + "W)");
+									maxPowerText.setText("(" + String.format("%.0f",
+											Collections.max(solarPowerCont)) + "W)");
+
+									// let the chart know it's data has changed
+									lineChart.notifyDataSetChanged();
+									lineChart.invalidate();
 								}
 
 								Utilities.stopRefreshAnim();
@@ -889,6 +867,9 @@ public class spMonitor extends Activity implements View.OnClickListener {
 
 	/**
 	 * Update UI with values received from spMonitor device (Linino part)
+	 *
+ 	 * @param result
+	 *        result sent by spMonitor
 	 */
 	private void updateSynced(final String result) {
 		runOnUiThread(new Runnable() {
@@ -939,8 +920,8 @@ public class spMonitor extends Activity implements View.OnClickListener {
 							if (autoRefreshOn) startTimer(5000, 60000);
 						}
 					}
+					initChart(true);
 				}
-				initChart(true);
 				Utilities.stopRefreshAnim();
 			}
 		});
@@ -1003,238 +984,221 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	 */
 	private void initChart(boolean isContinuous) {
 
-		// find the temperature levels plot in the layout
-		currentPlot = (GraphView) findViewById(R.id.graph);
-		// setup and format sensor 1 data series
-		solarSeries = new LineGraphSeries<>();
-		// setup and format sensor 2 data series
-		consSeries = new LineGraphSeries<>();
-		// setup and format sensor 3 data series
-		lightSeries = new LineGraphSeries<>();
-		// setup and format 0-line data series
-		zeroSeries = new LineGraphSeries<>();
+		// Pointer to the chart in the layout
+		lineChart = (LineChart) findViewById(R.id.graph);
 
-		currentPlot.getGridLabelRenderer().setNumVerticalLabels(10);
-
-		/** Instance of display */
-		Display display = ((WindowManager) appContext.getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-		/** Orientation of the display */
-		int orientation = display.getRotation();
-
-		if (Utilities.isTablet(appContext)) {
-			if (orientation == Surface.ROTATION_90
-					|| orientation == Surface.ROTATION_270) {
-				currentPlot.getGridLabelRenderer().setNumHorizontalLabels(5);
-			} else {
-				currentPlot.getGridLabelRenderer().setNumHorizontalLabels(10);
-			}
-		} else {
-			/** Display metrics */
-			DisplayMetrics metrics = new DisplayMetrics();
-			getWindowManager().getDefaultDisplay().getMetrics(metrics);
-			if (orientation == Surface.ROTATION_90
-					|| orientation == Surface.ROTATION_270) { // Landscape on phone
-				currentPlot.getGridLabelRenderer().setNumHorizontalLabels(5);
-				if (metrics.heightPixels < 481) { // On small screens we remove some check boxes
-					/** Checkbox to select if series is visible or not */
-					CheckBox showSeries = (CheckBox) findViewById(R.id.cb_cons);
-					showSeries.setVisibility(View.INVISIBLE);
-					showSeries = (CheckBox) findViewById(R.id.cb_solar);
-					showSeries.setVisibility(View.INVISIBLE);
-					showSeries = (CheckBox) findViewById(R.id.cb_light);
-					showSeries.setVisibility(View.INVISIBLE);
-				}
-			} else { // Portrait on phone
-				currentPlot.getGridLabelRenderer().setNumHorizontalLabels(3);
-				if (metrics.widthPixels < 481) { // On small screens we remove some check boxes
-					/** Checkbox to select if series is visible or not */
-					CheckBox showSeries = (CheckBox) findViewById(R.id.cb_cons);
-					showSeries.setVisibility(View.INVISIBLE);
-					showSeries = (CheckBox) findViewById(R.id.cb_solar);
-					showSeries.setVisibility(View.INVISIBLE);
-					showSeries = (CheckBox) findViewById(R.id.cb_light);
-					showSeries.setVisibility(View.INVISIBLE);
-				}
-			}
-		}
-
-		solarSeries.setColor(0xFFFFBB33);
-		consSeries.setColor(0xFF33B5E5);
-		lightSeries.setColor(Color.GREEN);
-		zeroSeries.setColor(Color.RED);
-		solarSeries.setBackgroundColor(0x55FFBB33);
-		consSeries.setBackgroundColor(0xFF33B5E5);
-		solarSeries.setDrawBackground(true);
-		consSeries.setDrawBackground(true);
-
-		currentPlot.getGridLabelRenderer().setVerticalAxisTitle("Watt");
-		currentPlot.getGridLabelRenderer().setVerticalAxisTitleColor(Color.WHITE);
-		currentPlot.getGridLabelRenderer().setGridColor(Color.WHITE);
-		currentPlot.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.BOTH);
-		currentPlot.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
-		currentPlot.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.WHITE);
-		currentPlot.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-
-		currentPlot.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-			@SuppressLint("SimpleDateFormat")
-			@Override
-			public String formatLabel(double value, boolean isValueX) {
-				/** Simple date format to format y scale of graph */
-				SimpleDateFormat dateFormat;
-				if (isValueX) {
-					if (showingLog || !calModeOn) {
-						dateFormat = new SimpleDateFormat("HH:mm");
-					} else {
-						dateFormat = new SimpleDateFormat("HH:mm:ss");
-					}
-					/** Date to be shown as y scale of graph */
-					Date d = new Date((long) (value));
-					return (dateFormat.format(d));
-				}
-				return "" + (int) value;
-			}
-		});
-
+		timeSeries.clear();
+		solarSeries.clear();
+		consSeries.clear();
+		lightSeries.clear();
+		zeroSeries.clear();
 		if (!isContinuous) {
+			for (int i=0; i<timeStamps.size(); i++) {
+				timeSeries.add(timeStamps.get(i));
+			}
 			for (int i=0; i<solarPower.size(); i++) {
-				solarSeries.appendData(new DataPoint(timeStamps.get(i), solarPower.get(i)), true, timeStamps.size());
+				solarSeries.add(new Entry(solarPower.get(i), i));
 			}
 			for (int i=0; i<consumPower.size(); i++) {
-				consSeries.appendData(new DataPoint(timeStamps.get(i), consumPower.get(i)), true, timeStamps.size());
+				consSeries.add(new Entry(consumPower.get(i), i));
 			}
 			for (int i= 0; i<lightValue.size(); i++) {
-				lightSeries.appendData(new DataPoint(timeStamps.get(i), lightValue.get(i)), true, timeStamps.size());
+				lightSeries.add(new Entry(lightValue.get(i), i));
 			}
-			for (int i= 0; i<lightValue.size(); i++) {
-				zeroSeries.appendData(new DataPoint(timeStamps.get(i), 0), true, timeStamps.size());
+			for (int i= 0; i<timeStamps.size(); i++) {
+				zeroSeries.add(new Entry(0, i));
 			}
-
-			minMaxVal = Utilities.getMinMax();
-			currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-			currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
-			currentPlot.getSecondScale().setMinY(lightSeries.getLowestValueY());
-			currentPlot.getSecondScale().setMaxY(lightSeries.getHighestValueY());
-			currentPlot.getViewport().setMinX(solarSeries.getLowestValueX());
-			currentPlot.getViewport().setMaxX(solarSeries.getHighestValueX());
-			currentPlot.addSeries(consSeries);
 		} else {
 			if (timeStampsCont.size() != 0) {
+				for (int i=0; i<timeStampsCont.size(); i++) {
+					timeSeries.add(timeStampsCont.get(i));
+				}
 				for (int i=0; i<solarPowerCont.size(); i++) {
-					solarSeries.appendData(new DataPoint(timeStampsCont.get(i),
-							solarPowerCont.get(i)), true, timeStampsCont.size());
+					solarSeries.add(new Entry(solarPowerCont.get(i), i));
 				}
 				for (int i=0; i<consumPowerCont.size(); i++) {
-					consSeries.appendData(new DataPoint(timeStampsCont.get(i),
-							consumPowerCont.get(i)), true, timeStampsCont.size());
+					consSeries.add(new Entry(consumPowerCont.get(i), i));
 				}
-				for (int i=0; i<lightValueCont.size(); i++) {
-					lightSeries.appendData(new DataPoint(timeStampsCont.get(i),
-							lightValueCont.get(i)), true, timeStampsCont.size());
+				for (int i= 0; i<lightValueCont.size(); i++) {
+					lightSeries.add(new Entry(lightValueCont.get(i), i));
 				}
-				for (int i=0; i<lightValueCont.size(); i++) {
-					zeroSeries.appendData(new DataPoint(timeStampsCont.get(i),
-							0), true, timeStampsCont.size());
+				for (int i= 0; i<timeStampsCont.size(); i++) {
+					zeroSeries.add(new Entry(0, i));
 				}
-
-				minMaxVal = Utilities.getMinMax();
-				currentPlot.getViewport().setMinY(minMaxVal[0] - 10f);
-				currentPlot.getViewport().setMaxY(minMaxVal[1] + 10f);
-
-				if (showCons) currentPlot.addSeries(consSeries);
-				// TODO Workaround for series using second scale -- cannot be removed
-				currentPlot.getSecondScale().addSeries(lightSeries);
-				if (!showLight) lightSeries.setColor(Color.TRANSPARENT);
-
-				if (showSolar) currentPlot.addSeries(solarSeries);
-				currentPlot.addSeries((zeroSeries));
-			} else {
-				currentPlot.getViewport().setMinY(0f);
-				currentPlot.getViewport().setMaxY(3000f);
 			}
-			currentPlot.setTitle("");
 		}
+		/** Line data set for solar data */
+		solar = new LineDataSet(solarSeries, "Solar");
+		/** Line data set for consumption data */
+		cons = new LineDataSet(consSeries, "Consumption");
+		/** Line data set for light data */
+		light = new LineDataSet(lightSeries, "Light");
+		/** Line data set for zero line */
+		LineDataSet zero = new LineDataSet(zeroSeries, "");
 
-		// TODO Workaround for series using second scale -- cannot be removed
-		currentPlot.getSecondScale().addSeries(lightSeries);
-		if (!showLight) lightSeries.setColor(Color.TRANSPARENT);
-		currentPlot.addSeries(solarSeries);
-		currentPlot.addSeries(zeroSeries);
+		solar.setLineWidth(1.75f);
+		solar.setCircleSize(0f);
+		if (showSolar) {
+			solar.setColor(0xFFFFBB33);
+			solar.setCircleColor(0xFFFFBB33);
+			solar.setHighLightColor(0xFFFFBB33);
+			solar.setFillColor(0xAAFFBB33);
+		} else {
+			solar.setColor(Color.TRANSPARENT);
+			solar.setCircleColor(Color.TRANSPARENT);
+			solar.setHighLightColor(Color.TRANSPARENT);
+			solar.setFillColor(Color.TRANSPARENT);
+		}
+		solar.setDrawValues(false);
+		solar.setDrawFilled(true);
 
-		currentPlot.getViewport().setScalable(true);
-		currentPlot.getViewport().setScrollable(true);
-		currentPlot.getViewport().setYAxisBoundsManual(true);
-		currentPlot.setTitle(dayToShow);
+		cons.setLineWidth(1.75f);
+		cons.setCircleSize(0f);
+		if (showCons) {
+			cons.setColor(0xFF33B5E5);
+			cons.setCircleColor(0xFF33B5E5);
+			cons.setHighLightColor(0xFF33B5E5);
+			cons.setFillColor(0xAA33B5E5);
+		} else {
+			cons.setColor(Color.TRANSPARENT);
+			cons.setCircleColor(Color.TRANSPARENT);
+			cons.setHighLightColor(Color.TRANSPARENT);
+			cons.setFillColor(Color.TRANSPARENT);
+		}
+		cons.setDrawValues(false);
+		cons.setDrawValues(false);
+		cons.setDrawFilled(true);
+		cons.setAxisDependency(YAxis.AxisDependency.LEFT);
 
-		solarSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
-			@SuppressLint("SimpleDateFormat")
-			@Override
-			public void onTap(Series series, DataPointInterface dataPoint) {
-				/** Simple date format to show time of tapped data point */
-				SimpleDateFormat dateFormat;
-				if (showingLog || !calModeOn) {
-					dateFormat = new SimpleDateFormat("HH:mm");
-				} else {
-					dateFormat = new SimpleDateFormat("HH:mm:ss");
-				}
-				/** Date of tapped data point */
-				Date d = new Date((long) (dataPoint.getX()));
-				/** Date of tapped data point as string*/
-				String dateTapped = dateFormat.format(d);
-				Toast.makeText(appContext, "Solar: " + String.format("%.0f", dataPoint.getY()) +
-						"W at " + dateTapped, Toast.LENGTH_SHORT).show();
-				/** Pointer to text view to show value */
-				TextView valueFields = (TextView) findViewById(R.id.tv_solar_val);
-				valueFields.setText(String.format("%.0f", dataPoint.getY()) + "W");
-				valueFields = (TextView) findViewById(R.id.tv_result);
-				valueFields.setText("Solar: " + String.format("%.0f", dataPoint.getY()) +
-						"W at " + dateTapped);
-			}
-		});
+		light.setLineWidth(1.75f);
+		light.setCircleSize(0f);
+		if (showLight) {
+			light.setColor(Color.GREEN);
+			light.setCircleColor(Color.GREEN);
+			light.setHighLightColor(Color.GREEN);
+		} else {
+			light.setColor(Color.TRANSPARENT);
+			light.setCircleColor(Color.TRANSPARENT);
+			light.setHighLightColor(Color.TRANSPARENT);
+		}
+		light.setDrawValues(false);
+		light.setAxisDependency(YAxis.AxisDependency.RIGHT);
 
-		consSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
-			@SuppressLint("SimpleDateFormat")
-			@Override
-			public void onTap(Series series, DataPointInterface dataPoint) {
-				/** Simple date format to show time of tapped data point */
-				SimpleDateFormat dateFormat;
-				if (showingLog || !calModeOn) {
-					dateFormat = new SimpleDateFormat("HH:mm");
-				} else {
-					dateFormat = new SimpleDateFormat("HH:mm:ss");
-				}
-				/** Date of tapped data point */
-				Date d = new Date((long) (dataPoint.getX()));
-				/** Date of tapped data point as string*/
-				String dateTapped = dateFormat.format(d);
-				Toast.makeText(appContext, "Consumption: " + String.format("%.0f", dataPoint.getY()) +
-						"W at " + dateTapped, Toast.LENGTH_LONG).show();
-				/** Pointer to text view to show value */
-				TextView valueFields = (TextView) findViewById(R.id.tv_cons_val);
-				valueFields.setText(String.format("%.0f", dataPoint.getY()) + "W");
-				valueFields = (TextView) findViewById(R.id.tv_result);
-				valueFields.setText("Consumption: " + String.format("%.0f", dataPoint.getY()) +
-						"W at " + dateTapped);
-			}
-		});
+		zero.setLineWidth(1.75f);
+		zero.setCircleSize(0f);
+		zero.setColor(Color.RED);
+		zero.setCircleColor(Color.RED);
+		zero.setHighLightColor(Color.RED);
+		zero.setDrawValues(false);
 
-		//lightSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
-		//	@Override
-		//	public void onTap(Series series, DataPointInterface dataPoint) {
-		//		Toast.makeText(appContext, "Sensor 3: " + String.format("%.0f", dataPoint.getY()) + "lux", Toast.LENGTH_LONG).show();
-		//		/** Pointer to text view to show value */
-		//		TextView valueFields = (TextView) findViewById(R.id.tv_light_value);
-		//		valueFields.setText(String.format("%.0f", dataPoint.getY()) + "lux");
-		//	}
-		//});
+		/** Data set with data for the 4 plots */
+		ArrayList<LineDataSet> dataSets = new ArrayList<>();
+		dataSets.add(zero);
+		dataSets.add(solar);
+		dataSets.add(cons);
+		dataSets.add(light);
 
-		currentPlot.onDataChanged(false, false);
+		/** Data object with the data set and the y values */
+		plotData = new LineData(timeSeries, dataSets);
+
+		lineChart.setBackgroundColor(Color.BLACK);
+		lineChart.setDrawGridBackground(false);
+		lineChart.setTouchEnabled(true);
+		lineChart.setDragEnabled(true);
+		lineChart.setAutoScaleMinMaxEnabled(true);
+		lineChart.setData(plotData);
+
+		TextView chartTitle = (TextView) findViewById(R.id.tv_plotTitle);
+		chartTitle.setText(dayToShow);
+
+		/** Instance of left y axis */
+		YAxis lYAx = lineChart.getAxisLeft();
+		lYAx.setEnabled(true);
+		lYAx.setTextColor(Color.WHITE);
+		lYAx.setStartAtZero(false);
+		lYAx.setSpaceTop(1);
+		lYAx.setSpaceBottom(1);
+
+		/** Instance of right y axis */
+		YAxis rYAx = lineChart.getAxisRight();
+		rYAx.setEnabled(true);
+		rYAx.setTextColor(Color.WHITE);
+		rYAx.setStartAtZero(false);
+		rYAx.setSpaceTop(1);
+		rYAx.setSpaceBottom(1);
+
+		/** Instance of x axis */
+		XAxis xAx = lineChart.getXAxis();
+		xAx.setEnabled(true);
+		xAx.setTextColor(Color.WHITE);
+		xAx.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+		lineChart.getLegend().setEnabled(false);
+
+		// create a custom MarkerView (extend MarkerView) and specify the layout
+		// to use for it
+		/** Instance of custom marker view handler */
+		CustomMarkerView mv = new CustomMarkerView(appContext);
+		lineChart.setMarkerView(mv);
+
+		// set the marker to the chart
+		lineChart.setMarkerView(mv);
+
+		// let the chart know it's data has changed
+		lineChart.notifyDataSetChanged();
+		lineChart.invalidate();
+
 	}
 
 	/**
-	 * Clean up chart for a new initialization
+	 * Show time, consumption and solar power when user touches a data point
+	 *
 	 */
-	private void clearChart() {
-		currentPlot.removeAllSeries();
-		currentPlot.onDataChanged(false, false);
+	public class CustomMarkerView extends MarkerView {
+
+		/** Pointer to text view for time */
+		private final TextView tvMarkerTime;
+		/** Pointer to text view for consumption */
+		private final TextView tvMarkerCons;
+		/** Pointer to text view for solar power */
+		private final TextView tvMarkerSolar;
+
+		public CustomMarkerView(Context context) {
+			super(context, R.layout.plot_marker);
+			/** Text view for time in marker */
+			tvMarkerTime = (TextView) findViewById(R.id.tv_marker_time);
+			/** Text view for consumption in marker */
+			tvMarkerCons = (TextView) findViewById(R.id.tv_marker_cons);
+			/** Text view for solar power in marker */
+			tvMarkerSolar = (TextView) findViewById(R.id.tv_marker_solar);
+		}
+
+		// callbacks every time the MarkerView is redrawn, can be used to update the
+		// content (user-interface)
+		@Override
+		public void refreshContent(Entry e, Highlight highlight) {
+			/** Index for the series at the touched data point */
+			int dataIndex = highlight.getXIndex();
+			/** Entry with data of solar power at given index */
+			Entry touchSolar = solarSeries.get(dataIndex);
+			/** Entry with data of consumption at given index */
+			Entry touchCons = consSeries.get(dataIndex);
+
+			tvMarkerTime.setText(timeSeries.get(dataIndex));
+			tvMarkerCons.setText((Float.toString(touchCons.getVal())+"W"));
+			tvMarkerSolar.setText((Float.toString(touchSolar.getVal())+"W"));
+		}
+
+		@Override
+		public int getXOffset() {
+			// this will center the marker-view horizontally
+			return -(getWidth() / 2);
+		}
+
+		@Override
+		public int getYOffset() {
+			// this will cause the marker-view to be above the selected value
+			return -getHeight();
+		}
 	}
 }

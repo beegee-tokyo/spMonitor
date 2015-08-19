@@ -7,12 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
-/** spMonitor - Main UI activity
+/** spMonitor - DataBaseHelper
  *
- * Shows life or logged data from the spMonitor
+ * Access to the spMonitor database
  *
  * @author Bernd Giesecke
- * @version 0.1 beta August 13, 2015.
+ * @version 0.2 beta August 19, 2015.
  */
 class DataBaseHelper extends SQLiteOpenHelper {
 

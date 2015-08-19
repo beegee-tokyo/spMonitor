@@ -10,11 +10,16 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-/**
+/** spMonitor - SPwidgetConfigureActivity
+ *
  * The configuration screen for the {@link SPwidget SPwidget} AppWidget.
+ *
+ * @author Bernd Giesecke
+ * @version 0.2 beta August 19, 2015.
  */
 public class SPwidgetConfigureActivity extends Activity {
 
+	/** Default app widget id */
 	private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
 	public SPwidgetConfigureActivity() {
@@ -29,12 +34,11 @@ public class SPwidgetConfigureActivity extends Activity {
 		// out of the widget placement if the user presses the back button.
 		setResult(RESULT_CANCELED);
 
-//		setContentView(R.layout.spwidget_configure);
-//		mAppWidgetText = (EditText) findViewById(R.id.appwidget_text);
-//		findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
 
 		// Find the widget id from the intent.
+		/** Intent to get bundled data */
 		Intent intent = getIntent();
+		/** Bundle with data */
 		Bundle extras = intent.getExtras();
 		if (extras != null) {
 			mAppWidgetId = extras.getInt(
@@ -47,17 +51,18 @@ public class SPwidgetConfigureActivity extends Activity {
 			return;
 		}
 
-//		mAppWidgetText.setText(loadTitlePref(SPwidgetConfigureActivity.this, mAppWidgetId));
-
 		// It is the responsibility of the configuration activity to update the app widget
+		/** App widget manager for this widget */
 		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 		SPwidget.updateAppWidget(this, appWidgetManager, mAppWidgetId);
 
 		// Make sure we pass back the original appWidgetId
+		/** Intent to report successful added widget */
 		Intent resultValue = new Intent();
 		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
 		setResult(RESULT_OK, resultValue);
 
+		/** Access to the shared preferences */
 		SharedPreferences mPrefs = getSharedPreferences("spMonitor",0);
 		if (mPrefs.getInt("wNums",0)== 0) {
 			mPrefs.edit().putInt("wNums",1).apply();

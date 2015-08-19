@@ -1,7 +1,7 @@
 package tk.giesecke.spmonitor;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
@@ -19,10 +19,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 /** spMonitor - Utilities
@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
  * Utilities used by SplashActivity and/or spMonitor
  *
  * @author Bernd Giesecke
- * @version 0.1 beta August 13, 2015.
+ * @version 0.2 beta August 19, 2015.
  */
 class Utilities {
 
@@ -50,7 +50,6 @@ class Utilities {
 		subnet += ".";
 		for(int i=0; i<255; i++){
 			try {
-				/** IP address under test */
 				/** IP address under test */
 				InetAddress inetAddress = InetAddress.getByName(subnet + String.valueOf(i));
 				if(inetAddress.isReachable(500)){
@@ -152,7 +151,7 @@ class Utilities {
 	 * Start animation of refresh icon in action bar
 	 */
 	public static void startRefreshAnim() {
-		/** Progressbar that will be shown instead of image button during refresh */
+		/** Progressbar that will be shown during refresh */
 		ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
 		refreshRot.setVisibility(View.VISIBLE);
 		spMonitor.isCommunicating = true;
@@ -162,53 +161,10 @@ class Utilities {
 	 * Stop animation of refresh icon in action bar
 	 */
 	public static void stopRefreshAnim() {
-		/** Progressbar that will be shown instead of image button during refresh */
+		/** Progressbar that will be shown during refresh */
 		ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
 		refreshRot.setVisibility(View.INVISIBLE);
 		spMonitor.isCommunicating = false;
-	}
-
-	/**
-	 * Check if the device is a tablet or a phone
-	 * by checking device configuration
-	 *
-	 * @param context
-	 *          Application context
-	 * @return <boolean>isTablet</boolean>
-	 *          True if device is a tablet
-	 *          False if device is a phone
-	 */
-	public static boolean isTablet(Context context) {
-		return (context.getResources().getConfiguration().screenLayout
-				& Configuration.SCREENLAYOUT_SIZE_MASK)
-				>= Configuration.SCREENLAYOUT_SIZE_LARGE;
-	}
-
-	/**
-	 * Get min and max value of 2 series, depending on which series are
-	 * visible
-	 *
-	 * @return <double[]>minMax</double[]>
-	 *              minMax[0] = min value or 0 if no series is shown
-	 *              minMax[1] = max value or 2000 if no series is shown
-	 */
-	public static double[] getMinMax() {
-		/** Holding the min and max values from comparison result */
-		double[] minMax = new double[2];
-		minMax[0] = 0;
-		minMax[1] = 2000;
-
-		if (spMonitor.showSolar && spMonitor.showCons) {
-			minMax[0] = Math.min(spMonitor.solarSeries.getLowestValueY(), spMonitor.consSeries.getLowestValueY());
-			minMax[1] = Math.max(spMonitor.solarSeries.getHighestValueY(), spMonitor.consSeries.getHighestValueY());
-		} else if (spMonitor.showSolar) {
-			minMax[0] = spMonitor.solarSeries.getLowestValueY();
-			minMax[1] = spMonitor.solarSeries.getHighestValueY();
-		} else {
-			minMax[0] = spMonitor.consSeries.getLowestValueY();
-			minMax[1] = spMonitor.consSeries.getHighestValueY();
-		}
-		return minMax;
 	}
 
 	/**
@@ -232,9 +188,13 @@ class Utilities {
 		spMonitor.solarEnergy = 0f;
 		spMonitor.consEnergy = 0f;
 
-		ArrayList<Long> tempTimeStamps;
+		/** Array list to hold time stamps */
+		ArrayList<String> tempTimeStamps;
+		/** Array list to hold solar power values */
 		ArrayList<Float> tempSolarStamps;
+		/** Array list to hold consumption values */
 		ArrayList<Float> tempConsStamps;
+		/** Array list to hold light values */
 		ArrayList<Long> tempLightStamps;
 		if (spMonitor.showingLog) {
 			tempTimeStamps = spMonitor.timeStamps;
@@ -252,23 +212,20 @@ class Utilities {
 		tempConsStamps.clear();
 		tempLightStamps.clear();
 		for (int cursorIndex=0; cursorIndex<data.getCount(); cursorIndex++) {
-			/** Gregorian calender to calculate the time stamp */
-			Calendar timeCal = new GregorianCalendar(
-					1970,
-					1,
-					1,
-					data.getInt(3),
-					data.getInt(4),
-					0);
-			tempTimeStamps.add(timeCal.getTimeInMillis());
+			tempTimeStamps.add(("00" +
+					data.getString(3)).substring(data.getString(3).length())
+					+ ":" + ("00" +
+					data.getString(4)).substring(data.getString(4).length()));
 			spMonitor.dayToShow = String.valueOf(data.getInt(0)) + "/" +
 					String.valueOf(data.getInt(1)) + "/" +
 					String.valueOf(data.getInt(2));
 			tempSolarStamps.add(data.getFloat(5));
 			tempConsStamps.add(data.getFloat(6));
-			tempLightStamps.add(data.getLong(7));
+			// TODO for debugging only insert fake light value
+			//tempLightStamps.add(data.getLong(7));
+			tempLightStamps.add(data.getLong(5)*70);
 			spMonitor.solarEnergy += data.getFloat(5)/60/1000;
-			spMonitor.consEnergy += data.getFloat(6)/60/1000;
+			spMonitor.consEnergy += Math.abs(data.getFloat(6)/60/1000);
 			data.moveToNext();
 		}
 
@@ -289,10 +246,10 @@ class Utilities {
 	}
 
 	/**
-	 * Get current date & time as string
+	 * Get current date as integer
 	 *
 	 * @return <code>int[]</code>
-	 *            Date and time as integer values
+	 *            Date as integer values
 	 *            int[0] = year
 	 *            int[1] = month
 	 *            int[2] = day
@@ -313,5 +270,19 @@ class Utilities {
 		currTime[2] = cal.get(Calendar.DATE);
 
 		return currTime;
+	}
+
+	/**
+	 * Get current time as string
+	 *
+	 * @return <code>String</code>
+	 *            Time as string HH:mm
+	 */
+	public static String getCurrentTime() {
+		/** Calendar to get current time and date */
+		Calendar cal = Calendar.getInstance();
+		/** Time format */
+		@SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+		return df.format(cal.getTime());
 	}
 }

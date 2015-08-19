@@ -23,9 +23,10 @@ import java.util.concurrent.TimeUnit;
 /** spMonitor - SplashActivity
  *
  * Shows splash screen when app is started
+ * Searches for IP address of the spMonitor device
  *
  * @author Bernd Giesecke
- * @version 0.1 beta August 13, 2015.
+ * @version 0.2 beta August 19, 2015.
  */
 public class SplashActivity extends Activity implements View.OnClickListener {
 

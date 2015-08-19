@@ -12,7 +12,7 @@ import android.content.SharedPreferences;
  * Get screen on/off broadcast messages to start/stop the update of the app widgets
  *
  * @author Bernd Giesecke
- * @version 1.3 June 25th, 2015
+ * @version 0.2 beta August 19, 2015.
  */
 public class ScreenReceiver extends BroadcastReceiver {
 

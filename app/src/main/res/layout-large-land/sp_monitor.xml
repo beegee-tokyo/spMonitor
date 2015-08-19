@@ -239,13 +239,22 @@
         android:layout_below="@+id/tv_result_txt"
         android:background="@android:color/transparent"/>
 
-    <com.jjoe64.graphview.GraphView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/graph"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/bt_prevLog"
-        android:layout_above="@+id/cb_solar"
-        android:background="@android:color/transparent"/>
+        android:layout_above="@+id/cb_solar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_result"
+        android:id="@+id/tv_plotTitle"
+        android:layout_alignTop="@+id/graph"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"/>
 
     <CheckBox
         android:layout_width="wrap_content"

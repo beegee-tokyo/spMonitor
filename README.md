@@ -29,9 +29,17 @@ Sensor shield --> schematic in subfolder hardware<br />
 #### Software:
 --> This repository<br />
 #### Required libraries:
-###### GraphView - open source graph plotting library for Android
--- Link: http://www.android-graphview.org/     <br />
--- License: GNU GENERAL PUBLIC LICENSE Version 2, June 1991<br />
+###### MPAndroidChart - open source graph plotting library for Android
+-- Link: https://github.com/PhilJay/MPAndroidChart/     <br />
+-- License: Apache License, Version 2.0<br />
+###### OkHttp - an HTTP & SPDY client for Android and Java applications
+-- Link: http://square.github.io/okhttp/<br />
+-- License: Apache License, Version 2.0<br />
+###### Okio - a modern I/O API for Java http://square.github.io/okio
+-- Link: https://github.com/square/okio/<br />
+-- License: Apache License, Version 2.0<br />
+###### Java documentation
+-- Link: http://desire.giesecke.tk/docs/spmonitor/<br />
 ### PC part:
 #### Work in progress
 --> PHP script in arduino/spMonitor/www<br />
