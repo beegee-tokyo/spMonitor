@@ -5,8 +5,8 @@
  * Optional additional measurement of luminosity.
  * Optional additional measurement of in/output to electricity grid
  *
- * @author Bernd Giesecke
- * @version 0.1 beta August 13, 2015.
+ *@author Bernd Giesecke
+ *@version 0.2 beta August 19, 2015.
  */
 
 /**
@@ -14,7 +14,7 @@
  *
  * thanks to https://www.arduino.cc/en/Tutorial/YunDatalogger
  *
- * @return *result
+ *@return *result
  *          Pointer to String with date and time
  *          format "yy,mm,dd,hh:mm"
  */

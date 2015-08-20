@@ -5,8 +5,8 @@
  * Optional additional measurement of luminosity.
  * Optional additional measurement of in/output to electricity grid
  *
- * @author Bernd Giesecke
- * @version 0.1 beta August 13, 2015.
+ *@author Bernd Giesecke
+ *@version 0.2 beta August 19, 2015.
  */
 
 /**************************************************************************/

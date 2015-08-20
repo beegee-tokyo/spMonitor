@@ -1,7 +1,10 @@
 package tk.giesecke.spmonitor;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,6 +36,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
@@ -209,6 +213,19 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				return true;
 			}
 		});
+
+		/** Calendar instance to setup daily sync */
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 5); // trigger at 5am
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		/** Pending intent for daily sync */
+		PendingIntent pi = PendingIntent.getService(this, 2702,
+				new Intent(this, SyncService.class),PendingIntent.FLAG_UPDATE_CURRENT);
+		/** Alarm manager for daily sync */
+		AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+				AlarmManager.INTERVAL_DAY, pi);
 
 	}
 
@@ -509,7 +526,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	 * Async task class to contact Linino part of the spMonitor device
 	 * and sync spMonitor database with local Android database
 	 */
-	private class syncDBtoDB extends AsyncTask<String, String, String> {
+	public class syncDBtoDB extends AsyncTask<String, String, String> {
 
 		@Override
 		protected String doInBackground(String... params) {
@@ -871,7 +888,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
  	 * @param result
 	 *        result sent by spMonitor
 	 */
-	private void updateSynced(final String result) {
+	public void updateSynced(final String result) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {

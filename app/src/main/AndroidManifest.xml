@@ -35,13 +35,11 @@
             android:enabled="true"
             android:exported="false" >
         </receiver>
-
         <receiver
             android:name=".ScreenReceiver"
             android:enabled="true"
             android:exported="false" >
         </receiver>
-
         <receiver android:name=".SPwidget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -61,6 +59,10 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".SyncService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>

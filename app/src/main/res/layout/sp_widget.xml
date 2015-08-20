@@ -12,13 +12,12 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/tv_sens_value_txt"
         android:id="@+id/tv_widgetRow1Value"
-        android:textColor="@android:color/holo_blue_dark"
-        android:background="@android:drawable/bottom_bar"
+        android:textColor="#ff0000ff"
         android:layout_marginBottom="5dp"
         android:textStyle="bold"
         android:gravity="center_horizontal"
-        android:textSize="36sp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/darker_gray"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,12 +26,11 @@
         android:text="@string/tv_sens_value_txt"
         android:id="@+id/tv_widgetRow2Value"
         android:textColor="@android:color/holo_red_light"
-        android:background="@android:drawable/bottom_bar"
         android:textStyle="bold"
         android:gravity="center_horizontal"
-        android:textSize="36sp"
         android:layout_below="@+id/tv_widgetRow1Value"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/darker_gray"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,12 +39,11 @@
         android:text="@string/tv_sens_value_txt"
         android:id="@+id/tv_widgetRow3Value"
         android:textColor="@android:color/holo_orange_light"
-        android:background="@android:drawable/bottom_bar"
         android:layout_marginTop="5dp"
         android:textStyle="bold"
         android:gravity="center_horizontal"
-        android:textSize="36sp"
         android:layout_below="@+id/tv_widgetRow2Value"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/darker_gray"/>
 
 </RelativeLayout>

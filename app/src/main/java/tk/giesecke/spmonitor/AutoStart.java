@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 
+import java.util.Calendar;
+
 /** spMonitor - AutoStart
  *
  * Start refresh timer for app widgets (if widgets are placed
@@ -48,6 +50,19 @@ public class AutoStart extends BroadcastReceiver {
 				ScreenReceiver.screenOnOffReceiver = new ScreenReceiver();
 				context.registerReceiver(ScreenReceiver.screenOnOffReceiver, filter);
 			}
+
+			/** Calendar instance to setup daily sync */
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.HOUR_OF_DAY, 5); // trigger at 1am
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			/** Pending intent for daily sync */
+			PendingIntent pi = PendingIntent.getService(context, 2702,
+					new Intent(context, SyncService.class),PendingIntent.FLAG_UPDATE_CURRENT);
+			/** Alarm manager for daily sync */
+			AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+			am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+					AlarmManager.INTERVAL_DAY, pi);
 		}
 	}
 }

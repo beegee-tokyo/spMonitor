@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="@drawable/round_corner_bg"
+                android:id="@+id/rlWidget1"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_sens_value_txt"
+        android:id="@+id/tv_widgetRow1Value"
+        android:textColor="#ff0000ff"
+        android:background="@android:drawable/bottom_bar"
+        android:layout_marginBottom="5dp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:textSize="36sp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_sens_value_txt"
+        android:id="@+id/tv_widgetRow2Value"
+        android:textColor="@android:color/holo_red_light"
+        android:background="@android:drawable/bottom_bar"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:textSize="36sp"
+        android:layout_below="@+id/tv_widgetRow1Value"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_sens_value_txt"
+        android:id="@+id/tv_widgetRow3Value"
+        android:textColor="@android:color/holo_orange_light"
+        android:background="@android:drawable/bottom_bar"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:textSize="36sp"
+        android:layout_below="@+id/tv_widgetRow2Value"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

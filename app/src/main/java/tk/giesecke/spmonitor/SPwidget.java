@@ -105,7 +105,14 @@ public class SPwidget extends AppWidgetProvider {
 		}
 
 		// Construct the RemoteViews object
-		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.sp_widget);
+		RemoteViews views;
+		/** Access to shared preferences of app widget */
+		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
+		if (mPrefs.getBoolean("wSizeLarge",true)) {
+			views = new RemoteViews(context.getPackageName(), R.layout.sp_widget_large);
+		} else {
+			views = new RemoteViews(context.getPackageName(), R.layout.sp_widget);
+		}
 
 		// Create an Intent to launch MainActivity
 		/** Intent to start app if widget is pushed */
@@ -119,8 +126,6 @@ public class SPwidget extends AppWidgetProvider {
 		//  Attach an on-click listener to the battery icon
 		views.setOnClickPendingIntent(R.id.rlWidget1, pendingIntent1);
 
-		/** Access to shared preferences of app widget */
-		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
 		/** URL of the spMonitor device */
 		String deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
 

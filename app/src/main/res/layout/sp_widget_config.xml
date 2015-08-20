@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/tv_widget_conf_txt"
+        android:id="@+id/tv_widget_conf"/>
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rg_size"
+                android:layout_below="@+id/tv_widget_conf">
+
+        <RadioButton
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rb_large_txt"
+            android:id="@+id/rb_large"
+            android:button="@null"
+            android:drawableRight="@android:drawable/btn_radio"
+            android:drawableEnd="@android:drawable/btn_radio"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:checked="true"/>
+
+        <RadioButton
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rb_small_txt"
+            android:id="@+id/rb_small"
+            android:button="@null"
+            android:drawableRight="@android:drawable/btn_radio"
+            android:drawableEnd="@android:drawable/btn_radio"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:checked="false"/>
+
+    </RadioGroup>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@android:string/cancel"
+        android:id="@+id/bt_cancel"
+        android:layout_below="@+id/rg_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_place_txt"
+        android:id="@+id/bt_ok"
+        android:layout_below="@+id/rg_size"
+        android:layout_toRightOf="@+id/bt_cancel"
+        android:layout_toEndOf="@+id/bt_cancel"/>
+
+</RelativeLayout>
