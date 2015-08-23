@@ -131,6 +131,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa06a9939f61f879385a87efdf4efa9af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91005ce5d8a4faaf0802f85e8f2cfc08"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a91005ce5d8a4faaf0802f85e8f2cfc08">onPause</a> ()</td></tr>
 <tr class="separator:a91005ce5d8a4faaf0802f85e8f2cfc08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a581e23431a9c962ca9c0c66e58e437b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a581e23431a9c962ca9c0c66e58e437b0">onDestroy</a> ()</td></tr>
+<tr class="separator:a581e23431a9c962ca9c0c66e58e437b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61103334e591eec8fae2e0e4aa098a13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a61103334e591eec8fae2e0e4aa098a13">onClick</a> (View v)</td></tr>
 <tr class="separator:a61103334e591eec8fae2e0e4aa098a13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89a009028a8003041ee3281f235219b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a89a009028a8003041ee3281f235219b6">updateSynced</a> (final String result)</td></tr>
@@ -345,7 +347,7 @@ Static Private Attributes</h2></td></tr>
 <p>Start async task to get last measurements from <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a>. </p>
 <p>String list with parts of the URL </p>
 
-<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00986">986</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l01004">1004</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
 
 </div>
 </div>
@@ -389,7 +391,7 @@ Static Private Attributes</h2></td></tr>
 <p>Instance of x axis</p>
 <p>Instance of custom marker view handler </p>
 
-<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l01002">1002</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l01020">1020</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
 
 </div>
 </div>
@@ -425,7 +427,7 @@ Static Private Attributes</h2></td></tr>
 <p>Checkbox to show or hide consumption graph</p>
 <p>Checkbox to show or hide light graph </p>
 
-<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00255">255</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00266">266</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
 
 </div>
 </div>
@@ -451,14 +453,33 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>ThreadPolicy to get permission to access internet</p>
+<p>Instance of <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html" title="spMonitor - DataBaseHelper ">DataBaseHelper</a></p>
+<p>Instance of data base</p>
 <p>Pointer to text views showing the consumed / produced energy</p>
 <p>Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate</p>
-<p>Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate</p>
+<p>Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate </p>
+
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00159">159</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a581e23431a9c962ca9c0c66e58e437b0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tk.giesecke.spmonitor.spMonitor.onDestroy </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 <p>Calendar instance to setup daily sync</p>
 <p>Pending intent for daily sync</p>
 <p>Alarm manager for daily sync </p>
 
-<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00159">159</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00249">249</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
 
 </div>
 </div>
@@ -475,7 +496,7 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00249">249</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00243">243</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
 
 </div>
 </div>
@@ -492,7 +513,7 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00233">233</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00227">227</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
 
 </div>
 </div>
@@ -538,7 +559,7 @@ Static Private Attributes</h2></td></tr>
 </dl>
 <p>Timer task for UI update </p>
 
-<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00955">955</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00973">973</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
 
 </div>
 </div>
@@ -565,7 +586,7 @@ Static Private Attributes</h2></td></tr>
 
 <p>Stop recurring timer if it is running. </p>
 
-<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00976">976</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00994">994</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
 
 </div>
 </div>
@@ -598,7 +619,7 @@ Static Private Attributes</h2></td></tr>
 <p>List with months of year in the database</p>
 <p>List with days of month of year in the database </p>
 
-<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00891">891</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00909">909</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
 
 </div>
 </div>
@@ -641,7 +662,7 @@ Static Private Attributes</h2></td></tr>
 <p>Current time as string</p>
 <p>Text view to show min and max poser values </p>
 
-<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00658">658</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor_8java_source.html#l00676">676</a> of file <a class="el" href="spMonitor_8java_source.html">spMonitor.java</a>.</p>
 
 </div>
 </div>
@@ -1805,7 +1826,7 @@ Static Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 20 2015 15:59:17 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Aug 23 2015 10:16:26 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

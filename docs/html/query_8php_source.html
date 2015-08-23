@@ -112,10 +112,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">// if get=all then get all newer rows as well</span></div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">// Example:</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">// date=13-08-16-20&amp;get=all returns the rows of 13-08-16 at 20 o&#39;clock and all rows after that</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">// date=13-08-16-20 returns only the rows of 13-08-16 at 20 but not of the next</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">// date=13-08-16-20 returns only the rows of 13-08-16 from 20:00 until 23:59 but not of the next day</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">// or</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">// date=13-08-16&amp;get=all returns the rows of 13-08-16 and all rows after that</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// date=13-08-16 returns only the rows of 13-08-16 but not of the next day</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// date=13-08-16 returns only the rows of 13-08-16 from 00:00 to 23:59 but not of the next day</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">//</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="query_8php.html#af14284195e63741d68c14fbd96ca54ba">   27</a></span>&#160;<a class="code" href="query_8php.html#af14284195e63741d68c14fbd96ca54ba">$dateSelect</a> = $_GET[&#39;date&#39;];</div>
 <div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="query_8php.html#a02c498b8897334e5b8021af54240e40f">   28</a></span>&#160;<a class="code" href="query_8php.html#a02c498b8897334e5b8021af54240e40f">$syncRest</a> = $_GET[&#39;get&#39;];</div>
@@ -169,7 +169,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 20 2015 15:59:17 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Aug 23 2015 10:16:26 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

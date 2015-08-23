@@ -174,6 +174,14 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		resultTextView = (TextView) findViewById(R.id.tv_result);
 		deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
 
+		// In case the database is not yet existing, open it once
+		/** Instance of DataBaseHelper */
+		DataBaseHelper dbHelper = new DataBaseHelper(appContext);
+		/** Instance of data base */
+		SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+		dataBase.close();
+		dbHelper.close();
+
 		if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
 			Utilities.startRefreshAnim();
 			new syncDBtoDB().execute();
@@ -213,20 +221,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				return true;
 			}
 		});
-
-		/** Calendar instance to setup daily sync */
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, 5); // trigger at 5am
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.SECOND, 0);
-		/** Pending intent for daily sync */
-		PendingIntent pi = PendingIntent.getService(this, 2702,
-				new Intent(this, SyncService.class),PendingIntent.FLAG_UPDATE_CURRENT);
-		/** Alarm manager for daily sync */
-		AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-				AlarmManager.INTERVAL_DAY, pi);
-
 	}
 
 	@Override
@@ -249,6 +243,23 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	public void onPause() {
 		super.onPause();
 		stopTimer();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		/** Calendar instance to setup daily sync */
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 5); // trigger at 5am
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		/** Pending intent for daily sync */
+		PendingIntent pi = PendingIntent.getService(this, 2702,
+				new Intent(this, SyncService.class),PendingIntent.FLAG_UPDATE_CURRENT);
+		/** Alarm manager for daily sync */
+		AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+				AlarmManager.INTERVAL_DAY, pi);
 	}
 
 	@Override
@@ -546,38 +557,45 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
 			/** Cursor with data from database */
 			Cursor dbCursor = DataBaseHelper.getLastRow(dataBase);
-			if (dbCursor.getCount() != 0) { // local database not empty, need to sync only missing
-				dbCursor.moveToFirst();
+			if (dbCursor != null) {
+				if (dbCursor.getCount() != 0) { // local database not empty, need to sync only missing
+					dbCursor.moveToFirst();
 
-				int lastMinute =  dbCursor.getInt(4);
-				int lastHour = dbCursor.getInt(3);
-				int lastDay = dbCursor.getInt(2);
+					int lastMinute =  dbCursor.getInt(4);
+					int lastHour = dbCursor.getInt(3);
+					int lastDay = dbCursor.getInt(2);
 
-				urlString += "?date=" + dbCursor.getString(0); // add year
-				urlString += "-" + ("00" +
-						dbCursor.getString(1)).substring(dbCursor.getString(1).length()); // add month
-				//urlString += "-" + dbCursor.getString(1); // add month
-				urlString += "-" + ("00" +
-						String.valueOf(lastDay))
-						.substring(String.valueOf(lastDay).length()); // add day
-				//urlString += "-" + dbCursor.getString(2); // add day
-				urlString += "-" + ("00" +
-						String.valueOf(lastHour))
-						.substring(String.valueOf(lastHour).length()); // add hour
-				//urlString += "-" + dbCursor.getString(3); // add hour
-				urlString += ":" + ("00" +
-						String.valueOf(lastMinute))
-						.substring(String.valueOf(lastMinute).length()); // add minute
-				//urlString += ":" + String.valueOf(lastMinute); // add minute
-				urlString += "&get=all";
-			} // else {} local database is empty, need to sync all data
-			dbCursor.close();
+					urlString += "?date=" + dbCursor.getString(0); // add year
+					urlString += "-" + ("00" +
+							dbCursor.getString(1)).substring(dbCursor.getString(1).length()); // add month
+					//urlString += "-" + dbCursor.getString(1); // add month
+					urlString += "-" + ("00" +
+							String.valueOf(lastDay))
+							.substring(String.valueOf(lastDay).length()); // add day
+					//urlString += "-" + dbCursor.getString(2); // add day
+					urlString += "-" + ("00" +
+							String.valueOf(lastHour))
+							.substring(String.valueOf(lastHour).length()); // add hour
+					//urlString += "-" + dbCursor.getString(3); // add hour
+					urlString += ":" + ("00" +
+							String.valueOf(lastMinute))
+							.substring(String.valueOf(lastMinute).length()); // add minute
+					//urlString += ":" + String.valueOf(lastMinute); // add minute
+					urlString += "&get=all";
+				} // else {} local database is empty, need to sync all data
+			}
+			if (dbCursor != null) {
+				dbCursor.close();
+			}
 			dataBase.close();
 			dbHelper.close();
 			// Make call only if valid url is given
 			if (urlString.startsWith("No")) {
 				resultToDisplay = getResources().getString(R.string.err_no_device);
 			} else {
+				// Set timeout to 5 minutes in case we have a lot of data to load
+				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
+				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
 				/** Request to spMonitor device */
 				Request request = new Request.Builder()
 						.url(urlString)

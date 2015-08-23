@@ -89,6 +89,11 @@ download the executable.-->
 			<CHARSET>0</CHARSET>
 			<FACENAME>Arial</FACENAME>
 		</FONT>
+		<STYLE id='0'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>1</THICKNESS>
+		</STYLE>
 		<STYLE id='3'>
 			<STYLE>0</STYLE>
 			<COLOR>000000</COLOR>
@@ -98,6 +103,11 @@ download the executable.-->
 			<STYLE>0</STYLE>
 			<COLOR>000000</COLOR>
 			<THICKNESS>2</THICKNESS>
+		</STYLE>
+		<STYLE id='8'>
+			<STYLE>0</STYLE>
+			<COLOR>000000</COLOR>
+			<THICKNESS>1</THICKNESS>
 		</STYLE>
 		<FILL id='0'>
 			<INDEX>-1</INDEX>
@@ -12822,6 +12832,130 @@ MM_\ G\7+MCG\41&gt;E]&#039;^67=_&lt;&lt;VT:H[_Y,O\ 1UQY?YV?G[#&gt;W_2IPB+CVC]]
 				<TEXT pos='96.00000,148.00000' direction='3' font='8' color='000000'>Antenna</TEXT>
 			</TinyCAD>
 		</SYMBOLDEF>
+		<SYMBOLDEF id='16'>
+			<NAME type='1'>RESISTOR</NAME>
+			<REF type='1'>R?</REF>
+			<DESCRIPTION>Resistor</DESCRIPTION>
+			<PPP>1</PPP>
+			<REF_POINT power='0' part='0' pos='23.00000,28.00000'/>
+			<REF_POINT power='1' part='0' pos='23.00000,28.00000'/>
+			<TinyCAD>
+				<RECTANGLE a='20.60000,26.00000' b='20.60000,26.00000' style='8' fill='0'/>
+				<RECTANGLE a='20.60000,26.00000' b='21.60000,22.00000' style='8' fill='0'/>
+				<PIN pos='21.00000,20.00000' which='0' elec='0' direction='1' part='0' number='1' show='0' length='10' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='21.00000,28.00000' which='0' elec='0' direction='0' part='0' number='2' show='0' length='10' number_pos='0' centre_name='0'></PIN>
+			</TinyCAD>
+		</SYMBOLDEF>
+		<SYMBOLDEF id='22'>
+			<NAME type='0'>LED</NAME>
+			<REF type='1'>D?</REF>
+			<DESCRIPTION>Light-Emitting Diode</DESCRIPTION>
+			<PPP>1</PPP>
+			<FIELD>
+				<NAME>Package</NAME>
+				<DEFAULT></DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Vf</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>If</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Brightness</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Color</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Manufacturer</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Manufacturer Part</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Digi-Key Part</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Newark Part</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Mouser Part</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<FIELD>
+				<NAME>Cost</NAME>
+				<DEFAULT>..</DEFAULT>
+				<FT>000001</FT>
+				<VALUE></VALUE>
+				<POS>0.00000,0.00000</POS>
+			</FIELD>
+			<REF_POINT power='0' part='0' pos='106.00000,124.00000'/>
+			<TinyCAD>
+				<RECTANGLE a='100.00000,120.00000' b='96.00000,120.30000' style='8' fill='1'/>
+				<POLYGON pos='96.00000,116.80000' style='8' fill='1'>
+					<POINT pos='2.05000,3.15000' arc='0'/>
+					<POINT pos='4.05000,0.15000' arc='0'/>
+					<POINT pos='0.05000,0.15000' arc='0'/>
+					<POINT pos='2.05000,3.15000' arc='0'/>
+				</POLYGON>
+				<PIN pos='98.00000,114.00000' which='0' elec='4' direction='1' part='0' number='1' show='1' length='15' number_pos='0' centre_name='0'></PIN>
+				<PIN pos='98.00000,123.00000' which='0' elec='4' direction='0' part='0' number='2' show='1' length='15' number_pos='0' centre_name='0'></PIN>
+				<POLYGON pos='102.80000,117.00000' style='8' fill='1'>
+					<POINT pos='1.51000,0.49000' arc='0'/>
+					<POINT pos='0.16000,0.04000' arc='0'/>
+					<POINT pos='0.16000,0.89000' arc='0'/>
+					<POINT pos='1.51000,0.49000' arc='0'/>
+				</POLYGON>
+				<WIRE style='0' a='103.31000,117.49000' b='102.06000,117.49000'/>
+				<POLYGON pos='103.00000,118.60000' style='8' fill='1'>
+					<POINT pos='1.35000,0.49000' arc='0'/>
+					<POINT pos='-0.00000,0.04000' arc='0'/>
+					<POINT pos='-0.00000,0.89000' arc='0'/>
+					<POINT pos='1.35000,0.49000' arc='0'/>
+				</POLYGON>
+				<WIRE style='0' a='103.35000,119.09000' b='102.10000,119.09000'/>
+				<ELLIPSE a='94.92000,115.48000' b='100.92000,121.48000' style='8' fill='0'/>
+			</TinyCAD>
+		</SYMBOLDEF>
 		<OPTIONS>
 			<GRID>0</GRID>
 			<UNITS>0</UNITS>
@@ -13046,5 +13180,34 @@ MM_\ G\7+MCG\41&gt;E]&#039;^67=_&lt;&lt;VT:H[_Y,O\ 1UQY?YV?G[#&gt;W_2IPB+CVC]]
 		<JUNCTION pos='82.00000,188.00000'/>
 		<JUNCTION pos='92.00000,196.00000'/>
 		<JUNCTION pos='92.00000,188.00000'/>
+		<SYMBOL id='22' pos='260.00000,112.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='D1' show='1' pos='-5.00000,-7.60000'/>
+			<FIELD type='0' description='Name' value=' LED white' show='1' pos='-5.00000,-10.00000'/>
+			<FIELD type='1' description='Package' value='' show='0' pos='1.00000,-3.20000'/>
+			<FIELD type='1' description='Vf' value='..' show='0' pos='1.00000,-0.80000'/>
+			<FIELD type='1' description='If' value='..' show='0' pos='1.00000,1.60000'/>
+			<FIELD type='1' description='Brightness' value='..' show='0' pos='1.00000,4.00000'/>
+			<FIELD type='1' description='Color' value='..' show='0' pos='1.00000,6.40000'/>
+			<FIELD type='1' description='Manufacturer' value='..' show='0' pos='1.00000,8.80000'/>
+			<FIELD type='1' description='Manufacturer Part' value='..' show='0' pos='1.00000,11.20000'/>
+			<FIELD type='1' description='Digi-Key Part' value='..' show='0' pos='1.00000,13.60000'/>
+			<FIELD type='1' description='Newark Part' value='..' show='0' pos='1.00000,16.00000'/>
+			<FIELD type='1' description='Mouser Part' value='..' show='0' pos='1.00000,18.40000'/>
+			<FIELD type='1' description='Cost' value='..' show='0' pos='1.00000,20.80000'/>
+		</SYMBOL>
+		<SYMBOL id='16' pos='254.00000,100.00000' part='0' rotate='0' can_scale='0' show_power='0' scale_x='1.00000' scale_y='1.00000'>
+			<FIELD type='1' description='Ref' value='R12' show='1' pos='1.00000,-4.00000'/>
+			<FIELD type='1' description='Name' value='RESISTOR' show='0' pos='0.00000,0.00000'/>
+			<FIELD type='3' description='Value' value='1k' show='1' pos='1.00000,-1.60000'/>
+		</SYMBOL>
+		<POWER pos='252.00000,114.00000' which='0' direction='1'>GND</POWER>
+		<LABEL pos='256.00000,86.00000' direction='2' font='3' color='208000' style='3'>LEDport</LABEL>
+		<WIRE a='256.00000,86.00000' b='252.00000,86.00000'/>
+		<WIRE a='252.00000,86.00000' b='252.00000,92.00000'/>
+		<WIRE a='252.00000,100.00000' b='252.00000,102.00000'/>
+		<WIRE a='252.00000,111.00000' b='252.00000,114.00000'/>
+		<TEXT pos='248.97400,80.31400' direction='3' font='5' color='000000'>Activity LED</TEXT>
+		<LABEL pos='226.00000,54.00000' direction='2' font='3' color='208000' style='3'>LEDport</LABEL>
+		<WIRE a='226.00000,54.00000' b='218.00000,54.00000'/>
 	</TinyCAD>
 </TinyCADSheets>

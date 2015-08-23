@@ -34,6 +34,9 @@
             android:name=".AutoStart"
             android:enabled="true"
             android:exported="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
         </receiver>
         <receiver
             android:name=".ScreenReceiver"
@@ -62,6 +65,11 @@
         <service
             android:name=".SyncService"
             android:exported="false" >
+        </service>
+        <service
+            android:name=".ScreenReceiverService"
+            android:enabled="true"
+            android:exported="true" >
         </service>
     </application>
 

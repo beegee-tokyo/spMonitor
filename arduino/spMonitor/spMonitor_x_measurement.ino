@@ -42,27 +42,3 @@ void getCTValues (int index) {
   Bridge.put ( prefix + "p", String ( emon[index].powerFactor ) );
 }
 
-/**
- * Called every minute by "eventTimer"
- * Reads values from analog input 0 (current produced by solar panel)
- * and analog input 3 (measured luminosity)
- */
-void getMeasures () {
-  /* Activity LED on */
-  digitalWrite ( activityLED, HIGH );
-
-  wdt_reset();
-  /* Get the light measurement if a sensor is attached */
-  readLux();
-
-  /* Get the measured current from the solar panel */
-  getCTValues(0);
-
-  /** Get the measured current from mains */
-  getCTValues(1);
-
-  /* Activity LED off */
-  digitalWrite ( activityLED, LOW );
-}
-
-

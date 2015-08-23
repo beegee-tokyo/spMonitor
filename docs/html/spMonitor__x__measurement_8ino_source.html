@@ -114,27 +114,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  Bridge.put ( prefix + <span class="stringliteral">&quot;p&quot;</span>, String ( <a class="code" href="spMonitor__a__definitions_8ino.html#acd926e685d8156fcab84c757e024cd88">emon</a>[index].powerFactor ) );</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="spMonitor__x__measurement_8ino.html#ad077d7c4de35c6b03bc380569aa597de">   50</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="spMonitor__x__measurement_8ino.html#ad077d7c4de35c6b03bc380569aa597de">getMeasures</a> () {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="comment">/* Activity LED on */</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  digitalWrite ( <a class="code" href="spMonitor__a__definitions_8ino.html#a9e8ee2405d47e654be2c22c5eba55737">activityLED</a>, HIGH );</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  wdt_reset();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="comment">/* Get the light measurement if a sensor is attached */</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <a class="code" href="spMonitor__c__lightsensor_8ino.html#a859aa0a0b759c18a64f0cb20469c190a">readLux</a>();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;  <span class="comment">/* Get the measured current from the solar panel */</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <a class="code" href="spMonitor__x__measurement_8ino.html#abd5299feec449fa74130a0305e217ae3">getCTValues</a>(0);</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <a class="code" href="spMonitor__x__measurement_8ino.html#abd5299feec449fa74130a0305e217ae3">getCTValues</a>(1);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="comment">/* Activity LED off */</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  digitalWrite ( <a class="code" href="spMonitor__a__definitions_8ino.html#a9e8ee2405d47e654be2c22c5eba55737">activityLED</a>, LOW );</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="ttc" id="spMonitor__a__definitions_8ino_html_a9e8ee2405d47e654be2c22c5eba55737"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#a9e8ee2405d47e654be2c22c5eba55737">activityLED</a></div><div class="ttdeci">#define activityLED</div><div class="ttdoc">Timer for reset. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00034">spMonitor_a_definitions.ino:34</a></div></div>
-<div class="ttc" id="spMonitor__x__measurement_8ino_html_ad077d7c4de35c6b03bc380569aa597de"><div class="ttname"><a href="spMonitor__x__measurement_8ino.html#ad077d7c4de35c6b03bc380569aa597de">getMeasures</a></div><div class="ttdeci">void getMeasures()</div><div class="ttdoc">Called every minute by "eventTimer" Reads values from analog input 0 (current produced by solar panel...</div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__x__measurement_8ino_source.html#l00050">spMonitor_x_measurement.ino:50</a></div></div>
-<div class="ttc" id="spMonitor__c__lightsensor_8ino_html_a859aa0a0b759c18a64f0cb20469c190a"><div class="ttname"><a href="spMonitor__c__lightsensor_8ino.html#a859aa0a0b759c18a64f0cb20469c190a">readLux</a></div><div class="ttdeci">void readLux()</div><div class="ttdoc">Get current light measurement. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__c__lightsensor_8ino_source.html#l00035">spMonitor_c_lightsensor.ino:35</a></div></div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_ad0850014a9730734d114cb72596951fa"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#ad0850014a9730734d114cb72596951fa">collCount</a></div><div class="ttdeci">int collCount[3]</div><div class="ttdoc">Counter for measurements per minute from sensors [0] = solar CT sensor [1] = mains CT sensor [2] = li...</div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00068">spMonitor_a_definitions.ino:68</a></div></div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_a733a463bdf63171cebe74e47802c7326"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#a733a463bdf63171cebe74e47802c7326">collPower</a></div><div class="ttdeci">double collPower[2]</div><div class="ttdoc">Collector for average power per minute CT sensors [0] = solar CT sensor [1] = mains CT sensor...</div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00063">spMonitor_a_definitions.ino:63</a></div></div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_acd926e685d8156fcab84c757e024cd88"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#acd926e685d8156fcab84c757e024cd88">emon</a></div><div class="ttdeci">EnergyMonitor emon[2]</div><div class="ttdoc">Create an instance to emon for CT sensors. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00047">spMonitor_a_definitions.ino:47</a></div></div>
@@ -142,7 +121,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 20 2015 15:59:17 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Aug 23 2015 10:16:26 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

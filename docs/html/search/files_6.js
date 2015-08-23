@@ -1,6 +1,7 @@
 var searchData=
 [
   ['screenreceiver_2ejava',['ScreenReceiver.java',['../ScreenReceiver_8java.html',1,'']]],
+  ['screenreceiverservice_2ejava',['ScreenReceiverService.java',['../ScreenReceiverService_8java.html',1,'']]],
   ['splashactivity_2ejava',['SplashActivity.java',['../SplashActivity_8java.html',1,'']]],
   ['spmonitor_2eino',['spMonitor.ino',['../spMonitor_8ino.html',1,'']]],
   ['spmonitor_2ejava',['spMonitor.java',['../spMonitor_8java.html',1,'']]],

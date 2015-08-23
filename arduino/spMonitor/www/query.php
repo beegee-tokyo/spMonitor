@@ -19,10 +19,10 @@ $dbh = new PDO($dir) or die("cannot open database");
 // if get=all then get all newer rows as well
 // Example:
 // date=13-08-16-20&get=all returns the rows of 13-08-16 at 20 o'clock and all rows after that
-// date=13-08-16-20 returns only the rows of 13-08-16 at 20 but not of the next
+// date=13-08-16-20 returns only the rows of 13-08-16 from 20:00 until 23:59 but not of the next day
 // or
 // date=13-08-16&get=all returns the rows of 13-08-16 and all rows after that
-// date=13-08-16 returns only the rows of 13-08-16 but not of the next day
+// date=13-08-16 returns only the rows of 13-08-16 from 00:00 to 23:59 but not of the next day
 //
 $dateSelect = $_GET['date'];
 $syncRest = $_GET['get'];

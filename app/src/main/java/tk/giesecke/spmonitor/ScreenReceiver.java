@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /**
  * ScreenReceiver
@@ -28,6 +29,7 @@ public class ScreenReceiver extends BroadcastReceiver {
 		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor",0);
 		if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
 			if (mPrefs.getInt("wNums", 0) != 0) {
+				if (BuildConfig.DEBUG) Log.d("spMonitor ScreenService", "Screen off");
 				/** Intent to start scheduled update of the widgets */
 				Intent stopIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
 				/** Pending intent for broadcast message to update widgets */
@@ -40,6 +42,7 @@ public class ScreenReceiver extends BroadcastReceiver {
 			}
 		} else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
 			if (mPrefs.getInt("wNums", 0) != 0) {
+				if (BuildConfig.DEBUG) Log.d("spMonitor ScreenService", "Screen on");
 				/** Update interval in ms */
 				int alarmTime = 60000;
 

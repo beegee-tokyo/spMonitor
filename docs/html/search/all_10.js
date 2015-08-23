@@ -6,6 +6,9 @@ var searchData=
   ['screenreceiver',['ScreenReceiver',['../classtk_1_1giesecke_1_1spmonitor_1_1ScreenReceiver.html',1,'tk::giesecke::spmonitor']]],
   ['screenreceiver',['ScreenReceiver',['../classtk_1_1giesecke_1_1spmonitor_1_1ScreenReceiver.html#a448f7182e364df701343b8d854697dc3',1,'tk::giesecke::spmonitor::ScreenReceiver']]],
   ['screenreceiver_2ejava',['ScreenReceiver.java',['../ScreenReceiver_8java.html',1,'']]],
+  ['screenreceiverservice',['ScreenReceiverService',['../classtk_1_1giesecke_1_1spmonitor_1_1ScreenReceiverService.html',1,'tk::giesecke::spmonitor']]],
+  ['screenreceiverservice',['ScreenReceiverService',['../classtk_1_1giesecke_1_1spmonitor_1_1ScreenReceiverService.html#a5a7aa5ae9b2dec9599c0d2e7e4285fcf',1,'tk::giesecke::spmonitor::ScreenReceiverService']]],
+  ['screenreceiverservice_2ejava',['ScreenReceiverService.java',['../ScreenReceiverService_8java.html',1,'']]],
   ['searchdeviceip',['searchDeviceIP',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a34783bb09ca638583533c1b3ce98dcd2',1,'tk::giesecke::spmonitor::Utilities']]],
   ['server',['server',['../spMonitor__a__definitions_8ino.html#a4e0c9ea4f8c666a7b51971ca06aae4e0',1,'spMonitor_a_definitions.ino']]],
   ['setup',['setup',['../spMonitor__y__setup_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'spMonitor_y_setup.ino']]],
@@ -34,8 +37,8 @@ var searchData=
   ['spmonitor_5fz_5floop_2eino',['spMonitor_z_loop.ino',['../spMonitor__z__loop_8ino.html',1,'']]],
   ['spwidget',['SPwidget',['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html',1,'tk::giesecke::spmonitor']]],
   ['spwidget_2ejava',['SPwidget.java',['../SPwidget_8java.html',1,'']]],
-  ['spwidgetconfigureactivity',['SPwidgetConfigureActivity',['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html',1,'tk::giesecke::spmonitor']]],
   ['spwidgetconfigureactivity',['SPwidgetConfigureActivity',['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a0b055c8ce083ca9ee351ea183bcf72a1',1,'tk::giesecke::spmonitor::SPwidgetConfigureActivity']]],
+  ['spwidgetconfigureactivity',['SPwidgetConfigureActivity',['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html',1,'tk::giesecke::spmonitor']]],
   ['spwidgetconfigureactivity_2ejava',['SPwidgetConfigureActivity.java',['../SPwidgetConfigureActivity_8java.html',1,'']]],
   ['startmain',['startMain',['../classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html#a09125acd48cdf0112425a7641418cf37',1,'tk::giesecke::spmonitor::SplashActivity']]],
   ['startrefreshanim',['startRefreshAnim',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#af48904135c97b62033a7d7d9a56b6281',1,'tk::giesecke::spmonitor::Utilities']]],
@@ -43,7 +46,7 @@ var searchData=
   ['stoprefreshanim',['stopRefreshAnim',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a34c34e08c073d2090e5bdfa7a793cb8c',1,'tk::giesecke::spmonitor::Utilities']]],
   ['stoptimer',['stopTimer',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ab325014df8b68b9551b0627d253c671d',1,'tk::giesecke::spmonitor::spMonitor']]],
   ['syncdbtodb',['syncDBtoDB',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1syncDBtoDB.html',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['syncservice',['SyncService',['../classtk_1_1giesecke_1_1spmonitor_1_1SyncService.html',1,'tk::giesecke::spmonitor']]],
   ['syncservice',['SyncService',['../classtk_1_1giesecke_1_1spmonitor_1_1SyncService.html#a60347191553958e0dfb0cb8d39b6ed11',1,'tk::giesecke::spmonitor::SyncService']]],
+  ['syncservice',['SyncService',['../classtk_1_1giesecke_1_1spmonitor_1_1SyncService.html',1,'tk::giesecke::spmonitor']]],
   ['syncservice_2ejava',['SyncService.java',['../SyncService_8java.html',1,'']]]
 ];

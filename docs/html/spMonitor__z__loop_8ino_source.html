@@ -97,74 +97,90 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <span class="keywordflow">if</span> ( now - <a class="code" href="spMonitor__a__definitions_8ino.html#a2ac22542c1cd2609dba924781699b8b4">lastMeasure</a> &gt;= <a class="code" href="spMonitor__a__definitions_8ino.html#a6bc99f9a2570b64e51802f06fa057292">measureFreq</a> ) { <span class="comment">/* initiate measurement every 1 seconds */</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="spMonitor__a__definitions_8ino.html#a2ac22542c1cd2609dba924781699b8b4">lastMeasure</a> = now;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    wdt_reset();</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="spMonitor__x__measurement_8ino.html#ad077d7c4de35c6b03bc380569aa597de">getMeasures</a>();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  }</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  <span class="keywordflow">if</span> ( now - <a class="code" href="spMonitor__a__definitions_8ino.html#a4b0d8d34df96d9eb9dbb61725b6e5ff7">lastSave</a> &gt;= 60000 ) { <span class="comment">/* Save data every minute */</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <a class="code" href="spMonitor__a__definitions_8ino.html#a4b0d8d34df96d9eb9dbb61725b6e5ff7">lastSave</a> = now;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    wdt_reset();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="spMonitor__b__utils_8ino.html#a5b86241374c9a379af845d4adaa170b5">saveData</a>();</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  }</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="comment">//if ( now - lastReset &gt;= 600000 ) { /* Reset every hour */</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="comment">/* Wait for watchdog reset */</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="comment">//  wdt_disable();</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="comment">//  wdt_enable(WDTO_15MS);</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="comment">//  delay (500);</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="comment">//}</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;  <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a> = <a class="code" href="spMonitor__a__definitions_8ino.html#a4e0c9ea4f8c666a7b51971ca06aae4e0">server</a>.accept();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="comment">/* There is a new client? */</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordflow">if</span> ( <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.available() ) {</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    wdt_reset();</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">char</span> command = <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.read();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">//if ( command == &#39;c&#39; ) { /* Set the CT calibration value e.g. c16.060606 =&gt; value 6.060606 for sensor 1 */</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="comment">//  command = client.read(); /* get the sensor number */</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"></span>    <span class="comment">//  double readCal = client.parseFloat();</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="comment">/* Activity LED on */</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    digitalWrite ( <a class="code" href="spMonitor__a__definitions_8ino.html#a9e8ee2405d47e654be2c22c5eba55737">activityLED</a>, HIGH );</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    wdt_reset();</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="comment">/* Get the light measurement if a sensor is attached */</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="spMonitor__c__lightsensor_8ino.html#a859aa0a0b759c18a64f0cb20469c190a">readLux</a>();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="comment">/* Get the measured current from the solar panel */</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="spMonitor__x__measurement_8ino.html#abd5299feec449fa74130a0305e217ae3">getCTValues</a>(0);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="spMonitor__x__measurement_8ino.html#abd5299feec449fa74130a0305e217ae3">getCTValues</a>(1);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="comment">/* Activity LED off */</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    digitalWrite ( <a class="code" href="spMonitor__a__definitions_8ino.html#a9e8ee2405d47e654be2c22c5eba55737">activityLED</a>, LOW );</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="keywordflow">if</span> ( now - <a class="code" href="spMonitor__a__definitions_8ino.html#a4b0d8d34df96d9eb9dbb61725b6e5ff7">lastSave</a> &gt;= 60000 ) { <span class="comment">/* Save data every minute */</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="spMonitor__a__definitions_8ino.html#a4b0d8d34df96d9eb9dbb61725b6e5ff7">lastSave</a> = now;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    wdt_reset();</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="spMonitor__b__utils_8ino.html#a5b86241374c9a379af845d4adaa170b5">saveData</a>();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="comment">//if ( now - lastReset &gt;= 600000 ) { /* Reset every hour */</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="comment">/* Wait for watchdog reset */</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="comment">//  wdt_disable();</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  <span class="comment">//  wdt_enable(WDTO_15MS);</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="comment">//  delay (500);</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="comment">//}</span></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">//  if ( command == &#39;1&#39; ) {</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="comment">//    iCal[0] = readCal;</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="comment">//    emon[0].current ( 0, iCal[0] );</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="comment">//  }</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="comment">//  if ( command == &#39;2&#39; ) {</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="comment">//    iCal[1] = readCal;</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="comment">//    emon[1].current ( 1, iCal[1] );</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="comment">//  }</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">//  client.println ( readCal, 6 );</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">//} else</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">if</span> ( command == <span class="charliteral">&#39;e&#39;</span> ) { <span class="comment">/* Get the actual settings */</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.print ( <span class="stringliteral">&quot;F &quot;</span> + String ( <a class="code" href="spMonitor__a__definitions_8ino.html#a6bc99f9a2570b64e51802f06fa057292">measureFreq</a> ) + <span class="stringliteral">&quot;s&quot;</span> );</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.println ( <span class="stringliteral">&quot; V &quot;</span> + String ( <a class="code" href="spMonitor__a__definitions_8ino.html#ae633c2b5abe166c2dbde22702a013c0f">vCal</a> ) );</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.print ( <span class="stringliteral">&quot;C1 &quot;</span> + String ( <a class="code" href="spMonitor__a__definitions_8ino.html#a12f25df644010f459781a7a52e4102e4">iCal1</a>, 1 ) );</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.println ( <span class="stringliteral">&quot; C2 &quot;</span> + String ( <a class="code" href="spMonitor__a__definitions_8ino.html#ae0d384ce0f576dea2aa02577b7e67258">iCal2</a>, 1 ) );</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">/* Close connection and free resources. */</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    wdt_reset();</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.flush();</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.stop();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  }</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a> = <a class="code" href="spMonitor__a__definitions_8ino.html#a4e0c9ea4f8c666a7b51971ca06aae4e0">server</a>.accept();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="comment">/* There is a new client? */</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keywordflow">if</span> ( <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.available() ) {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    wdt_reset();</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">char</span> command = <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.read();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">//if ( command == &#39;c&#39; ) { /* Set the CT calibration value e.g. c16.060606 =&gt; value 6.060606 for sensor 1 */</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">//  command = client.read(); /* get the sensor number */</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="comment"></span>    <span class="comment">//  double readCal = client.parseFloat();</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">//  if ( command == &#39;1&#39; ) {</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">//    iCal[0] = readCal;</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="comment">//    emon[0].current ( 0, iCal[0] );</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">//  }</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">//  if ( command == &#39;2&#39; ) {</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="comment">//    iCal[1] = readCal;</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">//    emon[1].current ( 1, iCal[1] );</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">//  }</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="comment">//  client.println ( readCal, 6 );</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="comment">//} else</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">if</span> ( command == <span class="charliteral">&#39;e&#39;</span> ) { <span class="comment">/* Get the actual settings */</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.print ( <span class="stringliteral">&quot;F &quot;</span> + String ( <a class="code" href="spMonitor__a__definitions_8ino.html#a6bc99f9a2570b64e51802f06fa057292">measureFreq</a> ) + <span class="stringliteral">&quot;s&quot;</span> );</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.println ( <span class="stringliteral">&quot; V &quot;</span> + String ( <a class="code" href="spMonitor__a__definitions_8ino.html#ae633c2b5abe166c2dbde22702a013c0f">vCal</a> ) );</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.print ( <span class="stringliteral">&quot;C1 &quot;</span> + String ( <a class="code" href="spMonitor__a__definitions_8ino.html#a12f25df644010f459781a7a52e4102e4">iCal1</a>, 1 ) );</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.println ( <span class="stringliteral">&quot; C2 &quot;</span> + String ( <a class="code" href="spMonitor__a__definitions_8ino.html#ae0d384ce0f576dea2aa02577b7e67258">iCal2</a>, 1 ) );</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="comment">/* Close connection and free resources. */</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    wdt_reset();</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.flush();</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a>.stop();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  }</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_a2ac22542c1cd2609dba924781699b8b4"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#a2ac22542c1cd2609dba924781699b8b4">lastMeasure</a></div><div class="ttdeci">unsigned long lastMeasure</div><div class="ttdoc">Solar Panel Monitor. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00027">spMonitor_a_definitions.ino:27</a></div></div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_a8c41dfd8517cd9f6fc24eb59f20f51d7"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a></div><div class="ttdeci">YunClient client</div><div class="ttdoc">Instance of client for incoming and outgoing HTTP requests. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00074">spMonitor_a_definitions.ino:74</a></div></div>
+<div class="ttc" id="spMonitor__a__definitions_8ino_html_a9e8ee2405d47e654be2c22c5eba55737"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#a9e8ee2405d47e654be2c22c5eba55737">activityLED</a></div><div class="ttdeci">#define activityLED</div><div class="ttdoc">Timer for reset. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00034">spMonitor_a_definitions.ino:34</a></div></div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_a4b0d8d34df96d9eb9dbb61725b6e5ff7"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#a4b0d8d34df96d9eb9dbb61725b6e5ff7">lastSave</a></div><div class="ttdeci">unsigned long lastSave</div><div class="ttdoc">Timer for saving. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00029">spMonitor_a_definitions.ino:29</a></div></div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_ae633c2b5abe166c2dbde22702a013c0f"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#ae633c2b5abe166c2dbde22702a013c0f">vCal</a></div><div class="ttdeci">#define vCal</div><div class="ttdoc">vCal definition for voltage measurement </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00058">spMonitor_a_definitions.ino:58</a></div></div>
-<div class="ttc" id="spMonitor__x__measurement_8ino_html_ad077d7c4de35c6b03bc380569aa597de"><div class="ttname"><a href="spMonitor__x__measurement_8ino.html#ad077d7c4de35c6b03bc380569aa597de">getMeasures</a></div><div class="ttdeci">void getMeasures()</div><div class="ttdoc">Called every minute by "eventTimer" Reads values from analog input 0 (current produced by solar panel...</div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__x__measurement_8ino_source.html#l00050">spMonitor_x_measurement.ino:50</a></div></div>
 <div class="ttc" id="spMonitor__b__utils_8ino_html_a5b86241374c9a379af845d4adaa170b5"><div class="ttname"><a href="spMonitor__b__utils_8ino.html#a5b86241374c9a379af845d4adaa170b5">saveData</a></div><div class="ttdeci">void saveData()</div><div class="ttdoc">This function saves the average of 1 minute of measurements to the log file on the SDcard...</div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__b__utils_8ino_source.html#l00050">spMonitor_b_utils.ino:50</a></div></div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_a12f25df644010f459781a7a52e4102e4"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#a12f25df644010f459781a7a52e4102e4">iCal1</a></div><div class="ttdeci">#define iCal1</div><div class="ttdoc">iCal definition for CT 1 (solar) </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00050">spMonitor_a_definitions.ino:50</a></div></div>
+<div class="ttc" id="spMonitor__c__lightsensor_8ino_html_a859aa0a0b759c18a64f0cb20469c190a"><div class="ttname"><a href="spMonitor__c__lightsensor_8ino.html#a859aa0a0b759c18a64f0cb20469c190a">readLux</a></div><div class="ttdeci">void readLux()</div><div class="ttdoc">Get current light measurement. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__c__lightsensor_8ino_source.html#l00035">spMonitor_c_lightsensor.ino:35</a></div></div>
 <div class="ttc" id="spMonitor__z__loop_8ino_html_afe461d27b9c48d5921c00d521181f12f"><div class="ttname"><a href="spMonitor__z__loop_8ino.html#afe461d27b9c48d5921c00d521181f12f">loop</a></div><div class="ttdeci">void loop()</div><div class="ttdoc">Solar Panel Monitor. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__z__loop_8ino_source.html#l00019">spMonitor_z_loop.ino:19</a></div></div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_ae0d384ce0f576dea2aa02577b7e67258"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#ae0d384ce0f576dea2aa02577b7e67258">iCal2</a></div><div class="ttdeci">#define iCal2</div><div class="ttdoc">iCal definition for CT 2 (mains) </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00052">spMonitor_a_definitions.ino:52</a></div></div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_a6bc99f9a2570b64e51802f06fa057292"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#a6bc99f9a2570b64e51802f06fa057292">measureFreq</a></div><div class="ttdeci">#define measureFreq</div><div class="ttdoc">Constant value for measurement frequency in ms. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00037">spMonitor_a_definitions.ino:37</a></div></div>
 <div class="ttc" id="spMonitor__a__definitions_8ino_html_a4e0c9ea4f8c666a7b51971ca06aae4e0"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#a4e0c9ea4f8c666a7b51971ca06aae4e0">server</a></div><div class="ttdeci">YunServer server</div><div class="ttdoc">Listen to the default port 5555, the Yún webserver will forward there all the HTTP requests you send...</div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00072">spMonitor_a_definitions.ino:72</a></div></div>
+<div class="ttc" id="spMonitor__x__measurement_8ino_html_abd5299feec449fa74130a0305e217ae3"><div class="ttname"><a href="spMonitor__x__measurement_8ino.html#abd5299feec449fa74130a0305e217ae3">getCTValues</a></div><div class="ttdeci">void getCTValues(int index)</div><div class="ttdoc">Solar Panel Monitor. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__x__measurement_8ino_source.html#l00020">spMonitor_x_measurement.ino:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Aug 20 2015 15:59:17 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Aug 23 2015 10:16:26 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

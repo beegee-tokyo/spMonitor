@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.StrictMode;
+import android.util.Log;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -35,6 +36,7 @@ public class SyncService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		if (BuildConfig.DEBUG) Log.d("spMonitor SyncService","started");
 		if (intent != null) {
 
 			if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -74,19 +76,15 @@ public class SyncService extends IntentService {
 				urlString += "?date=" + dbCursor.getString(0); // add year
 				urlString += "-" + ("00" +
 						dbCursor.getString(1)).substring(dbCursor.getString(1).length()); // add month
-				//urlString += "-" + dbCursor.getString(1); // add month
 				urlString += "-" + ("00" +
 						String.valueOf(lastDay))
 						.substring(String.valueOf(lastDay).length()); // add day
-				//urlString += "-" + dbCursor.getString(2); // add day
 				urlString += "-" + ("00" +
 						String.valueOf(lastHour))
 						.substring(String.valueOf(lastHour).length()); // add hour
-				//urlString += "-" + dbCursor.getString(3); // add hour
 				urlString += ":" + ("00" +
 						String.valueOf(lastMinute))
 						.substring(String.valueOf(lastMinute).length()); // add minute
-				//urlString += ":" + String.valueOf(lastMinute); // add minute
 				urlString += "&get=all";
 			} // else {} local database is empty, need to sync all data
 			dbCursor.close();

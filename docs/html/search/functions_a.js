@@ -3,6 +3,7 @@ var searchData=
   ['savedata',['saveData',['../spMonitor__b__utils_8ino.html#a5b86241374c9a379af845d4adaa170b5',1,'spMonitor_b_utils.ino']]],
   ['scansubnet',['scanSubNet',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a000d3935817b5ab0cb2dba6c57b62773',1,'tk::giesecke::spmonitor::Utilities']]],
   ['screenreceiver',['ScreenReceiver',['../classtk_1_1giesecke_1_1spmonitor_1_1ScreenReceiver.html#a448f7182e364df701343b8d854697dc3',1,'tk::giesecke::spmonitor::ScreenReceiver']]],
+  ['screenreceiverservice',['ScreenReceiverService',['../classtk_1_1giesecke_1_1spmonitor_1_1ScreenReceiverService.html#a5a7aa5ae9b2dec9599c0d2e7e4285fcf',1,'tk::giesecke::spmonitor::ScreenReceiverService']]],
   ['searchdeviceip',['searchDeviceIP',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a34783bb09ca638583533c1b3ce98dcd2',1,'tk::giesecke::spmonitor::Utilities']]],
   ['setup',['setup',['../spMonitor__y__setup_8ino.html#a4fc01d736fe50cf5b977f755b675f11d',1,'spMonitor_y_setup.ino']]],
   ['spwidgetconfigureactivity',['SPwidgetConfigureActivity',['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a0b055c8ce083ca9ee351ea183bcf72a1',1,'tk::giesecke::spmonitor::SPwidgetConfigureActivity']]],

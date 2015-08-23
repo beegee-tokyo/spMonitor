@@ -22,7 +22,22 @@ void loop() {
   if ( now - lastMeasure >= measureFreq ) { /* initiate measurement every 1 seconds */
     lastMeasure = now;
     wdt_reset();
-    getMeasures();
+
+    /* Activity LED on */
+    digitalWrite ( activityLED, HIGH );
+
+    wdt_reset();
+    /* Get the light measurement if a sensor is attached */
+    readLux();
+
+    /* Get the measured current from the solar panel */
+    getCTValues(0);
+
+    /** Get the measured current from mains */
+    getCTValues(1);
+
+    /* Activity LED off */
+    digitalWrite ( activityLED, LOW );
   }
 
   if ( now - lastSave >= 60000 ) { /* Save data every minute */
@@ -50,7 +65,7 @@ void loop() {
     /** Only for claibration needed */
     //if ( command == 'c' ) { /* Set the CT calibration value e.g. c16.060606 => value 6.060606 for sensor 1 */
     //  command = client.read(); /* get the sensor number */
-        /** Calibration factor that was sent */
+    /** Calibration factor that was sent */
     //  double readCal = client.parseFloat();
 
     //  if ( command == '1' ) {

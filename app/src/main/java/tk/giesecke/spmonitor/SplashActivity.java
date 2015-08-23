@@ -47,6 +47,7 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 		setContentView(R.layout.activity_splash);
 
 		spMonitor.appContext = this;
+
 		// Enable access to internet
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			/** ThreadPolicy to get permission to access internet */
@@ -79,6 +80,7 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 			if (spMonitor.deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
 				asTask = new findArduino().execute("find_new");
 			} else {
+				// String list with the IP address
 				String[] outValues = spMonitor.deviceIP.split("/");
 				asTask = new findArduino().execute("find_registered", outValues[2]);
 			}
@@ -90,7 +92,7 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 		switch (v.getId()) {
 			case R.id.bt_man_ip:
 				/** Progressbar shown during search */
-				ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
+				ProgressBar refreshRot = (ProgressBar) findViewById(R.id.pb_splash);
 				refreshRot.setVisibility(View.INVISIBLE);
 
 				/** Alert dialog builder to show dialog for manual IP address input */

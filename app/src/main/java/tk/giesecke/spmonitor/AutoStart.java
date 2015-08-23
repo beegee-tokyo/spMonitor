@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -26,8 +27,10 @@ public class AutoStart extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 			/** Access to shared preferences of app widget */
-			SharedPreferences wPrefs = context.getSharedPreferences("WidgetValues",0);
+			SharedPreferences wPrefs = context.getSharedPreferences("spMonitor",0);
+			if (BuildConfig.DEBUG) Log.d("spMonitor Autostart","Widget number = "+wPrefs.getInt("wNums",0));
 			if (wPrefs.getInt("wNums",0) != 0) {
+				if (BuildConfig.DEBUG) Log.d("spMonitor Autostart","activating widget timer");
 				/** Update interval in ms */
 				int alarmTime = 60000;
 
@@ -43,12 +46,8 @@ public class AutoStart extends BroadcastReceiver {
 						System.currentTimeMillis() + 10000,
 						alarmTime, pendingWidgetIntent);
 
-				/** IntentFilter to receive Screen on/off broadcast msgs */
-				IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-				filter.addAction(Intent.ACTION_SCREEN_OFF);
-				/** BroadcastReceiver to receive Screen on/off broadcast msgs */
-				ScreenReceiver.screenOnOffReceiver = new ScreenReceiver();
-				context.registerReceiver(ScreenReceiver.screenOnOffReceiver, filter);
+				// Start service to register ScreenReceiverService
+				context.startService(new Intent(context, ScreenReceiverService.class));
 			}
 
 			/** Calendar instance to setup daily sync */
