@@ -53,26 +53,26 @@ void readLux () {
 
       if ( lightInteg == 1 ) { /* we are at medium integration time, try a higher one */
         tsl.setIntegrationTime ( TSL2561_INTEGRATIONTIME_402MS ); /* 16-bit data but slowest conversions */
-        //				/* Test new integration time */
-        //				tsl.getEvent ( &event );
-        //
-        //				if ( event.light == 0 ) {
-        //					/* Satured, switch back to medium integration time */
-        //					tsl.setIntegrationTime ( TSL2561_INTEGRATIONTIME_101MS ); /* medium resolution and speed   */
-        //				} else {
-        lightInteg = 2;
-        //				}
+        				/* Test new integration time */
+        				tsl.getEvent ( &event );
+        
+        				if ( event.light == 0 ) {
+        					/* Satured, switch back to medium integration time */
+        					tsl.setIntegrationTime ( TSL2561_INTEGRATIONTIME_101MS ); /* medium resolution and speed   */
+        				} else {
+                            lightInteg = 2;
+        				}
       } else if ( lightInteg == 0 ) { /* we are at lowest integration time, try a higher one */
         tsl.setIntegrationTime ( TSL2561_INTEGRATIONTIME_101MS ); /* medium resolution and speed   */
-        //				/* Test new integration time */
-        //				tsl.getEvent ( &event );
-        //
-        //				if ( event.light == 0 ) {
-        //					/* Satured, switch back to low integration time */
-        //					tsl.setIntegrationTime ( TSL2561_INTEGRATIONTIME_13MS ); /* fast but low resolution */
-        //				} else {
-        lightInteg = 1;
-        //				}
+        				/* Test new integration time */
+        				tsl.getEvent ( &event );
+        
+        				if ( event.light == 0 ) {
+        					/* Satured, switch back to low integration time */
+        					tsl.setIntegrationTime ( TSL2561_INTEGRATIONTIME_13MS ); /* fast but low resolution */
+        				} else {
+                            lightInteg = 1;
+        				}
       }
     } else {
       /* If event.light = 0 lux the sensor is probably saturated

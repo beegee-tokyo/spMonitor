@@ -2,6 +2,9 @@ package tk.giesecke.spmonitor;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +12,14 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -26,6 +33,12 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -34,6 +47,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,6 +85,12 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	public static String deviceIP = "no IP saved";
 	/** A HTTP client to access the spMonitor device */
 	public static final OkHttpClient client = new OkHttpClient();
+	/** Flag for external network access */
+	private boolean isWAN = false;
+	/** Flag for external network access */
+	private boolean isWANonStart = false;
+	/** SSID of WiFi */
+	private String connSSID = null;
 
 	/** Pointer to text view for results */
 	private static TextView resultTextView;
@@ -86,17 +106,19 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	/** List to hold the measurements of the solar panel for the chart from a log file */
 	private static final ArrayList<Entry> solarSeries = new ArrayList<>();
 	/** List to hold the measurement of the consumption for the chart from a log file */
-	private static final ArrayList<Entry> consSeries = new ArrayList<>();
+	private static final ArrayList<Entry> consPSeries = new ArrayList<>();
+	/** List to hold the measurement of the consumption for the chart from a log file */
+	private static final ArrayList<Entry> consMSeries = new ArrayList<>();
 	/** List to hold the measurement of the light for the chart from a log file */
 	private static final ArrayList<Entry> lightSeries = new ArrayList<>();
-	/** List for zero line in the chart */
-	private static final ArrayList<Entry> zeroSeries = new ArrayList<>();
 	/** List to hold the timestamps for a continuously updated chart */
 	public static final ArrayList<String> timeStamps = new ArrayList<>();
 	/** List to hold the measurements of the solar panel for a continuously updated chart */
 	public static final ArrayList<Float> solarPower = new ArrayList<>();
 	/** List to hold the measurement of the consumption for a continuously updated chart */
-	public static final ArrayList<Float> consumPower = new ArrayList<>();
+	public static final ArrayList<Float> consumPPower = new ArrayList<>();
+	/** List to hold the measurement of the consumption for a continuously updated chart */
+	public static final ArrayList<Float> consumMPower = new ArrayList<>();
 	/** List to hold the measurement of the light for a continuously updated chart */
 	public static final ArrayList<Long> lightValue = new ArrayList<>();
 	/** List to hold the timestamps for a chart from logged data */
@@ -104,13 +126,17 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	/** List to hold the measurements of the solar panel for a chart from logged data */
 	public static final ArrayList<Float> solarPowerCont = new ArrayList<>();
 	/** List to hold the measurement of the consumption for a chart from logged data */
-	public static final ArrayList<Float> consumPowerCont = new ArrayList<>();
+	public static final ArrayList<Float> consumPPowerCont = new ArrayList<>();
+	/** List to hold the measurement of the consumption for a chart from logged data */
+	public static final ArrayList<Float> consumMPowerCont = new ArrayList<>();
 	/** List to hold the measurement of the light for a chart from logged data */
 	public static final ArrayList<Long> lightValueCont = new ArrayList<>();
 	/** Line data set for solar data */
 	private LineDataSet solar;
 	/** Line data set for consumption data */
-	private LineDataSet cons;
+	private LineDataSet consP;
+	/** Line data set for consumption data */
+	private LineDataSet consM;
 	/** Line data set for light data */
 	private LineDataSet light;
 
@@ -155,6 +181,9 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	/** Flag for calibration mode. Update every 5 secs instead of 60 seconds */
 	private static boolean calModeOn = false;
 
+	/** Instance of dialog */
+	private Dialog menuDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -173,6 +202,8 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		mPrefs = getSharedPreferences("spMonitor", 0);
 		resultTextView = (TextView) findViewById(R.id.tv_result);
 		deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
+		isWAN = mPrefs.getBoolean("access_type", false);
+		connSSID = mPrefs.getString("SSID", "");
 
 		// In case the database is not yet existing, open it once
 		/** Instance of DataBaseHelper */
@@ -182,11 +213,32 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		dataBase.close();
 		dbHelper.close();
 
-		if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
+		if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip)) && !isWAN) {
 			Utilities.startRefreshAnim();
 			new syncDBtoDB().execute();
 		} else {
-			resultTextView.setText(getString(R.string.err_no_device));
+			if (isWAN) {
+				resultTextView.setText(getString(R.string.on_WAN));
+				/** Buttons to be disabled when on mobile network */
+				Button uiButton = (Button) findViewById(R.id.bt_sync);
+				uiButton.setEnabled(false);
+				uiButton.setTextColor(getResources().getColor(android.R.color.darker_gray));
+				uiButton = (Button) findViewById(R.id.bt_status);
+				uiButton.setEnabled(false);
+				uiButton.setTextColor(getResources().getColor(android.R.color.darker_gray));
+
+				// Get an initial value
+				Utilities.startRefreshAnim();
+				/** String list with parts of the URL */
+				String[] ipValues = deviceIP.split("/");
+				url = "http://"+ipValues[2]+"/data/get";
+				isWANonStart = true;
+				// Queue up 2 readings from the spMonitor device to have some initial data
+				new callArduino().execute(url);
+				new callArduino().execute(url);
+			} else {
+				resultTextView.setText(getString(R.string.err_no_device));
+			}
 		}
 
 		/** Pointer to text views showing the consumed / produced energy */
@@ -203,21 +255,23 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		}
 		btStop.setOnLongClickListener(new View.OnLongClickListener() {
 			public boolean onLongClick(View v) {
-				calModeOn = !calModeOn;
-				if (calModeOn) {
-					resultTextView.setText(getString(R.string.fast_mode_on));
-					stopTimer();
-					startTimer(1, 5000);
-				} else {
-					resultTextView.setText(getString(R.string.fast_mode_off));
-					stopTimer();
-					startTimer(1, 60000);
+				if (!isWAN) {
+					calModeOn = !calModeOn;
+					if (calModeOn) {
+						resultTextView.setText(getString(R.string.fast_mode_on));
+						stopTimer();
+						startTimer(5000);
+					} else {
+						resultTextView.setText(getString(R.string.fast_mode_off));
+						stopTimer();
+						startTimer(60000);
+					}
+					/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
+					Button stopButton = (Button) findViewById(R.id.bt_stop);
+					stopButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+					stopButton.setText(getResources().getString(R.string.stop));
+					autoRefreshOn = true;
 				}
-				/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
-				Button stopButton = (Button) findViewById(R.id.bt_stop);
-				stopButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-				stopButton.setText(getResources().getString(R.string.stop));
-				autoRefreshOn = true;
 				return true;
 			}
 		});
@@ -226,16 +280,14 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
-			if (timer == null) {
-				if (calModeOn) {
-					if (autoRefreshOn) startTimer(1, 5000);
-				} else {
-					if (autoRefreshOn) startTimer(1, 60000);
-				}
+		if (timer == null) {
+			if (isWAN) { // When on mobile connection update only every 5 minutes
+				startTimer(300000);
+			} else if (calModeOn) { // When in calibration mode, update every 5 seconds
+				startTimer(5000);
+			} else { // Normal WiFi mode, update every 1 minute
+				startTimer(60000);
 			}
-		} else {
-			resultTextView.setText(getResources().getString(R.string.err_no_device));
 		}
 	}
 
@@ -360,8 +412,10 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				} else {
 					if (showingLog) {
 						showingLog = false;
-						Utilities.startRefreshAnim();
-						new syncDBtoDB().execute();
+						if (!isWAN) {
+							Utilities.startRefreshAnim();
+							new syncDBtoDB().execute();
+						}
 
 						/** Pointer to text views showing the consumed / produced energy */
 						TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
@@ -372,10 +426,12 @@ public class spMonitor extends Activity implements View.OnClickListener {
 						logDatesIndex = logDates.size()-1;
 						nextButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
 					} else {
-						if (calModeOn) {
-							startTimer(1, 5000);
-						} else {
-							startTimer(1, 60000);
+						if (isWAN) { // When on mobile connection update only every 5 minutes
+							startTimer(300000);
+						} else if (calModeOn) { // When in calibration mode, update every 5 seconds
+							startTimer(5000);
+						} else { // Normal WiFi mode, update every 1 minute
+							startTimer(60000);
 						}
 					}
 					/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
@@ -395,7 +451,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				finish();
 				break;
 			case R.id.bt_sync:
-				if (!showingLog) {
+				if (!showingLog && !isWAN) {
 					Utilities.startRefreshAnim();
 					new syncDBtoDB().execute();
 				}
@@ -404,16 +460,10 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				/** Checkbox to show or hide solar graph */
 				CheckBox cbSolar = (CheckBox)findViewById(R.id.cb_solar);
 				if (cbSolar.isChecked()) {
-					solar.setColor(0xFFFFBB33);
-					solar.setCircleColor(0xFFFFBB33);
-					solar.setHighLightColor(0xFFFFBB33);
-					solar.setFillColor(0xAAFFBB33);
+					solar.setVisible(true);
 					showSolar = true;
 				} else {
-					solar.setColor(Color.TRANSPARENT);
-					solar.setCircleColor(Color.TRANSPARENT);
-					solar.setHighLightColor(Color.TRANSPARENT);
-					solar.setFillColor(Color.TRANSPARENT);
+					solar.setVisible(false);
 					showSolar = false;
 				}
 				// let the chart know it's data has changed
@@ -424,16 +474,12 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				/** Checkbox to show or hide consumption graph */
 				CheckBox cbCons = (CheckBox)findViewById(R.id.cb_cons);
 				if (cbCons.isChecked()) {
-					cons.setColor(0xFF33B5E5);
-					cons.setCircleColor(0xFF33B5E5);
-					cons.setHighLightColor(0xFF33B5E5);
-					cons.setFillColor(0xAA33B5E5);
+					consP.setVisible(true);
+					consM.setVisible(true);
 					showCons = true;
 				} else {
-					cons.setColor(Color.TRANSPARENT);
-					cons.setCircleColor(Color.TRANSPARENT);
-					cons.setHighLightColor(Color.TRANSPARENT);
-					cons.setFillColor(Color.TRANSPARENT);
+					consP.setVisible(false);
+					consM.setVisible(false);
 					showCons = false;
 				}
 				// let the chart know it's data has changed
@@ -444,27 +490,143 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				/** Checkbox to show or hide light graph */
 				CheckBox cbLight = (CheckBox)findViewById(R.id.cb_light);
 				if (cbLight.isChecked()) {
-					light.setColor(Color.GREEN);
-					light.setCircleColor(Color.GREEN);
-					light.setHighLightColor(Color.GREEN);
-					light.setFillColor(Color.GREEN);
+					light.setVisible(true);
 					showLight = true;
+					TextView tvToHide = (TextView)findViewById(R.id.tv_light);
+					tvToHide.setVisibility(View.VISIBLE);
+					tvToHide = (TextView)findViewById(R.id.tv_light_value);
+					tvToHide.setVisibility(View.VISIBLE);
 				} else {
-					light.setColor(Color.TRANSPARENT);
-					light.setCircleColor(Color.TRANSPARENT);
-					light.setHighLightColor(Color.TRANSPARENT);
-					light.setFillColor(Color.TRANSPARENT);
+					light.setVisible(false);
 					showLight = false;
+					TextView tvToHide = (TextView)findViewById(R.id.tv_light);
+					tvToHide.setVisibility(View.INVISIBLE);
+					tvToHide = (TextView)findViewById(R.id.tv_light_value);
+					tvToHide.setVisibility(View.INVISIBLE);
 				}
 				// let the chart know it's data has changed
 				lineChart.notifyDataSetChanged();
 				lineChart.invalidate();
+				break;
+			case R.id.bt_backup:
+				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
+				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
+				url = deviceIP + "b";
+				menuDialog.dismiss();
+				break;
+			case R.id.bt_restore:
+				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
+				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
+				url = deviceIP + "r";
+				menuDialog.dismiss();
+				break;
+			case R.id.bt_switch_net:
+				if (isWAN) {
+					isWAN = false;
+					/** Buttons to be disabled when on mobile network */
+					Button uiButton = (Button) findViewById(R.id.bt_sync);
+					uiButton.setEnabled(true);
+					uiButton.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+					uiButton = (Button) findViewById(R.id.bt_status);
+					uiButton.setEnabled(true);
+					uiButton.setTextColor(getResources().getColor(android.R.color.holo_blue_light));
+				} else {
+					isWAN = true;
+					/** Buttons to be disabled when on mobile network */
+					Button uiButton = (Button) findViewById(R.id.bt_sync);
+					uiButton.setEnabled(false);
+					uiButton.setTextColor(getResources().getColor(android.R.color.darker_gray));
+					uiButton = (Button) findViewById(R.id.bt_status);
+					uiButton.setEnabled(false);
+					uiButton.setTextColor(getResources().getColor(android.R.color.darker_gray));
+				}
+				mPrefs.edit().putBoolean("access_type",isWAN).apply();
+				menuDialog.dismiss();
+				break;
+			case R.id.bt_future2:
+
+				NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+						.setContentTitle(this.getString(R.string.app_name))
+						.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, spMonitor.class), 0))
+						.setContentText(this.getString(R.string.notif_export, Utilities.getCurrentTime()))
+						.setAutoCancel(true)
+						.setSound(Uri.parse("android.resource://"
+								+ this.getPackageName() + "/"
+								+ R.raw.alert))
+						.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
+						.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+						.setWhen(System.currentTimeMillis())
+						.setSmallIcon(android.R.drawable.ic_dialog_info);
+
+				Notification notification = builder.build();
+				NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+				notificationManager.notify(0, notification);
+
+			case R.id.bt_menu_cancel:
+				menuDialog.dismiss();
 				break;
 		}
 
 		if (!url.isEmpty()) {
 			new callArduino().execute(url);
 		}
+	}
+
+	/**
+	 * Handle hardware key events to catch press of menu and back keys
+	 * which are handled within this app (since menu key will not open side bar)
+	 *
+	 * @param keyCode
+	 *            Code of pressed key
+	 * @param event
+	 *            context
+	 *
+	 * @return boolean
+	 *            Result of super.onKeyUp(keyCode, event)
+	 */
+	public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
+		switch (keyCode) {
+			//*******************************************************
+			// Use hardware menu key to open menu dialog
+			//*******************************************************
+			case KeyEvent.KEYCODE_MENU:
+				/** Alert dialog builder to show dialog for manual IP address input */
+				menuDialog = new Dialog(this);
+				menuDialog.setContentView(R.layout.menu_dialog);
+				/** Button inside the dialog */
+				Button dialogButton = (Button) menuDialog.findViewById(R.id.bt_backup);
+				dialogButton.setOnClickListener(this);
+				dialogButton.setEnabled(true);
+				dialogButton = (Button) menuDialog.findViewById(R.id.bt_restore);
+				dialogButton.setOnClickListener(this);
+				dialogButton.setEnabled(true);
+				dialogButton = (Button) menuDialog.findViewById(R.id.bt_menu_cancel);
+				dialogButton.setOnClickListener(this);
+				dialogButton = (Button) menuDialog.findViewById(R.id.bt_switch_net);
+				dialogButton.setOnClickListener(this);
+				if (isWAN) {
+					dialogButton.setText(getString(R.string.bt_switch_LAN_txt));
+				} else {
+					dialogButton.setText(getString(R.string.bt_switch_WAN_txt));
+				}
+				dialogButton = (Button) menuDialog.findViewById(R.id.bt_future2);
+				dialogButton.setOnClickListener(this);
+				if (isWAN) {
+					dialogButton = (Button) menuDialog.findViewById(R.id.bt_backup);
+					dialogButton.setEnabled(false);
+					dialogButton = (Button) menuDialog.findViewById(R.id.bt_restore);
+					dialogButton.setEnabled(false);
+				}
+				menuDialog.show();
+				break;
+			//*******************************************************
+			// Catch return key event to close UI activity
+			//*******************************************************
+			case KeyEvent.KEYCODE_BACK:
+				finish();
+				break;
+		}
+		return super.onKeyUp(keyCode, event);
 	}
 
 	/**
@@ -480,37 +642,44 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			/** Response from the spMonitor device or error message */
 			String resultToDisplay = "";
 
-			// Make call only if valid url is given
-			if (urlString.startsWith("No")) {
-				resultToDisplay = getResources().getString(R.string.err_no_device);
-			} else {
-				/** Request to spMonitor device */
-				Request request = new Request.Builder()
-						.url(urlString)
-						.build();
+			connSSID = Utilities.getSSID(getApplicationContext());
 
-				if (request != null) {
+			if (isWAN) {
+				if ((connSSID != null) && (connSSID.equalsIgnoreCase(mPrefs.getString("SSID","")))) {
+					isWAN= false;
+					mPrefs.edit().putBoolean("access_type",isWAN).apply();
+				} else {
+					urlString = "http://desire.giesecke.tk/s/l.php";
+				}
+			}
+			/** Request to spMonitor device */
+			Request request = new Request.Builder()
+					.url(urlString)
+					.build();
+
+			if (request != null) {
+				try {
+					/** Response from spMonitor device */
+					Response response = client.newCall(request).execute();
+					if (response != null) {
+						resultToDisplay = response.body().string();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+					resultToDisplay = e.getMessage();
+					isWAN = true;
+					mPrefs.edit().putBoolean("access_type",isWAN).apply();
 					try {
-						/** Response from spMonitor device */
-						Response response = client.newCall(request).execute();
-						if (response != null) {
-							resultToDisplay = response.body().string();
+						if (resultToDisplay.contains("EHOSTUNREACH")) {
+							resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
 						}
-					} catch (IOException e) {
-						e.printStackTrace();
-						resultToDisplay = e.getMessage();
-						try {
-							if (resultToDisplay.contains("EHOSTUNREACH")) {
-								resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
-							}
-							if (resultToDisplay.equalsIgnoreCase("")) {
-								resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
-							}
-							return resultToDisplay;
-						} catch (NullPointerException en) {
-							resultToDisplay = getResources().getString(R.string.err_no_device);
-							return resultToDisplay;
+						if (resultToDisplay.equalsIgnoreCase("")) {
+							resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
 						}
+						return resultToDisplay;
+					} catch (NullPointerException en) {
+						resultToDisplay = getResources().getString(R.string.err_no_device);
+						return resultToDisplay;
 					}
 				}
 			}
@@ -524,10 +693,12 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		protected void onPostExecute(String result) {
 			updateUI(result);
 			if (timer == null) {
-				if (calModeOn) {
-					if (autoRefreshOn) startTimer(5000, 5000);
-				} else {
-					if (autoRefreshOn) startTimer(5000, 60000);
+				if (isWAN) { // When on mobile connection update only every 5 minutes
+					startTimer(300000);
+				} else if (calModeOn) { // When in calibration mode, update every 5 seconds
+					startTimer(5000);
+				} else { // Normal WiFi mode, update every 1 minute
+					startTimer(60000);
 				}
 			}
 		}
@@ -537,7 +708,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	 * Async task class to contact Linino part of the spMonitor device
 	 * and sync spMonitor database with local Android database
 	 */
-	public class syncDBtoDB extends AsyncTask<String, String, String> {
+	private class syncDBtoDB extends AsyncTask<String, String, String> {
 
 		@Override
 		protected String doInBackground(String... params) {
@@ -568,19 +739,15 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					urlString += "?date=" + dbCursor.getString(0); // add year
 					urlString += "-" + ("00" +
 							dbCursor.getString(1)).substring(dbCursor.getString(1).length()); // add month
-					//urlString += "-" + dbCursor.getString(1); // add month
 					urlString += "-" + ("00" +
 							String.valueOf(lastDay))
 							.substring(String.valueOf(lastDay).length()); // add day
-					//urlString += "-" + dbCursor.getString(2); // add day
 					urlString += "-" + ("00" +
 							String.valueOf(lastHour))
 							.substring(String.valueOf(lastHour).length()); // add hour
-					//urlString += "-" + dbCursor.getString(3); // add hour
 					urlString += ":" + ("00" +
 							String.valueOf(lastMinute))
 							.substring(String.valueOf(lastMinute).length()); // add minute
-					//urlString += ":" + String.valueOf(lastMinute); // add minute
 					urlString += "&get=all";
 				} // else {} local database is empty, need to sync all data
 			}
@@ -668,6 +835,87 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	}
 
 	/**
+	 * Async task class to contact Linino part of the spMonitor device
+	 */
+	private class backupDataBase extends AsyncTask<String, String, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+
+			/** URL to be called */
+			String urlString = params[0]; // URL to call
+
+			/** Result message */
+			String ioResult = getResources().getString(R.string.backupSaved);
+
+			// Check if external SD card is available
+			if (Utilities.isExternalStorageWritable()) {
+				// Make call only if valid url is given
+				if (!urlString.startsWith("No")) {
+					File backupFile = Utilities.getExFileDir("spMonitor", true);
+					if (backupFile != null) {
+						backupFile = Utilities.getExFileDir("/spMonitor/s.bu.gz",false);
+						if (backupFile != null) {
+							/** IP address to connect to */
+							String ip[] = urlString.split("/");
+							/** Sftp session instance */
+							Session session = null;
+
+							try{
+								/** Jsch instance */
+								JSch sshChannel = new JSch();
+								session = sshChannel.getSession("root", ip[2], 22);
+								session.setPassword("spMonitor");
+								session.setConfig("StrictHostKeyChecking", "no");
+								session.connect();
+
+								if (session.isConnected()) {
+									/** Channel for session */
+									Channel channel = session.openChannel("sftp");
+									channel.connect();
+
+									if (channel.isConnected()) {
+										/** SFTP channel */
+										ChannelSftp sftp = (ChannelSftp) channel;
+
+										if (sftp.isConnected()) {
+											sftp.cd("/mnt/sda1/");
+											sftp.get("s.bu.gz", backupFile.getAbsolutePath());
+
+											sftp.disconnect();
+										}
+										channel.disconnect();
+									}
+									session.disconnect();
+								}
+
+							} catch(JSchException | SftpException e){
+								ioResult = e.getMessage();
+								if (session != null) {
+									session.disconnect();
+								}
+							}
+						} else {
+							ioResult = getResources().getString(R.string.noExtStorage);
+						}
+					} else {
+						ioResult = getResources().getString(R.string.noExtStorage);
+					}
+				} else {
+					ioResult = getResources().getString(R.string.err_no_device);
+				}
+			} else {
+				ioResult = getResources().getString(R.string.noExtStorage);
+			}
+			return ioResult;
+		}
+
+		protected void onPostExecute(String result) {
+			updateUI(result);
+		}
+	}
+
+	/**
 	 * Update UI with values received from spMonitor device (Arduino part)
 	 *
 	 * @param value
@@ -683,107 +931,148 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				String result;
 
 				if (value.length() != 0) {
-					if (url.endsWith("get")) {
+					if (url.endsWith("get") || isWAN) {
 						// decode JSON
 						if (Utilities.isJSONValid(value)) {
 							try {
-								/** JSON object containing result from server */
-								JSONObject jsonResult = new JSONObject(value);
-								/** JSON object containing the values */
-								JSONObject jsonValues = jsonResult.getJSONObject("value");
+								if (!isWAN) {
+									/** JSON object containing result from server */
+									JSONObject jsonResult = new JSONObject(value);
+									/** JSON object containing the values */
+									JSONObject jsonValues = jsonResult.getJSONObject("value");
 
-								try {
-									solarPowerMin = Float.parseFloat(jsonValues.getString("S"));
-									lastSolarPowerMin = solarPowerMin;
-								} catch (Exception excError) {
-									solarPowerMin = lastSolarPowerMin;
-								}
-								/** Temporary buffer for last read power value */
-								Float oldPower = solarPowerSec;
-								try {
-									solarPowerSec = Float.parseFloat(jsonValues.getString("sr"));
-								} catch (Exception excError) {
-									solarPowerSec = oldPower;
-								}
-								try {
-									consPowerMin = Float.parseFloat(jsonValues.getString("C"));
-									lastConsPowerMin = consPowerMin;
-								} catch (Exception excError) {
-									consPowerMin = lastConsPowerMin;
-								}
-								oldPower = consPowerSec;
-								try {
-									consPowerSec = Float.parseFloat(jsonValues.getString("cr"));
-								} catch (Exception excError) {
-									consPowerSec = oldPower;
+									try {
+										solarPowerMin = Float.parseFloat(jsonValues.getString("S"));
+										lastSolarPowerMin = solarPowerMin;
+									} catch (Exception excError) {
+										solarPowerMin = lastSolarPowerMin;
+									}
+									/** Temporary buffer for last read power value */
+									Float oldPower = solarPowerSec;
+									try {
+										solarPowerSec = Float.parseFloat(jsonValues.getString("sr"));
+									} catch (Exception excError) {
+										solarPowerSec = oldPower;
+									}
+									try {
+										consPowerMin = Float.parseFloat(jsonValues.getString("C"));
+										lastConsPowerMin = consPowerMin;
+									} catch (Exception excError) {
+										consPowerMin = lastConsPowerMin;
+									}
+									oldPower = consPowerSec;
+									try {
+										consPowerSec = Float.parseFloat(jsonValues.getString("cr"));
+									} catch (Exception excError) {
+										consPowerSec = oldPower;
+									}
+
+									result = "S=" + String.valueOf(solarPowerMin) + "W ";
+									result += "s=";
+									try {
+										result += jsonValues.getString("s");
+									} catch (Exception excError) {
+										result += "---";
+									}
+									result += "A sv=";
+									try {
+										result += jsonValues.getString("sv");
+									} catch (Exception excError) {
+										result += "---";
+									}
+									result += "V sr=";
+									try {
+										result += jsonValues.getString("sr");
+									} catch (Exception excError) {
+										result += "---";
+									}
+									result += "W sa=";
+									try {
+										result += jsonValues.getString("sa");
+									} catch (Exception excError) {
+										result += "---";
+									}
+									result += "W sp=";
+									try {
+										result += jsonValues.getString("sp");
+									} catch (Exception excError) {
+										result += "---";
+									}
+									result += "\nC=" + String.valueOf(consPowerMin) + "W c=";
+									try {
+										result += jsonValues.getString("c");
+									} catch (Exception excError) {
+										result += "---";
+									}
+									result += "A cv=";
+									try {
+										result += jsonValues.getString("cv");
+									} catch (Exception excError) {
+										result += "---";
+									}
+									result += "V cr=";
+									try {
+										result += jsonValues.getString("cr");
+									} catch (Exception excError) {
+										result += "---";
+									}
+									result += "W ca=";
+									try {
+										result += jsonValues.getString("ca");
+									} catch (Exception excError) {
+										result += "---";
+									}
+									result += "W cp=";
+									try {
+										result += jsonValues.getString("cp") + "\n";
+									} catch (Exception excError) {
+										result += "---" + "\n";
+									}
+
+									try {
+										lightValMin = Long.parseLong(jsonValues.getString("L"));
+										lastLightValMin = lightValMin;
+									} catch (Exception excError) {
+										lightValMin = lastLightValMin;
+									}
+									/** Temporary buffer for last read light value */
+									long oldLight = lightValSec;
+									try {
+										lightValSec = Long.parseLong(jsonValues.getString("l"));
+									} catch (Exception excError) {
+										lightValSec = oldLight;
+									}
+								} else {
+									/** JSON object containing result from server */
+									JSONObject jsonResult = new JSONObject(value.substring(1,value.length()-1));
+									try {
+										solarPowerMin = solarPowerSec = Float.parseFloat(jsonResult.getString("s"));
+										lastSolarPowerMin = solarPowerMin;
+									} catch (Exception excError) {
+										solarPowerMin = solarPowerSec = lastSolarPowerMin;
+									}
+									try {
+										consPowerMin = consPowerSec = Float.parseFloat(jsonResult.getString("c"));
+										lastConsPowerMin = consPowerMin;
+									} catch (Exception excError) {
+										consPowerMin = consPowerSec = lastConsPowerMin;
+									}
+									try {
+										lightValMin = lightValSec =Long.parseLong(jsonResult.getString("l"));
+										lastLightValMin = lightValMin;
+									} catch (Exception excError) {
+										lightValMin = lightValSec =lastLightValMin;
+									}
+									result = "WAN! S="
+											+ String.valueOf(solarPowerMin) + "W C= "
+											+ String.valueOf(consPowerMin) + "W L= "
+											+ String.valueOf(lightValMin) + "lux";
 								}
 
 								/** Double for the result of solar current and consumption used at 1min updates */
 								double resultPowerMin = solarPowerMin + consPowerMin;
 								/** Double for the result of solar current and consumption used at 5sec updates */
 								double resultPowerSec = solarPowerSec + consPowerSec;
-
-								result = "S=" + String.valueOf(solarPowerMin) + "W ";
-								result += "s=";
-								try {
-									result += jsonValues.getString("s");
-								} catch (Exception excError) {
-									result += "---";
-								}
-								result += "A sv=";
-								try {
-									result += jsonValues.getString("sv");
-								} catch (Exception excError) {
-									result += "---";
-								}
-								result += "V sr=";
-								try {
-									result += jsonValues.getString("sr");
-								} catch (Exception excError) {
-									result += "---";
-								}
-								result += "W sa=";
-								try {
-									result += jsonValues.getString("sa");
-								} catch (Exception excError) {
-									result += "---";
-								}
-								result += "W sp=";
-								try {
-									result += jsonValues.getString("sp");
-								} catch (Exception excError) {
-									result += "---";
-								}
-								result += "\nC=" + String.valueOf(consPowerMin) + "W c=";
-								try {
-									result += jsonValues.getString("c");
-								} catch (Exception excError) {
-									result += "---";
-								}
-								result += "A cv=";
-								try {
-									result += jsonValues.getString("cv");
-								} catch (Exception excError) {
-									result += "---";
-								}
-								result += "V cr=";
-								try {
-									result += jsonValues.getString("cr");
-								} catch (Exception excError) {
-									result += "---";
-								}
-								result += "W ca=";
-								try {
-									result += jsonValues.getString("ca");
-								} catch (Exception excError) {
-									result += "---";
-								}
-								result += "W cp=";
-								try {
-									result += jsonValues.getString("cp") + "\n";
-								} catch (Exception excError) {
-									result += "---" + "\n";
-								}
 
 								valueFields = (TextView) findViewById(R.id.tv_solar_val);
 								if (calModeOn) {
@@ -826,19 +1115,6 @@ public class spMonitor extends Activity implements View.OnClickListener {
 									valueFields.setText(String.format("%.0f", Math.abs(consPowerMin)) + "W");
 								}
 
-								try {
-									lightValMin = Long.parseLong(jsonValues.getString("L"));
-									lastLightValMin = lightValMin;
-								} catch (Exception excError) {
-									lightValMin = lastLightValMin;
-								}
-								/** Temporary buffer for last read light value */
-								long oldLight = lightValSec;
-								try {
-									lightValSec = Long.parseLong(jsonValues.getString("l"));
-								} catch (Exception excError) {
-									lightValSec = oldLight;
-								}
 								valueFields = (TextView) findViewById(R.id.tv_light_value);
 								if (calModeOn) {
 									valueFields.setText(String.valueOf(lightValSec) + "lux");
@@ -847,6 +1123,34 @@ public class spMonitor extends Activity implements View.OnClickListener {
 								}
 
 								if (autoRefreshOn) {
+									if (isWANonStart) {
+										isWANonStart = false;
+										/** Integer list with today's date info */
+										int[] requestedDate = Utilities.getCurrentDate();
+										/** Instance of DataBaseHelper */
+										DataBaseHelper dbHelper = new DataBaseHelper(appContext);
+										/** Instance of data base */
+										SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+
+										/** Cursor with data from the database */
+										Cursor newDataSet = DataBaseHelper.getLastRow(dataBase);
+										newDataSet.moveToFirst();
+										if (newDataSet.getInt(0) == requestedDate[0]-2000 &&
+												newDataSet.getInt(1) == requestedDate[1] &&
+												newDataSet.getInt(2) == requestedDate[2]) {
+											newDataSet.close();
+											/** Cursor with data from the database */
+											newDataSet = DataBaseHelper.getDay(dataBase,
+													requestedDate[2], requestedDate[1], requestedDate[0]-2000);
+											Utilities.fillSeries(newDataSet);
+											initChart(true);
+										}
+										newDataSet.close();
+										dataBase.close();
+										dbHelper.close();
+										initChart(true);
+									}
+
 									/** Current time as string */
 									String nowTime = Utilities.getCurrentTime();
 									plotData.addXValue(nowTime);
@@ -854,24 +1158,41 @@ public class spMonitor extends Activity implements View.OnClickListener {
 									if (calModeOn) {
 										solarSeries.add(new Entry(solarPowerSec, solarSeries.size()));
 										solarPowerCont.add(solarPowerSec);
-										consSeries.add(new Entry(consPowerSec, consSeries.size()));
-										consumPowerCont.add(consPowerSec);
+										if (consPowerSec < 0.0) {
+											consPSeries.add(new Entry(consPowerSec, consPSeries.size()));
+											consumPPowerCont.add(consPowerSec);
+											consMSeries.add(new Entry(0, consMSeries.size()));
+											consumMPowerCont.add(0.0f);
+										} else {
+											consMSeries.add(new Entry(consPowerSec, consMSeries.size()));
+											consumMPowerCont.add(consPowerSec);
+											consPSeries.add(new Entry(0, consPSeries.size()));
+											consumPPowerCont.add(0.0f);
+										}
 										lightSeries.add(new Entry(lightValSec, lightSeries.size()));
 										lightValueCont.add(lightValSec);
 									} else {
 										solarSeries.add(new Entry(solarPowerMin, solarSeries.size()));
 										solarPowerCont.add(solarPowerMin);
-										consSeries.add(new Entry(consPowerMin, consSeries.size()));
-										consumPowerCont.add(consPowerMin);
+										if (consPowerMin < 0.0) {
+											consPSeries.add(new Entry(consPowerMin, consPSeries.size()));
+											consumPPowerCont.add(consPowerMin);
+											consMSeries.add(new Entry(0, consMSeries.size()));
+											consumMPowerCont.add(0.0f);
+										} else {
+											consMSeries.add(new Entry(consPowerMin, consMSeries.size()));
+											consumMPowerCont.add(consPowerMin);
+											consPSeries.add(new Entry(0, consPSeries.size()));
+											consumPPowerCont.add(0.0f);
+										}
 										lightSeries.add(new Entry(lightValMin, lightSeries.size()));
 										lightValueCont.add(lightValMin);
 									}
-									zeroSeries.add(new Entry(0, zeroSeries.size()));
 
 									/** Text view to show min and max poser values */
 									TextView maxPowerText = (TextView) findViewById(R.id.tv_cons_max);
 									maxPowerText.setText("(" + String.format("%.0f",
-											Collections.max(consumPowerCont)) + "W)");
+											Collections.max(consumMPowerCont)) + "W)");
 									maxPowerText = (TextView) findViewById(R.id.tv_solar_max);
 									maxPowerText.setText("(" + String.format("%.0f",
 											Collections.max(solarPowerCont)) + "W)");
@@ -888,10 +1209,29 @@ public class spMonitor extends Activity implements View.OnClickListener {
 								return;
 							}
 						}
+					} else if (url.endsWith("b")) {
+						new backupDataBase().execute(deviceIP);
 					}
 					resultTextView.setText(value);
 					Utilities.stopRefreshAnim();
 					return;
+				}
+				if (isWAN) {
+					/** Buttons to be disabled when on mobile network */
+					Button uiButton = (Button) findViewById(R.id.bt_sync);
+					uiButton.setEnabled(false);
+					uiButton.setTextColor(getResources().getColor(android.R.color.darker_gray));
+					uiButton = (Button) findViewById(R.id.bt_status);
+					uiButton.setEnabled(false);
+					uiButton.setTextColor(getResources().getColor(android.R.color.darker_gray));
+				} else {
+					/** Buttons to be enabled when on wifi */
+					Button uiButton = (Button) findViewById(R.id.bt_sync);
+					uiButton.setEnabled(true);
+					uiButton.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+					uiButton = (Button) findViewById(R.id.bt_status);
+					uiButton.setEnabled(true);
+					uiButton.setTextColor(getResources().getColor(android.R.color.holo_blue_light));
 				}
 				result = "\n";
 				resultTextView.setText(result);
@@ -906,7 +1246,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
  	 * @param result
 	 *        result sent by spMonitor
 	 */
-	public void updateSynced(final String result) {
+	private void updateSynced(final String result) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -929,10 +1269,13 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					ArrayList<Integer> yearsAvail = DataBaseHelper.getEntries(dataBase, "year", 0, 0);
 					for (int year = 0; year < yearsAvail.size(); year++) {
 						/** List with months of year in the database */
-						ArrayList<Integer> monthsAvail = DataBaseHelper.getEntries(dataBase, "month", 0, yearsAvail.get(year));
+						ArrayList<Integer> monthsAvail = DataBaseHelper.getEntries(dataBase, "month",
+								0, yearsAvail.get(year));
 						for (int month = 0; month < monthsAvail.size(); month++) {
 							/** List with days of month of year in the database */
-							ArrayList<Integer> daysAvail = DataBaseHelper.getEntries(dataBase, "day", monthsAvail.get(month), yearsAvail.get(year));
+							ArrayList<Integer> daysAvail = DataBaseHelper.getEntries(dataBase, "day",
+									monthsAvail.get(month),
+									yearsAvail.get(year));
 							for (int day = 0; day < daysAvail.size(); day++) {
 								logDates.add(("00" + String.valueOf(yearsAvail.get(year)))
 										.substring(String.valueOf(yearsAvail.get(year)).length()) +
@@ -949,10 +1292,12 @@ public class spMonitor extends Activity implements View.OnClickListener {
 					dbHelper.close();
 
 					if (timer == null) {
-						if (calModeOn) {
-							if (autoRefreshOn) startTimer(5000, 5000);
-						} else {
-							if (autoRefreshOn) startTimer(5000, 60000);
+						if (isWAN) { // When on mobile connection update only every 5 minutes
+							startTimer(300000);
+						} else if (calModeOn) { // When in calibration mode, update every 5 seconds
+							startTimer(5000);
+						} else { // Normal WiFi mode, update every 1 minute
+							startTimer(60000);
 						}
 					}
 					initChart(true);
@@ -963,15 +1308,13 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	}
 
 	/**
-	 * Start recurring timer with given delay and repeat time
+	 * Start recurring timer with given repeat time
 	 *
-	 * @param startDelay
-	 *                delay in milli seconds before starting the timer
 	 * @param repeatTime
 	 *                repeat time in milli seconds
 	 */
-	private void startTimer(int startDelay, long repeatTime) {
-		// Start new single shot every 10 seconds
+	private void startTimer(long repeatTime) {
+		// Start new single shot every "repeatTime" seconds
 		timer = new Timer();
 		/** Timer task for UI update */
 		TimerTask timerTask = new TimerTask() {
@@ -985,7 +1328,7 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			}
 		};
 		//schedule the timer, after startDelay ms the TimerTask will run every repeatTime ms
-		timer.schedule(timerTask, startDelay, repeatTime); //
+		timer.schedule(timerTask, 1, repeatTime); //
 	}
 
 	/**
@@ -1024,9 +1367,9 @@ public class spMonitor extends Activity implements View.OnClickListener {
 
 		timeSeries.clear();
 		solarSeries.clear();
-		consSeries.clear();
+		consPSeries.clear();
+		consMSeries.clear();
 		lightSeries.clear();
-		zeroSeries.clear();
 		if (!isContinuous) {
 			for (int i=0; i<timeStamps.size(); i++) {
 				timeSeries.add(timeStamps.get(i));
@@ -1034,14 +1377,14 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			for (int i=0; i<solarPower.size(); i++) {
 				solarSeries.add(new Entry(solarPower.get(i), i));
 			}
-			for (int i=0; i<consumPower.size(); i++) {
-				consSeries.add(new Entry(consumPower.get(i), i));
+			for (int i=0; i<consumPPower.size(); i++) {
+				consPSeries.add(new Entry(consumPPower.get(i), i));
+			}
+			for (int i=0; i<consumMPower.size(); i++) {
+				consMSeries.add(new Entry(consumMPower.get(i), i));
 			}
 			for (int i= 0; i<lightValue.size(); i++) {
 				lightSeries.add(new Entry(lightValue.get(i), i));
-			}
-			for (int i= 0; i<timeStamps.size(); i++) {
-				zeroSeries.add(new Entry(0, i));
 			}
 		} else {
 			if (timeStampsCont.size() != 0) {
@@ -1051,86 +1394,90 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				for (int i=0; i<solarPowerCont.size(); i++) {
 					solarSeries.add(new Entry(solarPowerCont.get(i), i));
 				}
-				for (int i=0; i<consumPowerCont.size(); i++) {
-					consSeries.add(new Entry(consumPowerCont.get(i), i));
+				for (int i=0; i<consumPPowerCont.size(); i++) {
+					consPSeries.add(new Entry(consumPPowerCont.get(i), i));
+				}
+				for (int i=0; i<consumMPowerCont.size(); i++) {
+					consMSeries.add(new Entry(consumMPowerCont.get(i), i));
 				}
 				for (int i= 0; i<lightValueCont.size(); i++) {
 					lightSeries.add(new Entry(lightValueCont.get(i), i));
-				}
-				for (int i= 0; i<timeStampsCont.size(); i++) {
-					zeroSeries.add(new Entry(0, i));
 				}
 			}
 		}
 		/** Line data set for solar data */
 		solar = new LineDataSet(solarSeries, "Solar");
 		/** Line data set for consumption data */
-		cons = new LineDataSet(consSeries, "Consumption");
+		consP = new LineDataSet(consPSeries, "Export");
+		/** Line data set for consumption data */
+		consM = new LineDataSet(consMSeries, "Import");
 		/** Line data set for light data */
 		light = new LineDataSet(lightSeries, "Light");
-		/** Line data set for zero line */
-		LineDataSet zero = new LineDataSet(zeroSeries, "");
 
 		solar.setLineWidth(1.75f);
 		solar.setCircleSize(0f);
+		solar.setColor(0xFFFFBB33);
+		solar.setCircleColor(0xFFFFBB33);
+		solar.setHighLightColor(0xFFFFBB33);
+		solar.setFillColor(0xAAFFBB33);
 		if (showSolar) {
-			solar.setColor(0xFFFFBB33);
-			solar.setCircleColor(0xFFFFBB33);
-			solar.setHighLightColor(0xFFFFBB33);
-			solar.setFillColor(0xAAFFBB33);
+			solar.setVisible(true);
 		} else {
-			solar.setColor(Color.TRANSPARENT);
-			solar.setCircleColor(Color.TRANSPARENT);
-			solar.setHighLightColor(Color.TRANSPARENT);
-			solar.setFillColor(Color.TRANSPARENT);
+			solar.setVisible(false);
 		}
 		solar.setDrawValues(false);
 		solar.setDrawFilled(true);
 
-		cons.setLineWidth(1.75f);
-		cons.setCircleSize(0f);
+		consP.setLineWidth(1.75f);
+		consP.setCircleSize(0f);
+		consP.setColor(Color.GREEN);
+		consP.setCircleColor(Color.GREEN);
+		consP.setHighLightColor(Color.GREEN);
+		consP.setFillColor(0xAA00FF00);
 		if (showCons) {
-			cons.setColor(0xFF33B5E5);
-			cons.setCircleColor(0xFF33B5E5);
-			cons.setHighLightColor(0xFF33B5E5);
-			cons.setFillColor(0xAA33B5E5);
+			consP.setVisible(true);
 		} else {
-			cons.setColor(Color.TRANSPARENT);
-			cons.setCircleColor(Color.TRANSPARENT);
-			cons.setHighLightColor(Color.TRANSPARENT);
-			cons.setFillColor(Color.TRANSPARENT);
+			consP.setVisible(false);
 		}
-		cons.setDrawValues(false);
-		cons.setDrawValues(false);
-		cons.setDrawFilled(true);
-		cons.setAxisDependency(YAxis.AxisDependency.LEFT);
+		consP.setDrawValues(false);
+		consP.setDrawValues(false);
+		consP.setDrawFilled(true);
+		consP.setAxisDependency(YAxis.AxisDependency.LEFT);
+
+		consM.setLineWidth(1.75f);
+		consM.setCircleSize(0f);
+		consM.setColor(Color.RED);
+		consM.setCircleColor(Color.RED);
+		consM.setHighLightColor(Color.RED);
+		consM.setFillColor(0xAAFF0000);
+		if (showCons) {
+			consM.setVisible(true);
+		} else {
+			consM.setVisible(false);
+		}
+		consM.setDrawValues(false);
+		consM.setDrawValues(false);
+		consM.setDrawFilled(true);
+		consM.setAxisDependency(YAxis.AxisDependency.LEFT);
 
 		light.setLineWidth(1.75f);
 		light.setCircleSize(0f);
+		light.setColor(Color.WHITE);
+		light.setCircleColor(Color.WHITE);
+		light.setHighLightColor(Color.WHITE);
 		if (showLight) {
-			light.setColor(Color.GREEN);
-			light.setCircleColor(Color.GREEN);
-			light.setHighLightColor(Color.GREEN);
+			light.setVisible(true);
 		} else {
-			light.setColor(Color.TRANSPARENT);
-			light.setCircleColor(Color.TRANSPARENT);
-			light.setHighLightColor(Color.TRANSPARENT);
+			light.setVisible(false);
 		}
 		light.setDrawValues(false);
 		light.setAxisDependency(YAxis.AxisDependency.RIGHT);
 
-		zero.setLineWidth(1.75f);
-		zero.setCircleSize(0f);
-		zero.setColor(Color.RED);
-		zero.setCircleColor(Color.RED);
-		zero.setHighLightColor(Color.RED);
-		zero.setDrawValues(false);
-
 		/** Data set with data for the 4 plots */
 		ArrayList<LineDataSet> dataSets = new ArrayList<>();
-		dataSets.add(zero);
 		dataSets.add(solar);
-		dataSets.add(cons);
+		dataSets.add(consP);
+		dataSets.add(consM);
 		dataSets.add(light);
 
 		/** Data object with the data set and the y values */
@@ -1217,7 +1564,10 @@ public class spMonitor extends Activity implements View.OnClickListener {
 			/** Entry with data of solar power at given index */
 			Entry touchSolar = solarSeries.get(dataIndex);
 			/** Entry with data of consumption at given index */
-			Entry touchCons = consSeries.get(dataIndex);
+			Entry touchCons = consMSeries.get(dataIndex);
+			if (touchCons.getVal() == 0) {
+				touchCons = consPSeries.get(dataIndex);
+			}
 
 			tvMarkerTime.setText(timeSeries.get(dataIndex));
 			tvMarkerCons.setText((Float.toString(touchCons.getVal())+"W"));

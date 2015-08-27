@@ -86,6 +86,18 @@ void loop() {
       client.print ( "C1 " + String ( iCal1, 1 ) );
       client.println ( " C2 " + String ( iCal2, 1 ) );
     }
+    else if ( command == 'b' ) { /* Backup database */
+      /** Instance to Linino process */
+      Process sqLite;
+      sqLite.runShellCommand ( "rm /mnt/sda1/s.bu.gz" );
+      sqLite.runShellCommand ( "echo '.dump' | sqlite3 /mnt/sda1/s.db | gzip -c >/mnt/sda1/s.bu.gz" );
+    }
+    else if ( command == 'r' ) { /* restore database */
+      /** Instance to Linino process */
+      Process sqLite;
+      sqLite.runShellCommand ( "rm /mnt/sda1/bu.db" );
+      sqLite.runShellCommand ( "zcat /mnt/sda1/s.bu.gz | sqlite3 /mnt/sda1/bu.db" );
+    }
 
     /* Close connection and free resources. */
     wdt_reset();

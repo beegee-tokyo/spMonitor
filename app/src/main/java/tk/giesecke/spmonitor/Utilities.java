@@ -3,7 +3,11 @@ package tk.giesecke.spmonitor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Environment;
+import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
@@ -193,23 +198,28 @@ class Utilities {
 		/** Array list to hold solar power values */
 		ArrayList<Float> tempSolarStamps;
 		/** Array list to hold consumption values */
-		ArrayList<Float> tempConsStamps;
+		ArrayList<Float> tempConsPStamps;
+		/** Array list to hold consumption values */
+		ArrayList<Float> tempConsMStamps;
 		/** Array list to hold light values */
 		ArrayList<Long> tempLightStamps;
 		if (spMonitor.showingLog) {
 			tempTimeStamps = spMonitor.timeStamps;
 			tempSolarStamps = spMonitor.solarPower;
-			tempConsStamps = spMonitor.consumPower;
+			tempConsPStamps = spMonitor.consumPPower;
+			tempConsMStamps = spMonitor.consumMPower;
 			tempLightStamps = spMonitor.lightValue;
 		} else {
 			tempTimeStamps = spMonitor.timeStampsCont;
 			tempSolarStamps = spMonitor.solarPowerCont;
-			tempConsStamps = spMonitor.consumPowerCont;
+			tempConsPStamps = spMonitor.consumPPowerCont;
+			tempConsMStamps = spMonitor.consumMPowerCont;
 			tempLightStamps = spMonitor.lightValueCont;
 		}
 		tempTimeStamps.clear();
 		tempSolarStamps.clear();
-		tempConsStamps.clear();
+		tempConsPStamps.clear();
+		tempConsMStamps.clear();
 		tempLightStamps.clear();
 		for (int cursorIndex=0; cursorIndex<data.getCount(); cursorIndex++) {
 			tempTimeStamps.add(("00" +
@@ -220,7 +230,13 @@ class Utilities {
 					String.valueOf(data.getInt(1)) + "/" +
 					String.valueOf(data.getInt(2));
 			tempSolarStamps.add(data.getFloat(5));
-			tempConsStamps.add(data.getFloat(6));
+			if (data.getFloat(6) < 0.0f) {
+				tempConsPStamps.add(data.getFloat(6));
+				tempConsMStamps.add(0.0f);
+			} else {
+				tempConsMStamps.add(data.getFloat(6));
+				tempConsPStamps.add(0.0f);
+			}
 			// TODO for debugging only insert fake light value
 			//tempLightStamps.add(data.getLong(7));
 			tempLightStamps.add(data.getLong(5)*70);
@@ -240,7 +256,7 @@ class Utilities {
 		}
 		/** Text view to show max consumed / produced power */
 		TextView maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_cons_max);
-		maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempConsStamps)) + "W)");
+		maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempConsMStamps)) + "W)");
 		maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_solar_max);
 		maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempSolarStamps)) + "W)");
 	}
@@ -284,5 +300,70 @@ class Utilities {
 		/** Time format */
 		@SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("HH:mm");
 		return df.format(cal.getTime());
+	}
+
+	/**
+	 * Checks if external storage is available for read and write
+	 *
+	 * @return <code>boolean</code>
+	 *            true if external storage is available
+	 *            false if external storage is not available
+	 */
+	public static boolean isExternalStorageWritable() {
+		String state = Environment.getExternalStorageState();
+		return Environment.MEDIA_MOUNTED.equals(state);
+	}
+
+	/**
+	 * Pointer to directory or file on external storage
+	 * If directory doesn't exist it will be created
+	 *
+	 * @param myFile
+	 *            name of directory
+	 * @param isDir
+	 *            flag if it is a directory of file
+	 *            true => directory (will try to create it if not existing)
+	 *            false => file
+	 * @return <code>File</code>
+	 *            pointer to directory
+	 */
+	public static File getExFileDir(String myFile, boolean isDir) {
+		// Get the directory for the user's public pictures directory.
+		File file = new File(Environment.getExternalStorageDirectory(), myFile);
+		if (isDir) {
+			if (!file.mkdirs()) {
+				if (BuildConfig.DEBUG) Log.d("spMonitor","Directory not created");
+			}
+		} else {
+			//noinspection ResultOfMethodCallIgnored,ResultOfMethodCallIgnored
+			file.delete();
+		}
+		return file;
+	}
+
+	/**
+	 * Check WiFi connection and return SSID
+	 *
+	 * @param context
+	 *            application context
+	 * @return <code>String</code>
+	 *            SSID name or NULL if not connected
+	 */
+	public static String getSSID(Context context) {
+		/** Access to connectivity manager */
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		/** WiFi connection information  */
+		android.net.NetworkInfo wifiOn = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+		if (!wifiOn.isConnected()) {
+			return null;
+		} else {
+			final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+			final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+			if (connectionInfo != null && !TextUtils.isEmpty(connectionInfo.getSSID())) {
+				return connectionInfo.getSSID();
+			}
+		}
+		return null;
 	}
 }

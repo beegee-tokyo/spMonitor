@@ -24,7 +24,7 @@ public class SPwidgetConfigureActivity extends Activity {
 	/** Default app widget id */
 	private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 	/** Flag for requested widget text size */
-	boolean isTextLarge = true;
+	private boolean isTextLarge = true;
 
 	public SPwidgetConfigureActivity() {
 		super();

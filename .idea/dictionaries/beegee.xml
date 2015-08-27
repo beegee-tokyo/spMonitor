@@ -4,12 +4,15 @@
       <w>&amp;get</w>
       <w>calib</w>
       <w>consum</w>
+      <w>dcard</w>
       <w>ehostunreach</w>
       <w>jsch</w>
       <w>linino</w>
+      <w>notif</w>
       <w>pwidget</w>
       <w>spmonitor</w>
       <w>spwidget</w>
+      <w>ssid</w>
     </words>
   </dictionary>
 </component>

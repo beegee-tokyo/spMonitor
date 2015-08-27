@@ -67,32 +67,9 @@ void saveData () {
   Bridge.put ( "S", String ( solar ) );
   Bridge.put ( "C", String ( cons ) );
 
-//  /* Write measurment to log file on SDcard */
-//  dataString = getTimeStamp();
-//  dataString += ",";
-//  dataString += String ( light );
-//  dataString += ",";
-//  dataString += String ( solar );
-//  dataString += ",";
-//  dataString += String ( cons );
-
-//  /** Instance to the log file on the SDcard */
-//  String fileName = "/mnt/sda1/";
-//  fileName += dataString.substring ( 0, 8 );
-//  fileName.replace(',', '-');
-//  fileName += ".txt";
-
-//  /** Pointer to log file */
-//  File dataFile = FileSystem.open ( fileName.c_str(), FILE_APPEND );
-
-//  if ( dataFile ) {
-//    dataFile.println ( dataString );
-//    dataFile.close();
-//  }
-
   /* Write current data into sqlite database */
   /** Instance to Linino process */
-  Process sqLite;
+  Process dataSave;
   timeString = getTimeStamp();
   timeString.replace(',', '-');
   dataString = "sqlite3 /mnt/sda1/s.db 'insert into s (d,s,c,l) Values (\""
@@ -101,12 +78,11 @@ void saveData () {
                + String ( cons ) + ","
                + String ( light ) + ");'";
 
-  sqLite.runShellCommand ( dataString );
+  dataSave.runShellCommand ( dataString );
 
   wdt_reset();
   /* Send current data to emonCMS */
   /** Instance to Linino process */
-  Process emonCMS;
   dataString = "curl \"http://emoncms.org/api/post?apikey=e778b92fc1f06d7e94a94bcc2a969664&json={s:";
   dataString += String ( solar );
   dataString += ",c:";
@@ -114,7 +90,19 @@ void saveData () {
   dataString += ",l:";
   dataString += String ( light );
   dataString += "}\"";
-  emonCMS.runShellCommand ( dataString );
+  dataSave.runShellCommand ( dataString );
+
+  /* Send current data to mySQL database */
+  /** Instance to Linino process */
+  dataString = "curl \"http://desire.giesecke.tk/s/i.php?d=";
+  dataString += timeString + "&s=";
+  dataString += String ( solar );
+  dataString += "&c=";
+  dataString += String ( cons );
+  dataString += "&l=";
+  dataString += String ( light );
+  dataString += "\"";
+  dataSave.runShellCommand ( dataString );
 
   collPower[0] = collPower[1] = 0.0;
   collCount[0] = collCount[1] = collCount[2] = 0;

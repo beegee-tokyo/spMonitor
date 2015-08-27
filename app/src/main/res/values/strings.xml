@@ -44,4 +44,14 @@
     <string name="rb_large_txt">Large text</string>
     <string name="rb_small_txt">Small text</string>
     <string name="bt_place_txt">Add</string>
+    <string name="bt_backup_remote_txt">Backup database on spMonitor</string>
+    <string name="bt_restore_remote_txt">Restore database on spMonitor</string>
+    <string name="bt_backup_local_txt">Backup database to SDcard</string>
+    <string name="bt_restore_local_txt">Restore database from SDcard</string>
+    <string name="notif_export">Exporting more than 200W at %1$s</string>
+    <string name="noExtStorage">No external storage</string>
+    <string name="backupSaved">Backup file saved</string>
+    <string name="bt_switch_WAN_txt">Switch to mobile network</string>
+    <string name="bt_switch_LAN_txt">Switch to WiFi</string>
+    <string name="on_WAN">WAN, no database sync available</string>
 </resources>

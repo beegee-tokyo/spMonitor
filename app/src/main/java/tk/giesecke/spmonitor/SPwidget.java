@@ -1,6 +1,8 @@
 package tk.giesecke.spmonitor;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -8,9 +10,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.squareup.okhttp.OkHttpClient;
@@ -51,12 +54,12 @@ public class SPwidget extends AppWidgetProvider {
 		int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
 
 		/** Remote views of the widgets */
-		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.sp_widget);
+		//RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.sp_widget);
 
 		if (SP_WIDGET_UPDATE.equals(intent.getAction())) {
-			for (int appWidgetId : appWidgetIds) {
-				appWidgetManager.updateAppWidget(appWidgetId, views);
-			}
+			//for (int appWidgetId : appWidgetIds) {
+			//	appWidgetManager.updateAppWidget(appWidgetId, views);
+			//}
 
 			onUpdate(context, appWidgetManager, appWidgetIds);
 		}
@@ -129,100 +132,109 @@ public class SPwidget extends AppWidgetProvider {
 		/** URL of the spMonitor device */
 		String deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
 
-		// 1) Check if we have an IP address
-		if (deviceIP.equalsIgnoreCase("no IP saved")) { // No spMonitor device available
-			views.setTextViewText(R.id.tv_widgetRow1Value,
-					context.getResources().getString(R.string.widgetCommError1));
-			views.setTextViewText(R.id.tv_widgetRow2Value,
-					context.getResources().getString(R.string.widgetCommError2));
-			views.setTextViewText(R.id.tv_widgetRow3Value,
-					context.getResources().getString(R.string.widgetCommError3));
-		} else {
-			// 2) Check if WiFi is enabled
-			/** Access to connectivity manager */
-			ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-			android.net.NetworkInfo wifiOn = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		// Check if we are connected to home network
+		/** SSID current connected or NULL if none */
+		String connSSID = Utilities.getSSID(context);
 
-			wifiOn.getDetailedState();
-			if (wifiOn.getDetailedState().name().equalsIgnoreCase("DISCONNECTED")) {
+		/** String list with parts of the URL */
+		String[] ipValues = deviceIP.split("/");
+		/** String with the URL to get the data */
+		String urlString = "http://"+ipValues[2]+"/data/get"; // URL to call
+
+		if (connSSID != null) {
+			if (!connSSID.equalsIgnoreCase(mPrefs.getString("SSID",""))) {
+				urlString = "http://desire.giesecke.tk/s/l.php";
+			}
+		}
+
+		/** Response from the spMonitor device or error message */
+		String resultToDisplay = "";
+		/** A HTTP client to access the spMonitor device */
+		OkHttpClient client = new OkHttpClient();
+		/** Solar power received from spMonitor device as minute average */
+		Float solarPowerMin = 0.0f;
+		/** Consumption received from spMonitor device as minute average */
+		Float consPowerMin = 0.0f;
+
+		/** Request to spMonitor device */
+		Request request = new Request.Builder()
+				.url(urlString)
+				.build();
+
+		if (request != null) {
+			try {
+				/** Response from spMonitor device */
+				Response response = client.newCall(request).execute();
+				if (response != null) {
+					resultToDisplay = response.body().string();
+				}
+			} catch (IOException e) {
 				views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));
 				views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));
 				views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));
-			} else {
-				/** String list with parts of the URL */
-				String[] ipValues = deviceIP.split("/");
-				/** String with the URL to get the data */
-				String urlString="http://"+ipValues[2]+"/data/get"; // URL to call
-				/** Response from the spMonitor device or error message */
-				String resultToDisplay = "";
-				/** A HTTP client to access the spMonitor device */
-				OkHttpClient client = new OkHttpClient();
-				/** Solar power received from spMonitor device as minute average */
-				Float solarPowerMin = 0.0f;
-				/** Consumption received from spMonitor device as minute average */
-				Float consPowerMin = 0.0f;
+			}
+		}
 
-				/** Request to spMonitor device */
-				Request request = new Request.Builder()
-						.url(urlString)
-						.build();
+		if (resultToDisplay.equalsIgnoreCase("")) {
+			views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));
+			views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));
+			views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));
+		} else {
+			// decode JSON
+			if (Utilities.isJSONValid(resultToDisplay)) {
+				try {
+					/** JSON object containing result from server */
+					JSONObject jsonResult = new JSONObject(resultToDisplay);
+					/** JSON object containing the values */
+					JSONObject jsonValues = jsonResult.getJSONObject("value");
 
-				if (request != null) {
 					try {
-						/** Response from spMonitor device */
-						Response response = client.newCall(request).execute();
-						if (response != null) {
-							resultToDisplay = response.body().string();
-						}
-					} catch (IOException e) {
+						solarPowerMin = Float.parseFloat(jsonValues.getString("S"));
+						consPowerMin = Float.parseFloat(jsonValues.getString("C"));
+					} catch (Exception ignore) {
 						views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));
 						views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));
 						views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));
 					}
-				}
 
-				if (resultToDisplay.equalsIgnoreCase("")) {
+					/** Double for the result of solar current and consumption used at 1min updates */
+					double resultPowerMin = solarPowerMin + consPowerMin;
+
+					views.setTextViewText(R.id.tv_widgetRow1Value, String.format("%.0f", resultPowerMin) + "W");
+					views.setTextViewText(R.id.tv_widgetRow2Value, String.format("%.0f", Math.abs(consPowerMin)) + "W");
+					views.setTextViewText(R.id.tv_widgetRow3Value, String.format("%.0f", solarPowerMin) + "W");
+
+					if (consPowerMin > 0.0d) {
+						views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
+								.getColor(android.R.color.holo_red_light));
+					} else {
+						views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
+								.getColor(android.R.color.holo_green_light));
+						if (consPowerMin < -200.0d) {
+							NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+									.setContentTitle(context.getString(R.string.app_name))
+									.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, spMonitor.class), 0))
+									.setContentText(context.getString(R.string.notif_export,Utilities.getCurrentTime()))
+									.setAutoCancel(true)
+									.setSound(Uri.parse("android.resource://"
+											+ context.getPackageName() + "/"
+											+ R.raw.alert))
+									.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
+									.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+									.setWhen(System.currentTimeMillis())
+									.setSmallIcon(android.R.drawable.ic_dialog_info);
+
+							Notification notification = builder.build();
+							NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+							notificationManager.notify(0, notification);
+
+
+						}
+					}
+				} catch (Exception ignore) {
 					views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));
 					views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));
 					views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));
-				} else {
-					// decode JSON
-					if (Utilities.isJSONValid(resultToDisplay)) {
-						try {
-							/** JSON object containing result from server */
-							JSONObject jsonResult = new JSONObject(resultToDisplay);
-							/** JSON object containing the values */
-							JSONObject jsonValues = jsonResult.getJSONObject("value");
-
-							try {
-								solarPowerMin = Float.parseFloat(jsonValues.getString("S"));
-								consPowerMin = Float.parseFloat(jsonValues.getString("C"));
-							} catch (Exception ignore) {
-								views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));
-								views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));
-								views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));
-							}
-
-							/** Double for the result of solar current and consumption used at 1min updates */
-							double resultPowerMin = solarPowerMin + consPowerMin;
-
-							views.setTextViewText(R.id.tv_widgetRow1Value, String.format("%.0f", resultPowerMin) + "W");
-							views.setTextViewText(R.id.tv_widgetRow2Value, String.format("%.0f", Math.abs(consPowerMin)) + "W");
-							views.setTextViewText(R.id.tv_widgetRow3Value, String.format("%.0f", solarPowerMin) + "W");
-
-							if (consPowerMin > 0.0d) {
-								views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
-										.getColor(android.R.color.holo_red_light));
-							} else {
-								views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
-										.getColor(android.R.color.holo_green_light));
-							}
-						} catch (Exception ignore) {
-							views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));
-							views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));
-							views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));
-						}
-					}
 				}
 			}
 		}

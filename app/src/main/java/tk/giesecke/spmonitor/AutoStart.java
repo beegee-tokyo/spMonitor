@@ -5,9 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.Calendar;
 
@@ -28,9 +26,7 @@ public class AutoStart extends BroadcastReceiver {
 		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 			/** Access to shared preferences of app widget */
 			SharedPreferences wPrefs = context.getSharedPreferences("spMonitor",0);
-			if (BuildConfig.DEBUG) Log.d("spMonitor Autostart","Widget number = "+wPrefs.getInt("wNums",0));
 			if (wPrefs.getInt("wNums",0) != 0) {
-				if (BuildConfig.DEBUG) Log.d("spMonitor Autostart","activating widget timer");
 				/** Update interval in ms */
 				int alarmTime = 60000;
 

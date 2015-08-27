@@ -140,7 +140,8 @@
         android:layout_marginRight="5sp"
         android:layout_alignParentBottom="false"
         android:layout_alignBaseline="@+id/cb_solar"
-        android:layout_toLeftOf="@+id/tv_light_value"/>
+        android:layout_toLeftOf="@+id/tv_light_value"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -152,7 +153,8 @@
         android:layout_marginLeft="5sp"
         android:layout_marginRight="5sp"
         android:layout_alignBaseline="@+id/cb_solar"
-        android:layout_toLeftOf="@+id/bt_close"/>
+        android:layout_toLeftOf="@+id/bt_close"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -244,7 +246,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_toRightOf="@+id/cb_cons"
         android:textColor="@android:color/white"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:onClick="onClick"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -254,7 +257,8 @@
         android:checked="true"
         android:textColor="@android:color/white"
         android:layout_toRightOf="@+id/cb_solar"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:onClick="onClick"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -263,7 +267,8 @@
         android:id="@+id/cb_solar"
         android:checked="true"
         android:textColor="@android:color/white"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:onClick="onClick"/>
 
     <TextView
         android:layout_width="wrap_content"

@@ -29,10 +29,10 @@
         android:onClick="onClick"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/holo_blue_dark"
-        android:background="@color/bg_very_dark_grey"
         android:layout_below="@+id/tv_cons_max"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        style="@android:style/Widget.DeviceDefault.Button"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -42,11 +42,11 @@
         android:onClick="onClick"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/holo_red_light"
-        android:background="@color/bg_very_dark_grey"
         android:layout_below="@+id/tv_cons_max"
         android:layout_toRightOf="@+id/bt_prevLog"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        style="@android:style/Widget.DeviceDefault.Button"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -58,9 +58,9 @@
         android:layout_toRightOf="@+id/bt_nextLog"
         android:layout_below="@+id/tv_cons_max"
         android:textColor="@android:color/holo_blue_dark"
-        android:background="@color/bg_very_dark_grey"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        style="@android:style/Widget.DeviceDefault.Button"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -69,11 +69,11 @@
         android:id="@+id/bt_close"
         android:onClick="onClick"
         android:textColor="@android:color/holo_red_light"
-        android:background="@color/bg_very_dark_grey"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/tv_solar_max"/>
+        android:layout_below="@+id/tv_solar_max"
+        style="@android:style/Widget.DeviceDefault.Button"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -82,12 +82,12 @@
         android:id="@+id/bt_stop"
         android:onClick="onClick"
         android:textColor="@android:color/holo_red_light"
-        android:background="@color/bg_very_dark_grey"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_below="@+id/tv_cons_max"
         android:layout_toRightOf="@+id/bt_sync"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        style="@android:style/Widget.DeviceDefault.Button"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -96,12 +96,12 @@
         android:id="@+id/bt_sync"
         android:onClick="onClick"
         android:textColor="@android:color/holo_orange_light"
-        android:background="@color/bg_very_dark_grey"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_toRightOf="@+id/bt_status"
         android:layout_below="@+id/tv_cons_max"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        style="@android:style/Widget.DeviceDefault.Button"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -146,7 +146,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/tv_light_value"
-        tools:ignore="RelativeOverlap"/>
+        tools:ignore="RelativeOverlap"
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -158,7 +159,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        />
+        android:visibility="invisible"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -243,7 +244,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/white"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/cb_cons"/>
+        android:layout_toRightOf="@+id/cb_cons"
+        android:onClick="onClick"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -254,7 +256,8 @@
         android:textColor="@android:color/white"
         android:layout_toRightOf="@+id/cb_solar"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:onClick="onClick"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -264,7 +267,8 @@
         android:checked="true"
         android:textColor="@android:color/white"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:onClick="onClick"/>
 
     <TextView
         android:layout_width="wrap_content"

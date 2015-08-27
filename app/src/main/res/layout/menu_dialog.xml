@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="400dp"
+                android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:background="@android:color/darker_gray"
+              tools:ignore="Overdraw">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bt_backup_remote_txt"
+            android:id="@+id/bt_backup"
+            android:layout_margin="5dp"
+            style="@android:style/Widget.DeviceDefault.Button"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bt_restore_remote_txt"
+            android:id="@+id/bt_restore"
+            android:layout_margin="5dp"
+            style="@android:style/Widget.DeviceDefault.Button"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bt_switch_net"
+            android:layout_margin="5dp"
+            style="@android:style/Widget.DeviceDefault.Button"
+            android:layout_weight="1"
+            android:text="@string/bt_switch_WAN_txt"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bt_future2"
+            android:layout_margin="5dp"
+            style="@android:style/Widget.DeviceDefault.Button"
+            android:layout_weight="1"
+            android:text="@string/bt_restore_local_txt"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@android:string/cancel"
+        android:id="@+id/bt_menu_cancel"
+        android:layout_gravity="center_horizontal"
+        style="@android:style/Widget.DeviceDefault.Button"/>
+
+</LinearLayout>

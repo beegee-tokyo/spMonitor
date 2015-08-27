@@ -3,10 +3,8 @@ package tk.giesecke.spmonitor;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,6 +38,10 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 	private static final int delay = 1000;
 	/** Instance of asynchronous task */
 	private AsyncTask asTask;
+	/** SSID of WiFi */
+	private String connSSID = null;
+	/** Flag if device was found on WiFi or if IP was entered manual */
+	private boolean isManual = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +65,9 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 		// Check if device is reachable on the network
 
 		// 1) Check if WiFi is enabled
-		/** Access to connectivity manager */
-		ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-		android.net.NetworkInfo wifiOn = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-		wifiOn.getDetailedState();
-		if (wifiOn.getDetailedState().name().equalsIgnoreCase("DISCONNECTED")) {
+		connSSID = Utilities.getSSID(this);
+		if (connSSID == null) {
 			resultTextView.setText(getResources().getString(R.string.no_wifi));
-			manualEntry.setVisibility(View.INVISIBLE);
-			manualEntryTxt.setVisibility(View.INVISIBLE);
 		} else {
 			/** Access to shared preferences of application*/
 			spMonitor.mPrefs = getSharedPreferences("spMonitor", 0);
@@ -124,6 +120,7 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 								updateText(getResources().getString(R.string.manual_ip, ipBuilder));
 								manualEntry.setVisibility(View.INVISIBLE);
 								manualEntryTxt.setVisibility(View.INVISIBLE);
+								isManual = true;
 								asTask.cancel(true);
 								startMain();
 							}
@@ -255,6 +252,9 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 	private void startMain() {
 		/** Handler to start main UI with an delay of 5 second */
 		final Handler handler = new Handler();
+		if (!isManual) {
+			spMonitor.mPrefs.edit().putString("SSID",connSSID).apply();
+		}
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
