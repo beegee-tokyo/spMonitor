@@ -17,9 +17,6 @@ import android.util.Log;
  */
 public class ScreenReceiver extends BroadcastReceiver {
 
-	/** Broadcast receiver for screen on/off */
-	public static BroadcastReceiver screenOnOffReceiver = null;
-
 	public ScreenReceiver() {
 	}
 

@@ -1,28 +1,34 @@
 package tk.giesecke.spmonitor;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -64,7 +70,7 @@ import java.util.concurrent.TimeUnit;
  * @author Bernd Giesecke
  * @version 0.2 beta August 19, 2015.
  */
-public class spMonitor extends Activity implements View.OnClickListener {
+public class spMonitor extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
 	/** Access to shared preferences of application*/
 	public static SharedPreferences mPrefs;
@@ -184,6 +190,15 @@ public class spMonitor extends Activity implements View.OnClickListener {
 	/** Instance of dialog */
 	private Dialog menuDialog;
 
+	/** Array list with available alarm names */
+	private ArrayList<String> notifNames = new ArrayList<>();
+	/** Array list with available alarm uri's */
+	private ArrayList<String> notifUri = new ArrayList<>();
+	/** Selected alarm name */
+	private String notifNameSel = "";
+	/** Selected alarm uri */
+	private String notifUriSel = "";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -204,6 +219,10 @@ public class spMonitor extends Activity implements View.OnClickListener {
 		deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
 		isWAN = mPrefs.getBoolean("access_type", false);
 		connSSID = mPrefs.getString("SSID", "");
+
+		notifUriSel = "android.resource://"
+				+ this.getPackageName() + "/"
+				+ R.raw.alert;
 
 		// In case the database is not yet existing, open it once
 		/** Instance of DataBaseHelper */
@@ -545,23 +564,78 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				break;
 			case R.id.bt_future2:
 
-				NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-						.setContentTitle(this.getString(R.string.app_name))
-						.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, spMonitor.class), 0))
-						.setContentText(this.getString(R.string.notif_export, Utilities.getCurrentTime()))
-						.setAutoCancel(true)
-						.setSound(Uri.parse("android.resource://"
-								+ this.getPackageName() + "/"
-								+ R.raw.alert))
-						.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
-						.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-						.setWhen(System.currentTimeMillis())
-						.setSmallIcon(android.R.drawable.ic_dialog_info);
+				notifNames = new ArrayList<>();
+				notifUri = new ArrayList<>();
+				notifNames.add(getString(R.string.no_alarm_sel));
+				notifUri.add("");
+				notifNames.add(getString(R.string.dev_alarm_sel));
+				notifUri.add("android.resource://"
+						+ this.getPackageName() + "/"
+						+ R.raw.alert);
+				Utilities.getNotifSounds(this, notifNames, notifUri);
+				menuDialog.dismiss();
 
-				Notification notification = builder.build();
-				NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-				notificationManager.notify(0, notification);
+				/** Builder for alarm sound selection dialog */
+				AlertDialog.Builder alarmSelBuilder = new AlertDialog.Builder(appContext);
+				/** Inflater for restore file selection dialog */
+				LayoutInflater alarmSelInflater = (LayoutInflater) appContext.getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE);
+				/** View for restore file selection dialog */
+				@SuppressLint("InflateParams") View alarmListView = alarmSelInflater
+						.inflate(R.layout.alarm_dialog, null);
+				alarmSelBuilder.setView(alarmListView);
+				/** Pointer to restore file selection dialog */
+				AlertDialog alarmList = alarmSelBuilder.create();
+				alarmList.setTitle(appContext.getString(R.string.alarm_diag_title));
 
+				alarmList.setButton(AlertDialog.BUTTON_POSITIVE, appContext.getString(android.R.string.ok),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								if (!notifNameSel.equalsIgnoreCase("")) {
+									mPrefs.edit().putString("alarmUri",notifUriSel).apply();
+								}
+								dialog.dismiss();
+							}
+						});
+
+				alarmList.setButton(AlertDialog.BUTTON_NEGATIVE, appContext.getString(android.R.string.cancel),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int which) {
+								// nothing to do here, just close the dialog
+								dialog.dismiss();
+							}
+						});
+
+				/** Pointer to list view with the alarms */
+				ListView lvAlarmList = (ListView) alarmListView.findViewById(R.id.lv_AlarmList);
+				final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+						appContext,
+						android.R.layout.simple_list_item_single_choice,
+						notifNames );
+
+				lvAlarmList.setAdapter(arrayAdapter);
+				lvAlarmList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+					public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					                               int pos, long id) {
+						/** Instance of media player */
+						MediaPlayer mMediaPlayer = new MediaPlayer();
+						try {
+							mMediaPlayer.setDataSource(appContext, Uri.parse(notifUri.get(pos)));
+							final AudioManager audioManager = (AudioManager) appContext
+									.getSystemService(Context.AUDIO_SERVICE);
+							if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+								mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+								mMediaPlayer.prepare();
+								mMediaPlayer.start();
+							}
+						} catch (IOException e) {
+							System.out.println("OOPS");
+						}
+						return true;
+					}
+				});
+				lvAlarmList.setOnItemClickListener(this);
+				alarmList.show();
 			case R.id.bt_menu_cancel:
 				menuDialog.dismiss();
 				break;
@@ -627,6 +701,12 @@ public class spMonitor extends Activity implements View.OnClickListener {
 				break;
 		}
 		return super.onKeyUp(keyCode, event);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		notifNameSel = notifNames.get(position);
+		notifUriSel = notifUri.get(position);
 	}
 
 	/**

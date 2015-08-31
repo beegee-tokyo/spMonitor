@@ -62,15 +62,20 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 		manualEntry.setOnClickListener(this);
 		manualEntryTxt = (TextView) findViewById(R.id.tv_man_ip_hdr);
 
-		// Check if device is reachable on the network
+		/** Access to shared preferences of application*/
+		spMonitor.mPrefs = getSharedPreferences("spMonitor", 0);
 
-		// 1) Check if WiFi is enabled
+		// Check if device is reachable on the network
+		// Check if WiFi is enabled
 		connSSID = Utilities.getSSID(this);
-		if (connSSID == null) {
+		if (connSSID == null) { // No WiFi, but possibility to go into WAN mode
 			resultTextView.setText(getResources().getString(R.string.no_wifi));
-		} else {
-			/** Access to shared preferences of application*/
-			spMonitor.mPrefs = getSharedPreferences("spMonitor", 0);
+			/** Progressbar shown during search */
+			ProgressBar refreshRot = (ProgressBar) findViewById(R.id.pb_splash);
+			refreshRot.setVisibility(View.INVISIBLE);
+			manualEntry.setText(getResources().getString(R.string.bt_switch_WAN_txt));
+			manualEntryTxt.setVisibility(View.INVISIBLE);
+		} else { // WiFi connected => check last known IP address
 			spMonitor.deviceIP = spMonitor.mPrefs.getString("spMonitorIP","no IP saved");
 
 			if (spMonitor.deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip))) {
@@ -87,52 +92,58 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.bt_man_ip:
-				/** Progressbar shown during search */
-				ProgressBar refreshRot = (ProgressBar) findViewById(R.id.pb_splash);
-				refreshRot.setVisibility(View.INVISIBLE);
 
-				/** Alert dialog builder to show dialog for manual IP address input */
-				AlertDialog.Builder ipDialBuilder = new AlertDialog.Builder(this);
-				/** Layout inflater to show dialog for manual IP address input */
-				LayoutInflater ipDialInflater = getLayoutInflater();
-				@SuppressLint("InflateParams") final View ipDialView = ipDialInflater.inflate(R.layout.ip_input, null);
-				ipDialBuilder.setView(ipDialView);
-				/** Instance of dialog */
-				AlertDialog ipDialog = ipDialBuilder.create();
-				ipDialog.setTitle(getString(R.string.tv_ip_header_txt));
+				if (connSSID == null) {
+					isManual = true;
+					startMain();
+				} else {
+					/** Progressbar shown during search */
+					ProgressBar refreshRot = (ProgressBar) findViewById(R.id.pb_splash);
+					refreshRot.setVisibility(View.INVISIBLE);
 
-				ipDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-								/** String containing the IP address entered by the user */
-								String ipBuilder;
-								/** Pointer to edit text fields */
-								EditText numField = (EditText) ipDialView.findViewById(R.id.et_ip_1);
-								ipBuilder = numField.getText().toString();
-								ipBuilder = ipBuilder + ":";
-								numField = (EditText) ipDialView.findViewById(R.id.et_ip_2);
-								ipBuilder = ipBuilder + numField.getText().toString() + ":";
-								numField = (EditText) ipDialView.findViewById(R.id.et_ip_3);
-								ipBuilder = ipBuilder + numField.getText().toString() + ":";
-								numField = (EditText) ipDialView.findViewById(R.id.et_ip_4);
-								ipBuilder = ipBuilder + numField.getText().toString();
-								spMonitor.mPrefs.edit().putString("spMonitorIP", "http://" + ipBuilder + "/arduino/");
-								updateText(getResources().getString(R.string.manual_ip, ipBuilder));
-								manualEntry.setVisibility(View.INVISIBLE);
-								manualEntryTxt.setVisibility(View.INVISIBLE);
-								isManual = true;
-								asTask.cancel(true);
-								startMain();
-							}
-						});
-				ipDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int which) {
-							}
-						});
+					/** Alert dialog builder to show dialog for manual IP address input */
+					AlertDialog.Builder ipDialBuilder = new AlertDialog.Builder(this);
+					/** Layout inflater to show dialog for manual IP address input */
+					LayoutInflater ipDialInflater = getLayoutInflater();
+					@SuppressLint("InflateParams") final View ipDialView = ipDialInflater.inflate(R.layout.ip_input, null);
+					ipDialBuilder.setView(ipDialView);
+					/** Instance of dialog */
+					AlertDialog ipDialog = ipDialBuilder.create();
+					ipDialog.setTitle(getString(R.string.tv_ip_header_txt));
 
-				ipDialog.show();
-
+					ipDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									/** String containing the IP address entered by the user */
+									String ipBuilder;
+									/** Pointer to edit text fields */
+									EditText numField = (EditText) ipDialView.findViewById(R.id.et_ip_1);
+									ipBuilder = numField.getText().toString();
+									ipBuilder = ipBuilder + ":";
+									numField = (EditText) ipDialView.findViewById(R.id.et_ip_2);
+									ipBuilder = ipBuilder + numField.getText().toString() + ":";
+									numField = (EditText) ipDialView.findViewById(R.id.et_ip_3);
+									ipBuilder = ipBuilder + numField.getText().toString() + ":";
+									numField = (EditText) ipDialView.findViewById(R.id.et_ip_4);
+									ipBuilder = ipBuilder + numField.getText().toString();
+									spMonitor.mPrefs.edit().putString("spMonitorIP", "http://" + ipBuilder + "/arduino/");
+									updateText(getResources().getString(R.string.manual_ip, ipBuilder));
+									manualEntry.setVisibility(View.INVISIBLE);
+									manualEntryTxt.setVisibility(View.INVISIBLE);
+									isManual = true;
+									if (asTask != null) {
+										asTask.cancel(true);
+									}
+									startMain();
+								}
+							});
+					ipDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+								}
+							});
+					ipDialog.show();
+				}
 				break;
 		}
 	}

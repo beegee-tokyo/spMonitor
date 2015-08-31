@@ -4,13 +4,23 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.RadioGroup;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /** spMonitor - SPwidgetConfigureActivity
  *
@@ -19,12 +29,22 @@ import android.widget.RadioGroup;
  * @author Bernd Giesecke
  * @version 0.2 beta August 19, 2015.
  */
-public class SPwidgetConfigureActivity extends Activity {
+public class SPwidgetConfigureActivity extends Activity implements AdapterView.OnItemClickListener {
 
 	/** Default app widget id */
 	private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+	/** Context of the configuration */
+	private Context confContext;
 	/** Flag for requested widget text size */
 	private boolean isTextLarge = true;
+	/** Array list with available alarm names */
+	private ArrayList<String> notifNames = new ArrayList<>();
+	/** Array list with available alarm uri's */
+	private ArrayList<String> notifUri = new ArrayList<>();
+	/** Selected alarm name */
+	private String notifNameSel = "";
+	/** Selected alarm uri */
+	private String notifUriSel = "";
 
 	public SPwidgetConfigureActivity() {
 		super();
@@ -58,7 +78,8 @@ public class SPwidgetConfigureActivity extends Activity {
 			return;
 		}
 
-		/** Radio group with radio buttons for temperature unit selection */
+		confContext = this;
+		/** Radio group with radio buttons for text size selection */
 		RadioGroup rgSize = (RadioGroup) findViewById(R.id.rg_size);
 		rgSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			@Override
@@ -73,6 +94,47 @@ public class SPwidgetConfigureActivity extends Activity {
 				}
 			}
 		});
+
+		notifNames = new ArrayList<>();
+		notifUri = new ArrayList<>();
+		notifNames.add(getString(R.string.no_alarm_sel));
+		notifUri.add("");
+		notifNames.add(getString(R.string.dev_alarm_sel));
+		notifUri.add("android.resource://"
+				+ this.getPackageName() + "/"
+				+ R.raw.alert);
+		Utilities.getNotifSounds(this, notifNames, notifUri);
+
+		/** Pointer to list view with the alarms */
+		ListView lvAlarmList = (ListView) findViewById(R.id.lv_alarms);
+		final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+				this,
+				android.R.layout.simple_list_item_single_choice,
+				notifNames );
+
+		lvAlarmList.setAdapter(arrayAdapter);
+		lvAlarmList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+			                               int pos, long id) {
+				/** Instance of media player */
+				MediaPlayer mMediaPlayer = new MediaPlayer();
+				try {
+					mMediaPlayer.setDataSource(confContext, Uri.parse(notifUri.get(pos)));
+					final AudioManager audioManager = (AudioManager) confContext
+							.getSystemService(Context.AUDIO_SERVICE);
+					if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+						mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+						mMediaPlayer.prepare();
+						mMediaPlayer.start();
+					}
+				} catch (IOException e) {
+					System.out.println("OOPS");
+				}
+				return true;
+			}
+		});
+		lvAlarmList.setOnItemClickListener(this);
+
 	}
 
 	/**
@@ -91,6 +153,10 @@ public class SPwidgetConfigureActivity extends Activity {
 					/** Access to the shared preferences */
 					SharedPreferences mPrefs = getSharedPreferences("spMonitor",0);
 					mPrefs.edit().putBoolean("wSizeLarge",isTextLarge).apply();
+
+					if (!notifNameSel.equalsIgnoreCase("")) {
+						mPrefs.edit().putString("alarmUri",notifUriSel).apply();
+					}
 
 					// It is the responsibility of the configuration activity to update the app widget
 					/** App widget manager for this widget */
@@ -124,13 +190,19 @@ public class SPwidgetConfigureActivity extends Activity {
 						IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 						filter.addAction(Intent.ACTION_SCREEN_OFF);
 						/** BroadcastReceiver to receive Screen on/off broadcast msgs */
-						ScreenReceiver.screenOnOffReceiver = new ScreenReceiver();
-						registerReceiver(ScreenReceiver.screenOnOffReceiver, filter);
+						BroadcastReceiver mReceiver = new ScreenReceiver();
+						registerReceiver(mReceiver, filter);
 					}
 					finish();
 					break;
 			}
 		}
 	};
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		notifNameSel = notifNames.get(position);
+		notifUriSel = notifUri.get(position);
+	}
 }
 

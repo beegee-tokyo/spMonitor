@@ -3,6 +3,7 @@ package tk.giesecke.spmonitor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -365,5 +366,29 @@ class Utilities {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Get list of all available notification tones
+	 *
+	 * @param context
+	 *            application context
+	 * @param notifNames
+	 *            array list to store the name of the tones
+	 * @param notifUri
+	 *            array list to store the paths of the tones
+	 */
+	public static void getNotifSounds(Context context, ArrayList<String> notifNames, ArrayList<String> notifUri) {
+		/** Instance of the ringtone manager */
+		RingtoneManager manager = new RingtoneManager(context);
+		manager.setType(RingtoneManager.TYPE_NOTIFICATION);
+		/** Cursor with the notification tones */
+		Cursor cursor = manager.getCursor();
+
+		while (cursor.moveToNext()) {
+			notifNames.add(cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX));
+			notifUri.add(cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" +
+					cursor.getString(RingtoneManager.ID_COLUMN_INDEX));
+		}
 	}
 }

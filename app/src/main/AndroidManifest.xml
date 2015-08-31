@@ -68,6 +68,7 @@
             android:name=".SyncService"
             android:exported="false" >
         </service>
+
         <service
             android:name=".ScreenReceiverService"
             android:enabled="true"

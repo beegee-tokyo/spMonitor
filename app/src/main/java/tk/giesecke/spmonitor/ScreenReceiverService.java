@@ -1,6 +1,7 @@
 package tk.giesecke.spmonitor;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -32,12 +33,12 @@ public class ScreenReceiverService extends Service {
 		SharedPreferences wPrefs = this.getSharedPreferences("spMonitor", 0);
 		if (BuildConfig.DEBUG) Log.d("spMonitor ScreenService", "Widget number = " + wPrefs.getInt("wNums", 0));
 		if (wPrefs.getInt("wNums", 0) != 0) {
-			/** IntentFilter to receive Screen on/off broadcast msgs */
+			/** IntentFilter to receive screen on/off broadcast msgs */
 			IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 			filter.addAction(Intent.ACTION_SCREEN_OFF);
-			/** BroadcastReceiver to receive Screen on/off broadcast msgs */
-			ScreenReceiver.screenOnOffReceiver = new ScreenReceiver();
-			this.registerReceiver(ScreenReceiver.screenOnOffReceiver, filter);
+			/** Receiver for screen on/off broadcast msgs */
+			BroadcastReceiver mReceiver = new ScreenReceiver();
+			registerReceiver(mReceiver, filter);
 		}
 	}
 }
