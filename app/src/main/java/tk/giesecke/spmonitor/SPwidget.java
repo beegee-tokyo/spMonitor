@@ -326,9 +326,6 @@ public class SPwidget extends AppWidgetProvider {
 							.setContentTitle(context.getString(R.string.app_name))
 							.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, spMonitor.class), 0))
 							.setAutoCancel(false)
-							.setSound(Uri.parse("android.resource://"
-									+ context.getPackageName() + "/"
-									+ R.raw.silent))
 							.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 							.setVisibility(Notification.VISIBILITY_PUBLIC)
 							.setWhen(System.currentTimeMillis());

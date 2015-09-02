@@ -1,6 +1,8 @@
 package tk.giesecke.spmonitor;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -39,12 +41,31 @@ public class SyncService extends IntentService {
 		if (BuildConfig.DEBUG) Log.d("spMonitor SyncService","started");
 		if (intent != null) {
 
+			/** Context of application */
+			Context intentContext = getApplicationContext();
+			if (BuildConfig.DEBUG) Log.d("spMonitor SyncService","intentContext = "+intentContext);
+
+			// Start the background updates of widget and notifications
+			/** Update interval in ms */
+			int alarmTime = 60000;
+
+			/** Intent for broadcast message to update widgets */
+			Intent startIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
+			/** Pending intent for broadcast message to update widgets */
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(
+					intentContext, 2701, startIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			/** Alarm manager for scheduled widget updates */
+			AlarmManager alarmManager = (AlarmManager) intentContext.getSystemService
+					(Context.ALARM_SERVICE);
+			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+					System.currentTimeMillis(),
+					alarmTime, pendingIntent);
+
 			if (android.os.Build.VERSION.SDK_INT > 9) {
 				StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 				StrictMode.setThreadPolicy(policy);
 			}
 
-			Context intentContext = getApplicationContext();
 			/** Access to shared preferences of app widget */
 			SharedPreferences mPrefs = intentContext.getSharedPreferences("spMonitor", 0);
 			/** URL of the spMonitor device */

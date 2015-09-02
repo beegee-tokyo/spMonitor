@@ -48,7 +48,7 @@ public class AutoStart extends BroadcastReceiver {
 
 			/** Calendar instance to setup daily sync */
 			Calendar calendar = Calendar.getInstance();
-			calendar.set(Calendar.HOUR_OF_DAY, 5); // trigger at 1am
+			calendar.set(Calendar.HOUR_OF_DAY, 7); // trigger at 7am
 			calendar.set(Calendar.MINUTE, 0);
 			calendar.set(Calendar.SECOND, 0);
 			/** Pending intent for daily sync */

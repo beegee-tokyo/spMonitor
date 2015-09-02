@@ -562,7 +562,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				mPrefs.edit().putBoolean("access_type",isWAN).apply();
 				menuDialog.dismiss();
 				break;
-			case R.id.bt_future2:
+			case R.id.bt_set_alarm:
 
 				notifNames = new ArrayList<>();
 				notifUri = new ArrayList<>();
@@ -674,6 +674,9 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				dialogButton = (Button) menuDialog.findViewById(R.id.bt_restore);
 				dialogButton.setOnClickListener(this);
 				dialogButton.setEnabled(true);
+				dialogButton = (Button) menuDialog.findViewById(R.id.bt_save_csv);
+				dialogButton.setOnClickListener(this);
+				dialogButton.setEnabled(true);
 				dialogButton = (Button) menuDialog.findViewById(R.id.bt_menu_cancel);
 				dialogButton.setOnClickListener(this);
 				dialogButton = (Button) menuDialog.findViewById(R.id.bt_switch_net);
@@ -683,12 +686,16 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				} else {
 					dialogButton.setText(getString(R.string.bt_switch_WAN_txt));
 				}
-				dialogButton = (Button) menuDialog.findViewById(R.id.bt_future2);
+				dialogButton = (Button) menuDialog.findViewById(R.id.bt_enable_notif);
+				dialogButton.setOnClickListener(this);
+				dialogButton = (Button) menuDialog.findViewById(R.id.bt_set_alarm);
 				dialogButton.setOnClickListener(this);
 				if (isWAN) {
 					dialogButton = (Button) menuDialog.findViewById(R.id.bt_backup);
 					dialogButton.setEnabled(false);
 					dialogButton = (Button) menuDialog.findViewById(R.id.bt_restore);
+					dialogButton.setEnabled(false);
+					dialogButton = (Button) menuDialog.findViewById(R.id.bt_save_csv);
 					dialogButton.setEnabled(false);
 				}
 				menuDialog.show();
@@ -1609,7 +1616,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		// let the chart know it's data has changed
 		lineChart.notifyDataSetChanged();
 		lineChart.invalidate();
-
 	}
 
 	/**
