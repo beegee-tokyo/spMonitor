@@ -6,6 +6,20 @@
 		<title>spMonitor Test</title>
 		<script type="text/javascript" src="fusioncharts/fusioncharts.js"></script>
 		<script type="text/javascript" src="fusioncharts/themes/fusioncharts.theme.zune.js"></script>
+		<link rel="stylesheet" href="jq/jquery-ui.min.css">
+        <script src="jq/external/jquery/jquery.js"></script>
+        <script src="jq/jquery-ui.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(e){
+				e.preventDefault();
+				var minDay="<?php echo $datePickerMin; ?>";
+				$("#date").datepicker({
+					minDate: minDay,
+					maxDate: 0,
+					dateFormat: "yy-MM-dd"
+				});
+			});
+		</script>
 		<!--
 		.scroll{
 			width:auto;
@@ -16,7 +30,7 @@
 	</head>
 
 	<body bgcolor="#000000">
-
+	<font color="white">
 		<?php
 			$daySelected = $_GET['day'];
 			$plotType = $_GET['type'];
@@ -37,6 +51,10 @@
 			// Start drawing the table
 			echo "<div style=\"overflow: auto; max-height: 100px; width: 300px; float: top; background: lightgrey; padding-left: 10px; margin: 30px\">";
 
+			// First available date
+			$firstYear = "";
+			$firstMonth = "";
+			$firstDay = "";
 			// Define your SQL statement to get available years
 			$query = "SELECT DISTINCT SUBSTR(d,1,2) y FROM s";
 			$sth = $dbh->query($query);
@@ -72,6 +90,15 @@
 				}
 			}
 			echo "</div>";
+			$firstYear=$yearsAvail[0][y];
+			$firstMonth=$monthsAvail[0][m];
+			$firstDay=$daysAvail[0][d];
+			print_r ("First Year: $firstYear</br>");
+			print_r ("First Month: $firstMonth</br>");
+			print_r ("First Day: $firstDay</br>");
+			$datePickerMin = "$firstYear-$firstMonth-$firstDay";
+            print_r ("First Date: $datePickerMin</br>");
+            echo "<SCRIPT LANGUAGE='javascript'>add dd_Employee('".$id1."','".$fname1."',".$sal1.");</SCRIPT>";
 
 			if (!empty($daySelected)) {
                	$timeStamps = array();
@@ -157,6 +184,14 @@
 			}
 		?>
 
+		<h2>Select day to show</h2>
+
+		<form method="post" action="index.php?day=#date".$date id="selDate">
+			Select day : <input type="text" name="date" id="date"/>
+			<input type="submit" name="submit" value="Submit">
+		</form>
+
 		<div id="chartContainer">spMonitor plot from database will load here!</div>
+	</font>
 	</body>
 </html>

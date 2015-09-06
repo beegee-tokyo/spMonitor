@@ -2,6 +2,7 @@ package tk.giesecke.spmonitor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
@@ -63,8 +64,7 @@ class Utilities {
 					Log.d("spMonitor", inetAddress.getHostName());
 				}
 			} catch (IOException e) {
-				Log.d("spMonitor", "Exception "+e);
-				e.printStackTrace();
+				if (BuildConfig.DEBUG) Log.d("spMonitor", "Exception " + e);
 			}
 		}
 
@@ -99,7 +99,7 @@ class Utilities {
 			response = spMonitor.client.newCall(request).execute();
 			resultToDisplay = response.body().string();
 		} catch (IOException e) {
-			e.printStackTrace();
+			if (BuildConfig.DEBUG) Log.d("spMonitor", "Empty reply");
 			return "";
 		}
 		return resultToDisplay;
@@ -378,17 +378,28 @@ class Utilities {
 	 * @param notifUri
 	 *            array list to store the paths of the tones
 	 */
-	public static void getNotifSounds(Context context, ArrayList<String> notifNames, ArrayList<String> notifUri) {
+	public static int getNotifSounds(Context context, ArrayList<String> notifNames, ArrayList<String> notifUri) {
 		/** Instance of the ringtone manager */
 		RingtoneManager manager = new RingtoneManager(context);
 		manager.setType(RingtoneManager.TYPE_NOTIFICATION);
 		/** Cursor with the notification tones */
 		Cursor cursor = manager.getCursor();
+		/** Access to shared preferences of application*/
+		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
+		/** Last user selected alarm tone */
+		String lastUri = mPrefs.getString("alarmUri","");
+		/** Index of lastUri in the list */
+		int uriIndex = -1;
 
 		while (cursor.moveToNext()) {
 			notifNames.add(cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX));
 			notifUri.add(cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" +
 					cursor.getString(RingtoneManager.ID_COLUMN_INDEX));
+			if (lastUri.equalsIgnoreCase(cursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/" +
+					cursor.getString(RingtoneManager.ID_COLUMN_INDEX))) {
+				uriIndex = cursor.getPosition();
+			}
 		}
+		return uriIndex;
 	}
 }

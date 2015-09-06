@@ -60,9 +60,9 @@ public class SPwidget extends AppWidgetProvider {
 		//RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.sp_widget);
 
 		if (SP_WIDGET_UPDATE.equals(intent.getAction())) {
-			//for (int appWidgetId : appWidgetIds) {
-			//	appWidgetManager.updateAppWidget(appWidgetId, views);
-			//}
+//			for (int appWidgetId : appWidgetIds) {
+//				appWidgetManager.updateAppWidget(appWidgetId, views);
+//			}
 
 			onUpdate(context, appWidgetManager, appWidgetIds);
 		}
@@ -291,15 +291,12 @@ public class SPwidget extends AppWidgetProvider {
 							/** Uri of selected alarm */
 							String selUri = mPrefs.getString("alarmUri","");
 							if (!selUri.equalsIgnoreCase("")) {
-								// Instance of notification manager to cancel the existing notification */
-								NotificationManager nMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-								nMgr.cancel(0);
-
 								NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 										.setContentTitle(context.getString(R.string.app_name))
 										.setContentIntent(PendingIntent.getActivity(context, 0,
 												new Intent(context, spMonitor.class), 0))
 										.setContentText(context.getString(R.string.notif_export,
+												String.format("%.0f", Math.abs(consPowerMin)),
 												Utilities.getCurrentTime()))
 										.setAutoCancel(true)
 										.setSound(Uri.parse(selUri))
@@ -314,6 +311,10 @@ public class SPwidget extends AppWidgetProvider {
 										(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 								notificationManager.notify(0, notification);
 							}
+						} else {
+							// Instance of notification manager to cancel the existing notification */
+							NotificationManager nMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+							nMgr.cancel(0);
 						}
 					}
 
@@ -321,27 +322,28 @@ public class SPwidget extends AppWidgetProvider {
 					NotificationManager nMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 					nMgr.cancel(1);
 
-					/* Pointer to notification builder for export/import arrow */
-					NotificationCompat.Builder builder1 = new NotificationCompat.Builder(context)
-							.setContentTitle(context.getString(R.string.app_name))
-							.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, spMonitor.class), 0))
-							.setAutoCancel(false)
-							.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-							.setVisibility(Notification.VISIBILITY_PUBLIC)
-							.setWhen(System.currentTimeMillis());
-					/* Pointer to notification manager for export/import arrow */
-					NotificationManager notificationManager1 = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+					if (mPrefs.getBoolean("notif",true)) {
+						/* Pointer to notification builder for export/import arrow */
+						NotificationCompat.Builder builder1 = new NotificationCompat.Builder(context)
+								.setContentTitle(context.getString(R.string.app_name))
+								.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, spMonitor.class), 0))
+								.setAutoCancel(false)
+								.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+								.setVisibility(Notification.VISIBILITY_PUBLIC)
+								.setWhen(System.currentTimeMillis());
+						/* Pointer to notification manager for export/import arrow */
+						NotificationManager notificationManager1 = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-					builder1.setSmallIcon(notifIcon);
-					builder1.setContentText(notifText);
-					builder1.setTicker(String.format("%.0f", Math.abs(consPowerMin)) + "W");
-					if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-						builder1.setColor(notifColor);
+						builder1.setSmallIcon(notifIcon);
+						builder1.setContentText(notifText);
+						builder1.setTicker(String.format("%.0f", Math.abs(consPowerMin)) + "W");
+						if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+							builder1.setColor(notifColor);
+						}
+						/* Pointer to notification for export/import arrow */
+						Notification notification1 = builder1.build();
+						notificationManager1.notify(1, notification1);
 					}
-					/* Pointer to notification for export/import arrow */
-					Notification notification1 = builder1.build();
-					notificationManager1.notify(1, notification1);
-
 				} catch (Exception ignore) {
 					views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().
 							getString(R.string.widgetCommError1));

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -563,7 +565,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				menuDialog.dismiss();
 				break;
 			case R.id.bt_set_alarm:
-
 				notifNames = new ArrayList<>();
 				notifUri = new ArrayList<>();
 				notifNames.add(getString(R.string.no_alarm_sel));
@@ -572,7 +573,8 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				notifUri.add("android.resource://"
 						+ this.getPackageName() + "/"
 						+ R.raw.alert);
-				Utilities.getNotifSounds(this, notifNames, notifUri);
+				/** Index of last user selected alarm tone */
+				int uriIndex = Utilities.getNotifSounds(this, notifNames, notifUri) + 2;
 				menuDialog.dismiss();
 
 				/** Builder for alarm sound selection dialog */
@@ -592,7 +594,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
 								if (!notifNameSel.equalsIgnoreCase("")) {
-									mPrefs.edit().putString("alarmUri",notifUriSel).apply();
+									mPrefs.edit().putString("alarmUri", notifUriSel).apply();
 								}
 								dialog.dismiss();
 							}
@@ -605,6 +607,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 								dialog.dismiss();
 							}
 						});
+				alarmList.show();
 
 				/** Pointer to list view with the alarms */
 				ListView lvAlarmList = (ListView) alarmListView.findViewById(R.id.lv_AlarmList);
@@ -612,7 +615,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						appContext,
 						android.R.layout.simple_list_item_single_choice,
 						notifNames );
-
 				lvAlarmList.setAdapter(arrayAdapter);
 				lvAlarmList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 					public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
@@ -629,13 +631,30 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 								mMediaPlayer.start();
 							}
 						} catch (IOException e) {
-							System.out.println("OOPS");
+							if (BuildConfig.DEBUG) Log.d("spMonitor", "Cannot play alarm");
 						}
 						return true;
 					}
 				});
 				lvAlarmList.setOnItemClickListener(this);
-				alarmList.show();
+				lvAlarmList.setItemChecked(uriIndex, true);
+				lvAlarmList.setSelection(uriIndex);
+				break;
+			case R.id.bt_enable_notif:
+				boolean isNotifOn = mPrefs.getBoolean("notif",true);
+				if (isNotifOn) {
+					// Instance of notification manager to cancel the existing notification */
+					NotificationManager nMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+					nMgr.cancel(1);
+					mPrefs.edit().putBoolean("notif",false).apply();
+				} else {
+					mPrefs.edit().putBoolean("notif",true).apply();
+				}
+				menuDialog.dismiss();
+				break;
+			case R.id.bt_save_csv:
+				menuDialog.dismiss();
+				break;
 			case R.id.bt_menu_cancel:
 				menuDialog.dismiss();
 				break;
@@ -688,6 +707,11 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				}
 				dialogButton = (Button) menuDialog.findViewById(R.id.bt_enable_notif);
 				dialogButton.setOnClickListener(this);
+				if (mPrefs.getBoolean("notif",true)) {
+					dialogButton.setText(getString(R.string.bt_disable_notif_txt));
+				} else {
+					dialogButton.setText(getString(R.string.bt_enable_notif_txt));
+				}
 				dialogButton = (Button) menuDialog.findViewById(R.id.bt_set_alarm);
 				dialogButton.setOnClickListener(this);
 				if (isWAN) {
@@ -752,7 +776,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						resultToDisplay = response.body().string();
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
 					resultToDisplay = e.getMessage();
 					isWAN = true;
 					mPrefs.edit().putBoolean("access_type",isWAN).apply();

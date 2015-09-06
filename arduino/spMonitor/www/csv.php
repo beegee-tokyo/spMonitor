@@ -22,14 +22,26 @@ while($row = $sth->fetch(PDO::FETCH_ASSOC)) {
 //	echo $json[$i][id].",".$json[$i][d].",".$json[$i][s].",".$json[$i][c].",".$json[$i][l]."</br>";
 //}
 
-$header = '';
-$output = fopen("php://output",'w') or die("Can't open php://output");
-header("Content-Type:application/csv");
-header("Content-Disposition:attachment;filename=spMonitor.csv");
-fputcsv($output, array('id','d','s','c','l'));
+//$header = '';
+//$output = fopen("php://output",'w') or die("Can't open php://output");
+//header("Content-Type:application/csv");
+//header("Content-Disposition:attachment;filename=spMonitor.csv");
+//fputcsv($output, array('id','d','s','c','l'));
 
+//foreach($json as $data){
+//    fputcsv($output, $data);
+//}
+//fclose($output) or die("Can't close php://output");
+echo '<html><head><title>spMonitor Save as CSV</title></head><body bgcolor="#000000"><font color="white">';
+
+echo "<p>File ready to be sent, now saving on disk</p>";
+$outFile = fopen("/mnt/sda1/db.csv",'w') or die("Can't open /mnt/sda1/db.csv");
+fputcsv($outFile, array('id','d','s','c','l'));
 foreach($json as $data){
-    fputcsv($output, $data);
+    fputcsv($outFile, $data);
 }
-fclose($output) or die("Can't close php://output");
+fclose($outFile) or die("Can't close /mnt/sda1/db.csv");
+echo "<p>File saved</p>";
+echo "</font></body></html>";
+
 ?>

@@ -13,6 +13,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -103,7 +104,8 @@ public class SPwidgetConfigureActivity extends Activity implements AdapterView.O
 		notifUri.add("android.resource://"
 				+ this.getPackageName() + "/"
 				+ R.raw.alert);
-		Utilities.getNotifSounds(this, notifNames, notifUri);
+		/** Index of last user selected alarm tone */
+		int uriIndex = Utilities.getNotifSounds(this, notifNames, notifUri) + 2;
 
 		/** Pointer to list view with the alarms */
 		ListView lvAlarmList = (ListView) findViewById(R.id.lv_alarms);
@@ -128,13 +130,14 @@ public class SPwidgetConfigureActivity extends Activity implements AdapterView.O
 						mMediaPlayer.start();
 					}
 				} catch (IOException e) {
-					System.out.println("OOPS");
+					if (BuildConfig.DEBUG) Log.d("spMonitor", "No alarms found");
 				}
 				return true;
 			}
 		});
 		lvAlarmList.setOnItemClickListener(this);
-
+		lvAlarmList.setItemChecked(uriIndex, true);
+		lvAlarmList.setSelection(uriIndex);
 	}
 
 	/**

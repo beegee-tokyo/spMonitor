@@ -22,7 +22,7 @@
     <string name="et_ip1_txt" translatable="false">192</string>
     <string name="et_ip2_txt" translatable="false">168</string>
     <string name="et_ip3_txt" translatable="false">0</string>
-    <string name="et_ip4_txt" translatable="false">122</string>
+    <string name="et_ip4_txt" translatable="false">140</string>
     <string name="tv_col_txt">:</string>
     <string name="tv_man_ip_hdr_txt">Or enter IP address manually.</string>
     <string name="bt_stop_txt">Close</string>
@@ -46,7 +46,7 @@
     <string name="bt_place_txt">Add</string>
     <string name="bt_backup_remote_txt">Backup database</string>
     <string name="bt_restore_remote_txt">Restore database</string>
-    <string name="notif_export">Exporting more than 200W at %1$s</string>
+    <string name="notif_export">Exporting %1$sW at %2$s</string>
     <string name="noExtStorage">No external storage</string>
     <string name="backupSaved">Backup file saved</string>
     <string name="bt_switch_WAN_txt">Switch to mobile</string>
@@ -58,4 +58,5 @@
     <string name="alarm_diag_title">Select alarm</string>
     <string name="bt_saveCSV_txt">Save as CSV</string>
     <string name="bt_enable_notif_txt">Show notifications</string>
+    <string name="bt_disable_notif_txt">Hide notifications</string>
 </resources>
