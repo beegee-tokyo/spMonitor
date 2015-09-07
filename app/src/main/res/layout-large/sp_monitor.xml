@@ -9,7 +9,8 @@
                 tools:context=".spMonitor"
                 android:id="@+id/main"
                 android:focusableInTouchMode="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:tag="6">
 
     <ProgressBar
         android:id="@+id/pb_refresh_rot"

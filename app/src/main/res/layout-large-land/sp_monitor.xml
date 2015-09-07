@@ -8,7 +8,8 @@
                 android:paddingBottom="5dp"
                 tools:context=".spMonitor"
                 android:id="@+id/main"
-                android:focusableInTouchMode="true">
+                android:focusableInTouchMode="true"
+                android:tag="8">
 
     <ProgressBar
         android:id="@+id/pb_refresh_rot"

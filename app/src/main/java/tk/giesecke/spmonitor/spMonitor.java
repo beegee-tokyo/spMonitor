@@ -31,7 +31,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
@@ -191,6 +193,8 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 
 	/** Instance of dialog */
 	private Dialog menuDialog;
+	/** Flag for simple UI layout */
+	private boolean isSimpleUI = false;
 
 	/** Array list with available alarm names */
 	private ArrayList<String> notifNames = new ArrayList<>();
@@ -204,7 +208,14 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.sp_monitor);
+		mPrefs = getSharedPreferences("spMonitor", 0);
+		if (!mPrefs.getBoolean("simpleUI",false)) {
+			setContentView(R.layout.sp_monitor);
+			isSimpleUI = false;
+		} else {
+			setContentView(R.layout.sp_simple);
+			isSimpleUI = true;
+		}
 
 		// Enable access to internet
 		if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -212,6 +223,52 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+
+		/** For debug only */
+		/*
+		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.main);
+		if (currentLayout.getTag() != null) {
+			String currentDensity = (String) currentLayout.getTag();
+			switch (currentDensity) {
+				case "1":
+					Toast.makeText(this, "Portrait simple", Toast.LENGTH_LONG).show();
+					break;
+				case "2":
+					Toast.makeText(this, "Portrait graph", Toast.LENGTH_LONG).show();
+					break;
+				case "3":
+					Toast.makeText(this, "Land simple", Toast.LENGTH_LONG).show();
+					break;
+				case "4":
+					Toast.makeText(this, "Land graph", Toast.LENGTH_LONG).show();
+					break;
+				case "5":
+					Toast.makeText(this, "Portrait simple large", Toast.LENGTH_LONG).show();
+					break;
+				case "6":
+					Toast.makeText(this, "Portrait graph large", Toast.LENGTH_LONG).show();
+					break;
+				case "7":
+					Toast.makeText(this, "Land simple large", Toast.LENGTH_LONG).show();
+					break;
+				case "8":
+					Toast.makeText(this, "Land graph large", Toast.LENGTH_LONG).show();
+					break;
+				case "9":
+					Toast.makeText(this, "Portrait simple small", Toast.LENGTH_LONG).show();
+					break;
+				case "10":
+					Toast.makeText(this, "Portrait graph small", Toast.LENGTH_LONG).show();
+					break;
+				case "11":
+					Toast.makeText(this, "Land simple small", Toast.LENGTH_LONG).show();
+					break;
+				case "12":
+					Toast.makeText(this, "Land graph small", Toast.LENGTH_LONG).show();
+					break;
+			}
+		}
+		*/
 
 		appContext = this;
 		appView = getWindow().getDecorView().findViewById(android.R.id.content);
@@ -652,8 +709,14 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				}
 				menuDialog.dismiss();
 				break;
-			case R.id.bt_save_csv:
+			case R.id.bt_sw_ui:
+				if (mPrefs.getBoolean("simpleUI",false)) {
+					mPrefs.edit().putBoolean("simpleUI", false).apply();
+				} else {
+					mPrefs.edit().putBoolean("simpleUI", true).apply();
+				}
 				menuDialog.dismiss();
+				recreate();
 				break;
 			case R.id.bt_menu_cancel:
 				menuDialog.dismiss();
@@ -693,8 +756,13 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				dialogButton = (Button) menuDialog.findViewById(R.id.bt_restore);
 				dialogButton.setOnClickListener(this);
 				dialogButton.setEnabled(true);
-				dialogButton = (Button) menuDialog.findViewById(R.id.bt_save_csv);
+				dialogButton = (Button) menuDialog.findViewById(R.id.bt_sw_ui);
 				dialogButton.setOnClickListener(this);
+				if (!mPrefs.getBoolean("simpleUI",false)) {
+					dialogButton.setText(getString(R.string.bt_simple_UI));
+				} else {
+					dialogButton.setText(getString(R.string.bt_graph_UI));
+				}
 				dialogButton.setEnabled(true);
 				dialogButton = (Button) menuDialog.findViewById(R.id.bt_menu_cancel);
 				dialogButton.setOnClickListener(this);
@@ -719,7 +787,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 					dialogButton.setEnabled(false);
 					dialogButton = (Button) menuDialog.findViewById(R.id.bt_restore);
 					dialogButton.setEnabled(false);
-					dialogButton = (Button) menuDialog.findViewById(R.id.bt_save_csv);
+					dialogButton = (Button) menuDialog.findViewById(R.id.bt_sw_ui);
 					dialogButton.setEnabled(false);
 				}
 				menuDialog.show();
@@ -1232,7 +1300,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 									valueFields.setText(String.valueOf(lightValMin) + "lux");
 								}
 
-								if (autoRefreshOn) {
+								if (autoRefreshOn && !isSimpleUI) {
 									if (isWANonStart) {
 										isWANonStart = false;
 										/** Integer list with today's date info */

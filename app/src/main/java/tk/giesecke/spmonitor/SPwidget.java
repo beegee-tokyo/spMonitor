@@ -225,7 +225,7 @@ public class SPwidget extends AppWidgetProvider {
 							views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().
 									getString(R.string.widgetCommError2));
 							views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().
-									getString(R.string.widgetCommError3));
+									getString(R.string.widgetCommError3)+" L");
 						}
 					} else {
 						/** JSON object containing result from server */
@@ -240,7 +240,7 @@ public class SPwidget extends AppWidgetProvider {
 							views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().
 									getString(R.string.widgetCommError2));
 							views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().
-									getString(R.string.widgetCommError3));
+									getString(R.string.widgetCommError3)+" W");
 							// Instruct the widget manager to update the widget
 							appWidgetManager.updateAppWidget(appWidgetId, views);
 							return;
@@ -252,7 +252,11 @@ public class SPwidget extends AppWidgetProvider {
 
 					views.setTextViewText(R.id.tv_widgetRow1Value, String.format("%.0f", resultPowerMin) + "W");
 					views.setTextViewText(R.id.tv_widgetRow2Value, String.format("%.0f", Math.abs(consPowerMin)) + "W");
-					views.setTextViewText(R.id.tv_widgetRow3Value, String.format("%.0f", solarPowerMin) + "W");
+					if (isWAN) {
+						views.setTextViewText(R.id.tv_widgetRow3Value, String.format("%.0f", solarPowerMin) + "W");
+					} else {
+						views.setTextViewText(R.id.tv_widgetRow3Value, String.format("%.0f", solarPowerMin) + "W");
+					}
 
 					/** Icon for notification */
 					int notifIcon;
@@ -352,6 +356,11 @@ public class SPwidget extends AppWidgetProvider {
 					views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().
 							getString(R.string.widgetCommError3));
 				}
+			} else {
+				views.setTextViewText(R.id.tv_widgetRow1Value, "JSON");
+				views.setTextViewText(R.id.tv_widgetRow2Value,"Error");
+				views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().
+						getString(R.string.widgetCommError3));
 			}
 		}
 		// Instruct the widget manager to update the widget

@@ -56,7 +56,8 @@
     <string name="no_alarm_sel">No alarm</string>
     <string name="dev_alarm_sel">Submarine</string>
     <string name="alarm_diag_title">Select alarm</string>
-    <string name="bt_saveCSV_txt">Save as CSV</string>
+    <string name="bt_simple_UI">Show simple UI</string>
+    <string name="bt_graph_UI">Show graph UI</string>
     <string name="bt_enable_notif_txt">Show notifications</string>
     <string name="bt_disable_notif_txt">Hide notifications</string>
 </resources>

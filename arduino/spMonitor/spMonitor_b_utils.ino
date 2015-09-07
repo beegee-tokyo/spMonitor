@@ -94,15 +94,15 @@ void saveData () {
 
   /* Send current data to mySQL database */
   /** Instance to Linino process */
-  dataString = "curl \"http://desire.giesecke.tk/s/i.php?d=";
-  dataString += timeString + "&s=";
-  dataString += String ( solar );
-  dataString += "&c=";
-  dataString += String ( cons );
-  dataString += "&l=";
-  dataString += String ( light );
-  dataString += "\"";
-  dataSave.runShellCommand ( dataString );
+  //dataString = "curl \"http://desire.giesecke.tk/s/i.php?d=";
+  //dataString += timeString + "&s=";
+  //dataString += String ( solar );
+  //dataString += "&c=";
+  //dataString += String ( cons );
+  //dataString += "&l=";
+  //dataString += String ( light );
+  //dataString += "\"";
+  //dataSave.runShellCommand ( dataString );
 
   collPower[0] = collPower[1] = 0.0;
   collCount[0] = collCount[1] = collCount[2] = 0;

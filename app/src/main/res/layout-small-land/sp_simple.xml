@@ -9,110 +9,101 @@
                 tools:context=".spMonitor"
                 android:id="@+id/main"
                 android:focusableInTouchMode="true"
-                android:tag="10">
+                android:tag="11">
 
     <Button
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_prev_txt"
         android:id="@+id/bt_prevLog"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:onClick="onClick"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/tv_cons_max"
+        android:background="@color/bg_very_dark_grey"
         android:textColor="@android:color/holo_blue_dark"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        style="@android:style/Widget.DeviceDefault.Button"/>
+        android:visibility="gone"/>
 
     <Button
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_next_txt"
         android:id="@+id/bt_nextLog"
         android:onClick="onClick"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@+id/tv_cons_max"
+        android:background="@color/bg_very_dark_grey"
         android:textColor="@android:color/holo_red_light"
-        android:layout_toRightOf="@+id/bt_prevLog"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        style="@android:style/Widget.DeviceDefault.Button"/>
+        android:visibility="gone"/>
 
     <Button
-        android:layout_width="65dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bt_status_txt"
         android:id="@+id/bt_status"
         android:onClick="onClick"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_toRightOf="@+id/bt_nextLog"
-        android:layout_below="@+id/tv_cons_max"
         android:textColor="@android:color/holo_blue_dark"
+        android:background="@color/bg_very_dark_grey"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        style="@android:style/Widget.DeviceDefault.Button"/>
+        android:visibility="gone"/>
 
     <Button
-        android:layout_width="60dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bt_stop_txt"
         android:id="@+id/bt_close"
         android:onClick="onClick"
         android:textColor="@android:color/holo_red_light"
+        android:background="@color/bg_very_dark_grey"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        style="@android:style/Widget.DeviceDefault.Button"
-        />
+        android:layout_alignParentEnd="true"/>
 
     <Button
-        android:layout_width="55dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/stop"
         android:id="@+id/bt_stop"
         android:onClick="onClick"
         android:textColor="@android:color/holo_red_light"
+        android:background="@color/bg_very_dark_grey"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/tv_solar_max"
-        android:layout_alignParentRight="true"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        style="@android:style/Widget.DeviceDefault.Button"
-        />
+        android:visibility="gone"/>
 
     <Button
-        android:layout_width="75dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bt_sync_txt"
         android:id="@+id/bt_sync"
         android:onClick="onClick"
         android:textColor="@android:color/holo_orange_light"
+        android:background="@color/bg_very_dark_grey"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_toRightOf="@+id/bt_status"
-        android:layout_below="@+id/tv_cons_max"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
-        style="@android:style/Widget.DeviceDefault.Button"
-        />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sv_result"
         android:layout_above="@+id/bt_close"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true">
+        android:layout_below="@+id/tv_solar_val">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/tv_result"
-            android:id="@+id/tv_result"/>
+            android:id="@+id/tv_result"
+            />
 
     </ScrollView>
 
@@ -120,8 +111,7 @@
         android:id="@+id/graph"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/sv_result"
-        android:layout_below="@+id/bt_prevLog" />
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -129,8 +119,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/tv_result"
         android:id="@+id/tv_plotTitle"
-        android:layout_alignTop="@+id/graph"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -141,10 +131,7 @@
         android:textSize="12sp"
         android:layout_marginLeft="5sp"
         android:layout_marginRight="5sp"
-        android:layout_alignParentBottom="false"
-        android:layout_alignBaseline="@+id/cb_solar"
-        android:layout_toLeftOf="@+id/tv_light_value"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -155,19 +142,16 @@
         android:textSize="12sp"
         android:layout_marginLeft="5sp"
         android:layout_marginRight="5sp"
-        android:layout_alignBaseline="@+id/cb_solar"
-        android:layout_toLeftOf="@+id/bt_close"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/tv_sens1_curr_txt"
         android:id="@+id/tv_solar_txt"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:layout_alignBaseline="@+id/tv_solar_val"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -175,21 +159,20 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/tv_sens_value_txt"
         android:id="@+id/tv_solar_val"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:textColor="@android:color/holo_orange_light"
-        android:layout_below="@+id/tv_solar_txt"
-        android:textSize="35sp"/>
+        android:textSize="36sp"
+        android:layout_below="@+id/tv_result_val"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/tv_sens2_curr_txt"
         android:id="@+id/tv_cons_txt"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:layout_alignBaseline="@+id/tv_cons_val"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -197,24 +180,21 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/tv_sens_value_txt"
         android:id="@+id/tv_cons_val"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="30dp"
-        android:layout_below="@+id/tv_cons_txt"
         android:textColor="@android:color/holo_blue_light"
-        android:textSize="35sp"/>
+        android:textSize="36sp"
+        android:layout_centerHorizontal="true"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/tv_result_txt_ex"
         android:id="@+id/tv_result_txt"
         android:textColor="@android:color/white"
-        android:layout_toRightOf="@+id/tv_cons_txt"
-        android:layout_toLeftOf="@+id/tv_solar_txt"
-        android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        android:layout_alignBaseline="@+id/tv_result_val"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -224,21 +204,21 @@
         android:id="@+id/tv_result_val"
         android:textColor="@android:color/holo_green_light"
         android:gravity="center_horizontal"
-        android:layout_toRightOf="@+id/tv_cons_txt"
-        android:layout_toLeftOf="@+id/tv_solar_txt"
-        android:layout_below="@+id/tv_result_txt"
-        android:textSize="35sp"
-        android:background="@android:color/transparent"/>
+        android:textSize="36sp"
+        android:background="@android:color/transparent"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tv_cons_val"
+        android:layout_marginTop="5dp"/>
 
     <ProgressBar
         android:id="@+id/pb_refresh_rot"
         style="?android:attr/progressBarStyleSmall"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:visibility="invisible"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -251,7 +231,7 @@
         android:textColor="@android:color/white"
         android:layout_alignParentBottom="true"
         android:onClick="onClick"
-        android:visibility="invisible"/>
+        android:visibility="gone"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -262,7 +242,8 @@
         android:textColor="@android:color/white"
         android:layout_toRightOf="@+id/cb_solar"
         android:layout_alignParentBottom="true"
-        android:onClick="onClick"/>
+        android:onClick="onClick"
+        android:visibility="gone"/>
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -272,7 +253,8 @@
         android:checked="true"
         android:textColor="@android:color/white"
         android:layout_alignParentBottom="true"
-        android:onClick="onClick"/>
+        android:onClick="onClick"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -283,7 +265,8 @@
         android:textColor="@android:color/holo_orange_light"
         android:background="@android:color/transparent"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/tv_cons_energy"/>
+        android:layout_below="@+id/tv_cons_energy"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -295,32 +278,31 @@
         android:background="@android:color/transparent"
         android:layout_alignTop="@+id/graph"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/tv_result"
         android:id="@+id/tv_solar_max"
         android:textColor="@android:color/holo_orange_light"
         android:background="@android:color/transparent"
-        android:layout_below="@+id/tv_solar_val"
         android:gravity="center_horizontal"
-        android:layout_alignLeft="@+id/tv_solar_val"
-        android:layout_alignRight="@+id/tv_solar_val"/>
+        android:layout_alignBaseline="@+id/tv_solar_val"
+        android:layout_alignParentRight="true"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/tv_result"
         android:id="@+id/tv_cons_max"
         android:textColor="@android:color/holo_blue_light"
         android:background="@android:color/transparent"
-        android:layout_below="@+id/tv_cons_val"
-        android:layout_alignLeft="@+id/tv_cons_val"
-        android:layout_alignRight="@+id/tv_cons_val"
-        android:gravity="center_horizontal"/>
+        android:gravity="center_horizontal"
+        android:layout_alignParentRight="true"
+        android:layout_alignBaseline="@+id/tv_cons_val"/>
 
 </RelativeLayout>
