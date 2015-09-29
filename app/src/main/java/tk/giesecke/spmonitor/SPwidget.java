@@ -100,6 +100,7 @@ public class SPwidget extends AppWidgetProvider {
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService
 				(Context.ALARM_SERVICE);
 		alarmManager.cancel(pendingIntent);
+
 	}
 
 	@SuppressLint("InlinedApi")
@@ -152,17 +153,16 @@ public class SPwidget extends AppWidgetProvider {
 		/** A HTTP client to access the spMonitor device */
 		OkHttpClient client = new OkHttpClient();
 
+		client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
+		client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
+
 		if (connSSID != null) {
-			if (!connSSID.equalsIgnoreCase(mPrefs.getString("SSID",""))) {
+			if (!connSSID.equalsIgnoreCase(mPrefs.getString("SSID","none"))) {
 				urlString = "http://www.desire.giesecke.tk/s/l.php";
-				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
-				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
 				isWAN = true;
 			}
 		} else {
 			urlString = "http://www.desire.giesecke.tk/s/l.php";
-			client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
-			client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
 			isWAN = true;
 		}
 

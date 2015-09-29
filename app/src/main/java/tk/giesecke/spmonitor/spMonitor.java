@@ -31,9 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
@@ -59,9 +57,13 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -84,7 +86,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	public static View appView;
 	/** The timer to refresh the UI */
 	private Timer timer;
-	/**we are going to use a handler to be able to run in our TimerTask */
+	/** Handler for timer task */
 	private final Handler handler = new Handler();
 	/** Flag for communication active */
 	public static boolean isCommunicating = false;
@@ -154,11 +156,20 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	private static final List<String> logDates = new ArrayList<>();
 	/** Pointer to current displayed log in logDates array */
 	private static int logDatesIndex = 0;
+	/** Array with existing log dates on the Arduino */
+	private static final List<String> lastLogDates = new ArrayList<>();
+	/** Pointer to current displayed log in logDates array */
+	private static int lastLogDatesIndex = 0;
+	/** Flag for showing last month */
+	private static boolean showingLast = false;
 	/** Flag for showing a log */
 	public static boolean showingLog = false;
 
 	/** Day stamp of data */
 	public static String dayToShow;
+
+	/** Today's year-month database name */
+	private static String[] dbNamesList = new String[2];
 
 	/** Solar power received from spMonitor device as minute average */
 	private static Float solarPowerMin = 0.0f;
@@ -212,9 +223,11 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		if (!mPrefs.getBoolean("simpleUI",false)) {
 			setContentView(R.layout.sp_monitor);
 			isSimpleUI = false;
+			mPrefs.edit().putBoolean("simpleUI",false).apply();
 		} else {
 			setContentView(R.layout.sp_simple);
 			isSimpleUI = true;
+			mPrefs.edit().putBoolean("simpleUI",true).apply();
 		}
 
 		// Enable access to internet
@@ -277,23 +290,101 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		resultTextView = (TextView) findViewById(R.id.tv_result);
 		deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
 		isWAN = mPrefs.getBoolean("access_type", false);
-		connSSID = mPrefs.getString("SSID", "");
+		connSSID = mPrefs.getString("SSID", "none");
 
 		notifUriSel = "android.resource://"
 				+ this.getPackageName() + "/"
 				+ R.raw.alert;
 
+		// Get today's day for the online database name
+		dbNamesList = Utilities.getDateStrings();
+		if (BuildConfig.DEBUG) Log.d("spMonitor","This month = " + dbNamesList[0]);
+		if (BuildConfig.DEBUG) Log.d("spMonitor","Last month = " + dbNamesList[1]);
+
 		// In case the database is not yet existing, open it once
 		/** Instance of DataBaseHelper */
-		DataBaseHelper dbHelper = new DataBaseHelper(appContext);
+		DataBaseHelper dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME);
 		/** Instance of data base */
 		SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+		dataBase.close();
+		dbHelper.close();
+		/** Instance of DataBaseHelper */
+		dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME_LAST);
+		/** Instance of data base */
+		dataBase = dbHelper.getReadableDatabase();
+		dataBase.close();
+		dbHelper.close();
+
+		// In case the database is not yet existing, open it once
+		/** Instance of DataBaseHelper */
+		dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME_LAST);
+		/** Instance of data base */
+		dataBase = dbHelper.getReadableDatabase();
 		dataBase.close();
 		dbHelper.close();
 
 		if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip)) && !isWAN) {
 			Utilities.startRefreshAnim();
-			new syncDBtoDB().execute();
+			String syncedMonth = mPrefs.getString("synced_month", "");
+			if (!syncedMonth.equalsIgnoreCase(dbNamesList[0])) {
+				deleteDatabase(DataBaseHelper.DATABASE_NAME);
+				deleteDatabase(DataBaseHelper.DATABASE_NAME_LAST);
+				mPrefs.edit().putString("synced_month", dbNamesList[0]).apply();
+				/** Instance of DataBaseHelper */
+				dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME);
+				/** Instance of data base */
+				dataBase = dbHelper.getReadableDatabase();
+				dataBase.close();
+				dbHelper.close();
+				/** Instance of DataBaseHelper */
+				dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME_LAST);
+				/** Instance of data base */
+				dataBase = dbHelper.getReadableDatabase();
+				dataBase.close();
+				dbHelper.close();
+			}
+			new syncDBtoDB().execute(dbNamesList[0]);
+			// Check if we have already synced the last month
+			/** Instance of DataBaseHelper */
+			dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME_LAST);
+			/** Instance of data base */
+			dataBase = dbHelper.getReadableDatabase();
+			/** Cursor with data from database */
+			Cursor dbCursor = DataBaseHelper.getLastRow(dataBase);
+			if (dbCursor != null) {
+				if (dbCursor.getCount() == 0) { // local database is empty, need to sync all data
+					new syncDBtoDB().execute(dbNamesList[1]);
+				} else { // fill last log file array
+					lastLogDates.clear();
+					/** List with years in the database */
+					ArrayList<Integer> yearsAvail = DataBaseHelper.getEntries(dataBase, "year", 0, 0);
+					for (int year = 0; year < yearsAvail.size(); year++) {
+						/** List with months of year in the database */
+						ArrayList<Integer> monthsAvail = DataBaseHelper.getEntries(dataBase, "month",
+								0, yearsAvail.get(year));
+						for (int month = 0; month < monthsAvail.size(); month++) {
+							/** List with days of month of year in the database */
+							ArrayList<Integer> daysAvail = DataBaseHelper.getEntries(dataBase, "day",
+									monthsAvail.get(month),
+									yearsAvail.get(year));
+							for (int day = 0; day < daysAvail.size(); day++) {
+								lastLogDates.add(("00" + String.valueOf(yearsAvail.get(year)))
+										.substring(String.valueOf(yearsAvail.get(year)).length()) +
+										"-" + ("00" + String.valueOf(monthsAvail.get(month)))
+										.substring(String.valueOf(monthsAvail.get(month)).length()) +
+										"-" + ("00" + String.valueOf(daysAvail.get(day)))
+										.substring(String.valueOf(daysAvail.get(day)).length()));
+							}
+						}
+					}
+					lastLogDatesIndex = lastLogDates.size() - 1;
+				}
+			}
+			if (dbCursor != null) {
+				dbCursor.close();
+			}
+			dataBase.close();
+			dbHelper.close();
 		} else {
 			if (isWAN) {
 				resultTextView.setText(getString(R.string.on_WAN));
@@ -406,77 +497,166 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 
 		switch (v.getId()) {
 			case R.id.bt_prevLog:
-				if (logDatesIndex > 0) {
-					Utilities.startRefreshAnim();
-					logDatesIndex--;
-					/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
-					Button stopButton = (Button) findViewById(R.id.bt_stop);
-					stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
-					stopButton.setText(getResources().getString(R.string.start));
-					autoRefreshOn = false;
-					stopTimer();
-					showingLog = true;
-					// Get data from data base
-					/** String list with requested date info */
-					String[] requestedDate = logDates.get(logDatesIndex).substring(0, 8).split("-");
-					/** Instance of DataBaseHelper */
-					DataBaseHelper dbHelper = new DataBaseHelper(appContext);
-					/** Instance of data base */
-					SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+				if (logDatesIndex == 0) {
+					if ((lastLogDatesIndex == lastLogDates.size()-1) && !showingLast) {
+						lastLogDatesIndex++;
+					}
+					showingLast = true;
+				} else {
+					showingLast = false;
+				}
+				if (!showingLast) { // use this months database
+					if (logDatesIndex > 0) {
+						Utilities.startRefreshAnim();
+						logDatesIndex--;
+						/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
+						Button stopButton = (Button) findViewById(R.id.bt_stop);
+						stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+						stopButton.setText(getResources().getString(R.string.start));
+						autoRefreshOn = false;
+						stopTimer();
+						showingLog = true;
+						// Get data from data base
+						/** String list with requested date info */
+						String[] requestedDate = logDates.get(logDatesIndex).substring(0, 8).split("-");
+						/** Instance of DataBaseHelper */
+						DataBaseHelper dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME);
+						/** Instance of data base */
+						SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
 
-					/** Cursor with new data from the database */
-					Cursor newDataSet = DataBaseHelper.getDay(dataBase, Integer.parseInt(requestedDate[2]),
-							Integer.parseInt(requestedDate[1]), Integer.parseInt(requestedDate[0]));
-					Utilities.fillSeries(newDataSet);
-					initChart(false);
-					newDataSet.close();
-					dataBase.close();
-					dbHelper.close();
+						/** Cursor with new data from the database */
+						Cursor newDataSet = DataBaseHelper.getDay(dataBase, Integer.parseInt(requestedDate[2]),
+								Integer.parseInt(requestedDate[1]), Integer.parseInt(requestedDate[0]));
+						Utilities.fillSeries(newDataSet);
+						initChart(false);
+						newDataSet.close();
+						dataBase.close();
+						dbHelper.close();
 
+					/*
 					if (logDatesIndex == 0) {
 						prevButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
 					} else {
 						prevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
 					}
-					nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
-					Utilities.stopRefreshAnim();
+					*/
+						nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+						Utilities.stopRefreshAnim();
+					}
+				} else { // use last months database
+					if (lastLogDatesIndex > 0) {
+						Utilities.startRefreshAnim();
+						lastLogDatesIndex--;
+						/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
+						Button stopButton = (Button) findViewById(R.id.bt_stop);
+						stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+						stopButton.setText(getResources().getString(R.string.start));
+						autoRefreshOn = false;
+						stopTimer();
+						showingLog = true;
+						// Get data from data base
+						/** String list with requested date info */
+						String[] requestedDate = lastLogDates.get(lastLogDatesIndex).substring(0, 8).split("-");
+						/** Instance of DataBaseHelper */
+						DataBaseHelper dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME_LAST);
+						/** Instance of data base */
+						SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+
+						/** Cursor with new data from the database */
+						Cursor newDataSet = DataBaseHelper.getDay(dataBase, Integer.parseInt(requestedDate[2]),
+								Integer.parseInt(requestedDate[1]), Integer.parseInt(requestedDate[0]));
+						Utilities.fillSeries(newDataSet);
+						initChart(false);
+						newDataSet.close();
+						dataBase.close();
+						dbHelper.close();
+
+						if (lastLogDatesIndex == 0) {
+							prevButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+						} else {
+							prevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+						}
+						nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+						Utilities.stopRefreshAnim();
+					}
 				}
 				break;
 			case R.id.bt_nextLog:
-				if (logDatesIndex < logDates.size()-1) {
-					Utilities.startRefreshAnim();
-					logDatesIndex++;
-					/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
-					Button stopButton = (Button) findViewById(R.id.bt_stop);
-					stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
-					stopButton.setText(getResources().getString(R.string.start));
-					autoRefreshOn = false;
-					stopTimer();
-					showingLog = true;
-					// Get data from data base
-					/** String list with requested date info */
-					String[] requestedDate = logDates.get(logDatesIndex).substring(0, 8).split("-");
-					/** Instance of DataBaseHelper */
-					DataBaseHelper dbHelper = new DataBaseHelper(appContext);
-					/** Instance of data base */
-					SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
-
-					/** Cursor with new data from the database */
-					Cursor newDataSet = DataBaseHelper.getDay(dataBase, Integer.parseInt(requestedDate[2]),
-							Integer.parseInt(requestedDate[1]), Integer.parseInt(requestedDate[0]));
-					Utilities.fillSeries(newDataSet);
-					initChart(false);
-					newDataSet.close();
-					dataBase.close();
-					dbHelper.close();
-
-					if (logDatesIndex == logDates.size()-1) {
-						nextButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-					} else {
-						nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+				if (lastLogDatesIndex == lastLogDates.size()-1) {
+					if ((logDatesIndex == 0) && showingLast) {
+						logDatesIndex--;
 					}
-					prevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
-					Utilities.stopRefreshAnim();
+					showingLast = false;
+				} else {
+					showingLast = true;
+				}
+				if (!showingLast) { // use this months database
+					if (logDatesIndex < logDates.size()-1) {
+						Utilities.startRefreshAnim();
+						logDatesIndex++;
+						/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
+						Button stopButton = (Button) findViewById(R.id.bt_stop);
+						stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+						stopButton.setText(getResources().getString(R.string.start));
+						autoRefreshOn = false;
+						stopTimer();
+						showingLog = true;
+						// Get data from data base
+						/** String list with requested date info */
+						String[] requestedDate = logDates.get(logDatesIndex).substring(0, 8).split("-");
+						/** Instance of DataBaseHelper */
+						DataBaseHelper dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME);
+						/** Instance of data base */
+						SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+
+						/** Cursor with new data from the database */
+						Cursor newDataSet = DataBaseHelper.getDay(dataBase, Integer.parseInt(requestedDate[2]),
+								Integer.parseInt(requestedDate[1]), Integer.parseInt(requestedDate[0]));
+						Utilities.fillSeries(newDataSet);
+						initChart(false);
+						newDataSet.close();
+						dataBase.close();
+						dbHelper.close();
+
+						if (logDatesIndex == logDates.size()-1) {
+							nextButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+						} else {
+							nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+						}
+						prevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+						Utilities.stopRefreshAnim();
+					}
+				} else { // use last months database
+					if (lastLogDatesIndex < lastLogDates.size()-1) {
+						Utilities.startRefreshAnim();
+						lastLogDatesIndex++;
+						/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
+						Button stopButton = (Button) findViewById(R.id.bt_stop);
+						stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+						stopButton.setText(getResources().getString(R.string.start));
+						autoRefreshOn = false;
+						stopTimer();
+						showingLog = true;
+						// Get data from data base
+						/** String list with requested date info */
+						String[] requestedDate = lastLogDates.get(lastLogDatesIndex).substring(0, 8).split("-");
+						/** Instance of DataBaseHelper */
+						DataBaseHelper dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME_LAST);
+						/** Instance of data base */
+						SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+
+						/** Cursor with new data from the database */
+						Cursor newDataSet = DataBaseHelper.getDay(dataBase, Integer.parseInt(requestedDate[2]),
+								Integer.parseInt(requestedDate[1]), Integer.parseInt(requestedDate[0]));
+						Utilities.fillSeries(newDataSet);
+						initChart(false);
+						newDataSet.close();
+						dataBase.close();
+						dbHelper.close();
+
+						nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
+						Utilities.stopRefreshAnim();
+					}
 				}
 				break;
 			case R.id.bt_stop:
@@ -492,7 +672,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						showingLog = false;
 						if (!isWAN) {
 							Utilities.startRefreshAnim();
-							new syncDBtoDB().execute();
+							new syncDBtoDB().execute(dbNamesList[0]);
 						}
 
 						/** Pointer to text views showing the consumed / produced energy */
@@ -531,7 +711,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			case R.id.bt_sync:
 				if (!showingLog && !isWAN) {
 					Utilities.startRefreshAnim();
-					new syncDBtoDB().execute();
+					new syncDBtoDB().execute(dbNamesList[0]);
 				}
 				break;
 			case R.id.cb_solar:
@@ -824,7 +1004,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			connSSID = Utilities.getSSID(getApplicationContext());
 
 			if (isWAN) {
-				if ((connSSID != null) && (connSSID.equalsIgnoreCase(mPrefs.getString("SSID","")))) {
+				if ((connSSID != null) && (connSSID.equalsIgnoreCase(mPrefs.getString("SSID","none")))) {
 					isWAN= false;
 					mPrefs.edit().putBoolean("access_type",isWAN).apply();
 				} else {
@@ -883,61 +1063,83 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	}
 
 	/**
+	 * Wrapper to send 2 parameters to onPostExecute of AsyncTask
+	 */
+	public class onPostExecuteWrapper {
+		public String taskResult;
+		public String syncMonth;
+	}
+
+	/**
 	 * Async task class to contact Linino part of the spMonitor device
 	 * and sync spMonitor database with local Android database
 	 */
-	private class syncDBtoDB extends AsyncTask<String, String, String> {
+	private class syncDBtoDB extends AsyncTask<String, String, onPostExecuteWrapper> {
 
 		@Override
-		protected String doInBackground(String... params) {
+		protected onPostExecuteWrapper doInBackground(String... params) {
 
-			/** String list with parts of the URL */
-			String[] ipValues = deviceIP.split("/");
-			/** URL to be called */
-			String urlString = "http://"+ipValues[2]+"/sd/spMonitor/query.php"; // URL to call
+			/** Return values for onPostExecute */
+			onPostExecuteWrapper result = new onPostExecuteWrapper();
+
+			/** Which month to sync */
+			result.syncMonth = params[0];
 
 			/** Response from the spMonitor device or error message */
-			String resultToDisplay = getResources().getString(R.string.filesSyncFail);
+			result.taskResult = getResources().getString(R.string.filesSyncFail);
 
-			// Check for last entry in the local database
-			/** Instance of DataBaseHelper */
-			DataBaseHelper dbHelper = new DataBaseHelper(appContext);
-			/** Instance of data base */
-			SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
-			/** Cursor with data from database */
-			Cursor dbCursor = DataBaseHelper.getLastRow(dataBase);
-			if (dbCursor != null) {
-				if (dbCursor.getCount() != 0) { // local database not empty, need to sync only missing
-					dbCursor.moveToFirst();
-
-					int lastMinute =  dbCursor.getInt(4);
-					int lastHour = dbCursor.getInt(3);
-					int lastDay = dbCursor.getInt(2);
-
-					urlString += "?date=" + dbCursor.getString(0); // add year
-					urlString += "-" + ("00" +
-							dbCursor.getString(1)).substring(dbCursor.getString(1).length()); // add month
-					urlString += "-" + ("00" +
-							String.valueOf(lastDay))
-							.substring(String.valueOf(lastDay).length()); // add day
-					urlString += "-" + ("00" +
-							String.valueOf(lastHour))
-							.substring(String.valueOf(lastHour).length()); // add hour
-					urlString += ":" + ("00" +
-							String.valueOf(lastMinute))
-							.substring(String.valueOf(lastMinute).length()); // add minute
-					urlString += "&get=all";
-				} // else {} local database is empty, need to sync all data
-			}
-			if (dbCursor != null) {
-				dbCursor.close();
-			}
-			dataBase.close();
-			dbHelper.close();
 			// Make call only if valid url is given
-			if (urlString.startsWith("No")) {
-				resultToDisplay = getResources().getString(R.string.err_no_device);
+			if (deviceIP.startsWith("No")) {
+				result.taskResult = getResources().getString(R.string.err_no_device);
 			} else {
+				/** String list with parts of the URL */
+				String[] ipValues = deviceIP.split("/");
+				/** URL to be called */
+				String urlString = "http://"+ipValues[2]+"/sd/spMonitor/query2.php"; // URL to call
+
+				// Check for last entry in the local database
+				/** Instance of DataBaseHelper */
+				DataBaseHelper dbHelper;
+				if (result.syncMonth.equalsIgnoreCase(dbNamesList[0])) {
+					dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME);
+				} else {
+					dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME_LAST);
+				}
+				/** Instance of data base */
+				SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+				/** Cursor with data from database */
+				Cursor dbCursor = DataBaseHelper.getLastRow(dataBase);
+				if (dbCursor != null) {
+					if (dbCursor.getCount() != 0) { // local database not empty, need to sync only missing
+						dbCursor.moveToFirst();
+
+						int lastMinute =  dbCursor.getInt(4);
+						int lastHour = dbCursor.getInt(3);
+						int lastDay = dbCursor.getInt(2);
+
+						urlString += "?date=" + dbCursor.getString(0); // add year
+						urlString += "-" + ("00" +
+								dbCursor.getString(1)).substring(dbCursor.getString(1).length()); // add month
+						urlString += "-" + ("00" +
+								String.valueOf(lastDay))
+								.substring(String.valueOf(lastDay).length()); // add day
+						urlString += "-" + ("00" +
+								String.valueOf(lastHour))
+								.substring(String.valueOf(lastHour).length()); // add hour
+						urlString += ":" + ("00" +
+								String.valueOf(lastMinute))
+								.substring(String.valueOf(lastMinute).length()); // add minute
+						urlString += "&get=all";
+					} else { // local database is empty, need to sync all data
+						urlString += "?date=" + result.syncMonth + "&get=all"; // get all of this month
+					}
+				}
+				if (dbCursor != null) {
+					dbCursor.close();
+				}
+				dataBase.close();
+				dbHelper.close();
+
 				// Set timeout to 5 minutes in case we have a lot of data to load
 				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
 				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
@@ -951,30 +1153,33 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						/** Response from spMonitor device */
 						Response response = client.newCall(request).execute();
 						if (response != null) {
-							resultToDisplay = response.body().string();
+							result.taskResult = response.body().string();
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
-						resultToDisplay = e.getMessage();
+						result.taskResult = e.getMessage();
 						try {
-							if (resultToDisplay.contains("EHOSTUNREACH")) {
-								resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
+							if (result.taskResult.contains("EHOSTUNREACH")) {
+								result.taskResult = getApplicationContext().getString(R.string.err_arduino);
 							}
-							if (resultToDisplay.equalsIgnoreCase("")) {
-								resultToDisplay = getApplicationContext().getString(R.string.err_arduino);
+							if (result.taskResult.equalsIgnoreCase("")) {
+								result.taskResult = getApplicationContext().getString(R.string.err_arduino);
 							}
-							return resultToDisplay;
+							return result;
 						} catch (NullPointerException en) {
-							resultToDisplay = getResources().getString(R.string.err_no_device);
-							return resultToDisplay;
+							result.taskResult = getResources().getString(R.string.err_no_device);
+							return result;
 						}
 					}
-					if (Utilities.isJSONValid(resultToDisplay)) {
+					if (Utilities.isJSONValid(result.taskResult)) {
 						try {
 							/** JSON array with the data received from spMonitor device */
-							JSONArray jsonFromDevice = new JSONArray(resultToDisplay);
-							/** Instance of DataBaseHelper */
-							dbHelper = new DataBaseHelper(appContext);
+							JSONArray jsonFromDevice = new JSONArray(result.taskResult);
+							if (result.syncMonth.equalsIgnoreCase(dbNamesList[0])) {
+								dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME);
+							} else {
+								dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME_LAST);
+							}
 							/** Instance of data base */
 							dataBase = dbHelper.getWritableDatabase();
 
@@ -990,25 +1195,24 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 								record += ","+jsonRecord.getString("c");
 								DataBaseHelper.addDay(dataBase, record);
 							}
-							resultToDisplay = getResources().getString(R.string.filesSynced);
+							result.taskResult = getResources().getString(R.string.filesSynced);
 						} catch (JSONException e) {
-							resultToDisplay = getResources().getString(R.string.filesSyncFail);
+							result.taskResult = getResources().getString(R.string.filesSyncFail);
 							dataBase.close();
 							dbHelper.close();
 						}
 						dataBase.close();
 						dbHelper.close();
 					} else {
-						resultToDisplay = getResources().getString(R.string.filesSyncFail);
+						result.taskResult = getResources().getString(R.string.filesSyncFail);
 					}
 				}
 			}
-
-			return resultToDisplay;
+			return result;
 		}
 
-		protected void onPostExecute(String result) {
-			updateSynced(result);
+		protected void onPostExecute(onPostExecuteWrapper result) {
+			updateSynced(result.taskResult, result.syncMonth);
 		}
 	}
 
@@ -1306,7 +1510,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 										/** Integer list with today's date info */
 										int[] requestedDate = Utilities.getCurrentDate();
 										/** Instance of DataBaseHelper */
-										DataBaseHelper dbHelper = new DataBaseHelper(appContext);
+										DataBaseHelper dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME);
 										/** Instance of data base */
 										SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
 
@@ -1423,8 +1627,10 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	 *
  	 * @param result
 	 *        result sent by spMonitor
+	 * @param syncMonth
+	 *        Month that got synced
 	 */
-	private void updateSynced(final String result) {
+	private void updateSynced(final String result, final String syncMonth) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -1434,7 +1640,17 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 					/** Today split into 3 integers for the database query */
 					int[] todayDate = Utilities.getCurrentDate();
 					/** Instance of DataBaseHelper */
-					DataBaseHelper dbHelper = new DataBaseHelper(appContext);
+					DataBaseHelper dbHelper;
+					/** Array with existing log dates on the Arduino */
+					List<String> thisLogDates;
+
+					if (syncMonth.equalsIgnoreCase(dbNamesList[0])) {
+						dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME);
+						thisLogDates = logDates;
+					} else {
+						dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME_LAST);
+						thisLogDates = lastLogDates;
+					}
 					/** Instance of data base */
 					SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
 					/** Cursor with new data from the database */
@@ -1442,7 +1658,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 							todayDate[1], todayDate[0] - 2000);
 					Utilities.fillSeries(newDataSet);
 					newDataSet.close();
-					logDates.clear();
+					thisLogDates.clear();
 					/** List with years in the database */
 					ArrayList<Integer> yearsAvail = DataBaseHelper.getEntries(dataBase, "year", 0, 0);
 					for (int year = 0; year < yearsAvail.size(); year++) {
@@ -1455,7 +1671,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 									monthsAvail.get(month),
 									yearsAvail.get(year));
 							for (int day = 0; day < daysAvail.size(); day++) {
-								logDates.add(("00" + String.valueOf(yearsAvail.get(year)))
+								thisLogDates.add(("00" + String.valueOf(yearsAvail.get(year)))
 										.substring(String.valueOf(yearsAvail.get(year)).length()) +
 										"-" + ("00" + String.valueOf(monthsAvail.get(month)))
 										.substring(String.valueOf(monthsAvail.get(month)).length()) +
@@ -1464,7 +1680,11 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 							}
 						}
 					}
-					logDatesIndex = logDates.size() - 1;
+					if (syncMonth.equalsIgnoreCase(dbNamesList[0])) {
+						logDatesIndex = thisLogDates.size() - 1;
+					} else {
+						lastLogDatesIndex = thisLogDates.size() - 1;
+					}
 
 					dataBase.close();
 					dbHelper.close();
@@ -1497,7 +1717,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		/** Timer task for UI update */
 		TimerTask timerTask = new TimerTask() {
 			public void run() {
-				//use a handler to run a toast that shows the current timestamp
+				//use a handler to run a UI update task
 				handler.post(new Runnable() {
 					public void run() {
 						autoRefresh();
@@ -1538,6 +1758,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	 *          true = continuous display of data received from spMonitor
 	 *          false = display content of a log file
 	 */
+	@SuppressLint("SimpleDateFormat")
 	private void initChart(boolean isContinuous) {
 
 		// Pointer to the chart in the layout
@@ -1669,6 +1890,18 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		lineChart.setData(plotData);
 
 		TextView chartTitle = (TextView) findViewById(R.id.tv_plotTitle);
+
+		Calendar c = Calendar.getInstance();
+		@SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yy-MM-dd");
+		try {
+			Date myDate = df.parse(dayToShow.trim());
+			c.setTime(myDate);
+			df = new SimpleDateFormat("yyyy-MMM-dd");
+			dayToShow = df.format(c.getTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
 		chartTitle.setText(dayToShow);
 
 		/** Instance of left y axis */
@@ -1686,6 +1919,9 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		rYAx.setStartAtZero(false);
 		rYAx.setSpaceTop(1);
 		rYAx.setSpaceBottom(1);
+		/** Hide right axis */
+		rYAx.setDrawLabels(false);
+		rYAx.setEnabled(false);
 
 		/** Instance of x axis */
 		XAxis xAx = lineChart.getXAxis();

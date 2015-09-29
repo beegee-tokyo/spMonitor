@@ -9,14 +9,14 @@ import android.os.IBinder;
 import android.util.Log;
 
 /**
- * ScreenReceiverService
+ * EventReceiverService
  * Registers broadcast receiver for screen on/off broadcast messages
  *
  * @author Bernd Giesecke
  * @version 0.2 beta August 19, 2015.
  */
-public class ScreenReceiverService extends Service {
-	public ScreenReceiverService() {
+public class EventReceiverService extends Service {
+	public EventReceiverService() {
 	}
 
 	@Override
@@ -36,8 +36,9 @@ public class ScreenReceiverService extends Service {
 			/** IntentFilter to receive screen on/off broadcast msgs */
 			IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 			filter.addAction(Intent.ACTION_SCREEN_OFF);
+			filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
 			/** Receiver for screen on/off broadcast msgs */
-			BroadcastReceiver mReceiver = new ScreenReceiver();
+			BroadcastReceiver mReceiver = new EventReceiver();
 			registerReceiver(mReceiver, filter);
 		}
 	}

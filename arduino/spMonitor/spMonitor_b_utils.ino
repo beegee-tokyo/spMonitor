@@ -72,6 +72,30 @@ void saveData () {
   Process dataSave;
   timeString = getTimeStamp();
   timeString.replace(',', '-');
+  /** Month as integer */
+  int nowMonth = timeString.substring(3, 5).toInt();
+
+  /* Check for month change or new start of app */
+  if (thisMonth != nowMonth) {
+    // new start of app or new month started
+    thisMonth = nowMonth;
+    // create new database for the new month
+    dataString = "sqlite3 /mnt/sda1/"
+                 + timeString.substring(0, 5)
+                 + ".db < /mnt/sda1/create.sql";
+    dataSave.runShellCommand ( dataString );
+  }
+
+  dataString = "sqlite3 /mnt/sda1/"
+               + timeString.substring(0, 5)
+               + ".db 'insert into s (d,s,c,l) Values (\""
+               + timeString + "\","
+               + String ( solar ) + ","
+               + String ( cons ) + ","
+               + String ( light ) + ");'";
+
+  dataSave.runShellCommand ( dataString );
+
   dataString = "sqlite3 /mnt/sda1/s.db 'insert into s (d,s,c,l) Values (\""
                + timeString + "\","
                + String ( solar ) + ","
@@ -94,15 +118,15 @@ void saveData () {
 
   /* Send current data to mySQL database */
   /** Instance to Linino process */
-  //dataString = "curl \"http://desire.giesecke.tk/s/i.php?d=";
-  //dataString += timeString + "&s=";
-  //dataString += String ( solar );
-  //dataString += "&c=";
-  //dataString += String ( cons );
-  //dataString += "&l=";
-  //dataString += String ( light );
-  //dataString += "\"";
-  //dataSave.runShellCommand ( dataString );
+  dataString = "curl \"http://desire.giesecke.tk/s/i.php?d=";
+  dataString += timeString + "&s=";
+  dataString += String ( solar );
+  dataString += "&c=";
+  dataString += String ( cons );
+  dataString += "&l=";
+  dataString += String ( light );
+  dataString += "\"";
+  dataSave.runShellCommand ( dataString );
 
   collPower[0] = collPower[1] = 0.0;
   collCount[0] = collCount[1] = collCount[2] = 0;
@@ -116,10 +140,10 @@ void saveData () {
  *      String with message to be written into debug file
  */
 //void writeDebug(String message) {
-  /** File name for debug info */
+/** File name for debug info */
 //  String fileName = "/mnt/sda1/debug.txt";
 //
-  /** Pointer to debug file */
+/** Pointer to debug file */
 //  File dataFile = FileSystem.open ( fileName.c_str(), FILE_APPEND );
 //
 //  if ( dataFile ) {

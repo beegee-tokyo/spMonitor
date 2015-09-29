@@ -1,0 +1,13 @@
+UPDATE s SET d = replace( d, '15-09', '15-07' ) WHERE d LIKE '15-09%';
+
+DELETE FROM s WHERE d NOT LIKE '15-09%';
+VACUUM;
+.exit
+
+cd /mnt/sda1
+rm 15-09.db
+cp s.db 15-09.db
+sqlite3 15-09.db
+
+DELETE FROM s WHERE d LIKE '70-01%';
+.exit

@@ -44,7 +44,7 @@
         </receiver>
 
         <receiver
-            android:name=".ScreenReceiver"
+            android:name=".EventReceiver"
             android:enabled="true"
             android:exported="false" >
         </receiver>
@@ -74,7 +74,7 @@
         </service>
 
         <service
-            android:name=".ScreenReceiverService"
+            android:name=".EventReceiverService"
             android:enabled="true"
             android:exported="true" >
         </service>

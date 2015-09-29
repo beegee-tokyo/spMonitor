@@ -192,8 +192,9 @@ public class SPwidgetConfigureActivity extends Activity implements AdapterView.O
 						/** IntentFilter to receive Screen on/off broadcast msgs */
 						IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 						filter.addAction(Intent.ACTION_SCREEN_OFF);
+						filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
 						/** BroadcastReceiver to receive Screen on/off broadcast msgs */
-						BroadcastReceiver mReceiver = new ScreenReceiver();
+						BroadcastReceiver mReceiver = new EventReceiver();
 						registerReceiver(mReceiver, filter);
 					}
 					finish();

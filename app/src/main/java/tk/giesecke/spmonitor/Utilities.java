@@ -1,7 +1,10 @@
 package tk.giesecke.spmonitor;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.RingtoneManager;
@@ -227,8 +230,8 @@ class Utilities {
 					data.getString(3)).substring(data.getString(3).length())
 					+ ":" + ("00" +
 					data.getString(4)).substring(data.getString(4).length()));
-			spMonitor.dayToShow = String.valueOf(data.getInt(0)) + "/" +
-					String.valueOf(data.getInt(1)) + "/" +
+			spMonitor.dayToShow = String.valueOf(data.getInt(0)) + "-" +
+					String.valueOf(data.getInt(1)) + "-" +
 					String.valueOf(data.getInt(2));
 			tempSolarStamps.add(data.getFloat(5));
 			if (data.getFloat(6) < 0.0f) {
@@ -256,10 +259,12 @@ class Utilities {
 			energyText.setText("Produced: " + String.format("%.3f", spMonitor.solarEnergy) + "kWh");
 		}
 		/** Text view to show max consumed / produced power */
-		TextView maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_cons_max);
-		maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempConsMStamps)) + "W)");
-		maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_solar_max);
-		maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempSolarStamps)) + "W)");
+		if (tempConsMStamps.size() != 0 && tempSolarStamps.size() != 0) {
+			TextView maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_cons_max);
+			maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempConsMStamps)) + "W)");
+			maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_solar_max);
+			maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempSolarStamps)) + "W)");
+		}
 	}
 
 	/**
@@ -290,6 +295,27 @@ class Utilities {
 	}
 
 	/**
+	 * Get current month and last month as string
+	 *
+	 * @return <code>String[]</code>
+	 *            [0] current month as string yy-mm
+	 *            [1] last month as string yy-mm
+	 */
+	public static String[] getDateStrings() {
+		/** Array with strings for this and last month date */
+		String[] dateStrings = new String[2];
+		/** Calendar to get current time and date */
+		Calendar cal = Calendar.getInstance();
+		/** Time format */
+		@SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yy-MM");
+		dateStrings[0] = df.format(cal.getTime());
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)-1);
+		dateStrings[1] = df.format(cal.getTime());
+
+		return dateStrings;
+	}
+
+	/**
 	 * Get current time as string
 	 *
 	 * @return <code>String</code>
@@ -303,6 +329,35 @@ class Utilities {
 		return df.format(cal.getTime());
 	}
 
+	/**
+	 * Add or subtract a day to/from current date
+	 *
+	 * @param fromDate
+	 *              Date in format yy-MM-dd
+	 * @param isAdd
+	 *              Flag for adding / subtracting a day
+	 *              true -> add a day
+	 *              false -> subtract a day
+	 * @return <code>String</code>
+	 *              fromDate + 1 day
+	 */
+/*	public static String changeDay(String fromDate, boolean isAdd) {
+		Calendar c = Calendar.getInstance();
+		@SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yy-MM-dd");
+		try {
+			Date myDate = df.parse(fromDate.trim());
+			c.setTime(myDate);
+			if (isAdd) {
+				c.add(Calendar.DATE, 1);
+			} else {
+				c.add(Calendar.DATE, -1);
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return df.format(c.getTime());
+	}
+*/
 	/**
 	 * Checks if external storage is available for read and write
 	 *
@@ -340,6 +395,75 @@ class Utilities {
 			file.delete();
 		}
 		return file;
+	}
+
+	/**
+	 * Start or stop timer for widget updates
+	 * If connection is same LAN as spMonitor device then update is every 60 seconds
+	 * else the update is every 5 minutes
+	 *
+	 * @param context
+	 *            application context
+	 * @param isStart
+	 *            flag if timer should be started or stopped
+	 */
+	public static void startStopUpdates(Context context, boolean isStart) {
+
+		/** Intent to start scheduled update of the widgets */
+		Intent timerIntent;
+		/** Pending intent for broadcast message to update widgets */
+		PendingIntent pendingIntent;
+		/** Alarm manager for scheduled widget updates */
+		AlarmManager alarmManager;
+		/* Access to shared preferences of app widget */
+		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
+		/** Update interval in ms */
+		int alarmTime = 60000;
+
+		// Stop the update of the widgets
+		/** Intent to stop scheduled update of the widgets */
+		timerIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
+		/** Pending intent for broadcast message to update widgets */
+		pendingIntent = PendingIntent.getBroadcast(
+				context, 2701, timerIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		/** Alarm manager for scheduled widget updates */
+		alarmManager = (AlarmManager) context.getSystemService
+				(Context.ALARM_SERVICE);
+		alarmManager.cancel(pendingIntent);
+
+		if (isStart) {
+			/** SSID of Wifi network */
+			String connSSID = getSSID(context);
+
+			if ((connSSID != null) && (connSSID.equalsIgnoreCase(mPrefs.getString("SSID","none")))) {
+				/** Intent for broadcast message to update widgets */
+				timerIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
+				/** Pending intent for broadcast message to update widgets */
+				pendingIntent = PendingIntent.getBroadcast(
+						context, 2701, timerIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+				/** Alarm manager for scheduled widget updates */
+				alarmManager = (AlarmManager) context.getSystemService
+						(Context.ALARM_SERVICE);
+				alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+						System.currentTimeMillis(),
+						alarmTime, pendingIntent);
+			} else {
+				/** Update interval in ms */
+				alarmTime = 300000;
+
+				/** Intent for broadcast message to update widgets */
+				timerIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
+				/** Pending intent for broadcast message to update widgets */
+				pendingIntent = PendingIntent.getBroadcast(
+						context, 2701, timerIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+				/** Alarm manager for scheduled widget updates */
+				alarmManager = (AlarmManager) context.getSystemService
+						(Context.ALARM_SERVICE);
+				alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+						System.currentTimeMillis(),
+						alarmTime, pendingIntent);
+			}
+		}
 	}
 
 	/**

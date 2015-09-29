@@ -17,13 +17,15 @@ import java.util.ArrayList;
  */
 class DataBaseHelper extends SQLiteOpenHelper {
 
-	/** Name of the database */
-	private static final String DATABASE_NAME="spMonitor";
+	/** Name of the database of current month*/
+	public static final String DATABASE_NAME="spMonitor";
+	/** Name of the database of */
+	public static final String DATABASE_NAME_LAST="spLast";
 	/** Name of the table */
 	private static final String TABLE_NAME = "s";
 
-	public DataBaseHelper(Context context) {
-		super(context, DATABASE_NAME, null, 1);
+	public DataBaseHelper(Context context, String dbName) {
+		super(context, dbName, null, 1);
 	}
 
 	@Override

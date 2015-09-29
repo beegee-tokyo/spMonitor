@@ -29,6 +29,8 @@ unsigned long lastMeasure;
 unsigned long lastSave;
 /** Timer for reset */
 //unsigned long lastReset;
+/** Current month used for database */
+unsigned int thisMonth = 0;
 
 /** Constant value for activity LED port */
 #define activityLED 8

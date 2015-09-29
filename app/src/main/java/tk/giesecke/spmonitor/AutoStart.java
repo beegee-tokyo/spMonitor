@@ -42,8 +42,8 @@ public class AutoStart extends BroadcastReceiver {
 						System.currentTimeMillis() + 10000,
 						alarmTime, pendingWidgetIntent);
 
-				// Start service to register ScreenReceiverService
-				context.startService(new Intent(context, ScreenReceiverService.class));
+				// Start service to register EventReceiverService
+				context.startService(new Intent(context, EventReceiverService.class));
 			}
 
 			/** Calendar instance to setup daily sync */

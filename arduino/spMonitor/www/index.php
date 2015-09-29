@@ -44,8 +44,6 @@
 			$dbh = new PDO($dir) or die("cannot open database");
 
 			$yearsAvail = array();
-			$monthsAvail = array();
-			$daysAvail = array();
 			$recordsAvail;
 
 			// Start drawing the table
@@ -62,6 +60,7 @@
 				$yearsAvail[] = $row;
 			};
 			for ($year=0; $year<count($yearsAvail); $year++) {
+				$monthsAvail = array();
 				// Define your SQL statement to get available months per year
 				$query = "SELECT DISTINCT SUBSTR(d,4,2) m FROM s WHERE d LIKE '" . $yearsAvail[$year]['y'] . "%'";
 				$sth = $dbh->query($query);
@@ -69,6 +68,7 @@
 					$monthsAvail[] = $row;
 				}
 				for ($month=0; $month<count($monthsAvail); $month++) {
+					$daysAvail = array();
 					// Define your SQL statement to get available days per month per year
 					$query = "SELECT DISTINCT SUBSTR(d,7,2) d FROM s WHERE d LIKE '" . $yearsAvail[$year]['y'] .
 					 "-" . $monthsAvail[$month]['m'] . "%'";

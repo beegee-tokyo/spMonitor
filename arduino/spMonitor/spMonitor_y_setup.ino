@@ -22,6 +22,9 @@ void setup() {
   /* set pin to output */
   pinMode ( activityLED, OUTPUT );
 
+  /* LED on */
+  digitalWrite ( activityLED, HIGH );
+
   /* Initialize bridge connection */
   Bridge.begin();
   /* Listen for incoming connection only from localhost */
@@ -52,14 +55,12 @@ void setup() {
   emon[1].current ( 1, iCal2 ); // AD1, Ical = 11.5
 
   /* Get initial reading to setup the low pass filter */
+  /* This is as well to wait for the Linino to boot up
+     complete and update the date/time from internet */
   unsigned int i = 0;
-  while (i<50) {
-    /* LED on */
-    digitalWrite ( activityLED, HIGH );
+  while (i < 500) {
     emon[0].calcVI ( 20, 2000 );
     emon[1].calcVI ( 20, 2000 );
-    /* LED off */
-    digitalWrite ( activityLED, LOW );
     i++;
   }
 
@@ -67,9 +68,15 @@ void setup() {
   //writeDebug( getTimeStamp() );
   /* End of For debug only */
 
-  /* Initiate call of getMeasures and saveData every 5 seconds / 60 seconds */
+  /* Initiate call of getMeasures / saveData every 5 seconds / 60 seconds */
   lastMeasure = lastSave = millis();
 
+  /* LED off */
+  digitalWrite ( activityLED, LOW );
+
+  /* Delay for another 10 seconds to give Linino more time to boot up and get the correct date */
+  delay(10000);
+  
   /* Activate the watchdog */
   wdt_enable(WDTO_8S);
 }

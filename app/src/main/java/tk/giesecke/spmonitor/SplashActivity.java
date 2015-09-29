@@ -34,8 +34,6 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 	private static Button manualEntry;
 	/** Pointer to text view for manual IP address entry */
 	private static TextView manualEntryTxt;
-	/** Delay in ms before showing main activity */
-	private static final int delay = 1000;
 	/** Instance of asynchronous task */
 	private AsyncTask asTask;
 	/** SSID of WiFi */
@@ -273,6 +271,6 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 				finish();
 			}
-		}, delay);
+		}, 1000);
 	}
 }
