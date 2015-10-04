@@ -96,13 +96,13 @@ void saveData () {
 
   dataSave.runShellCommand ( dataString );
 
-  dataString = "sqlite3 /mnt/sda1/s.db 'insert into s (d,s,c,l) Values (\""
-               + timeString + "\","
-               + String ( solar ) + ","
-               + String ( cons ) + ","
-               + String ( light ) + ");'";
+//  dataString = "sqlite3 /mnt/sda1/s.db 'insert into s (d,s,c,l) Values (\""
+//               + timeString + "\","
+//               + String ( solar ) + ","
+//               + String ( cons ) + ","
+//               + String ( light ) + ");'";
 
-  dataSave.runShellCommand ( dataString );
+//  dataSave.runShellCommand ( dataString );
 
   wdt_reset();
   /* Send current data to emonCMS */

@@ -36,7 +36,7 @@ unsigned int thisMonth = 0;
 #define activityLED 8
 
 /** Constant value for measurement frequency in ms */
-#define measureFreq 1000
+#define measureFreq 5000
 
 /** Instance of the Adafruit TSL2561 sensor */
 Adafruit_TSL2561_Unified tsl = Adafruit_TSL2561_Unified ( TSL2561_ADDR_FLOAT, 1 );
