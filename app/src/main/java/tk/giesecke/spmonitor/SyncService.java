@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /** spMonitor - Daily sync service
  *
@@ -159,6 +160,8 @@ public class SyncService extends IntentService {
 		SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
 		/** Cursor with data from database */
 		Cursor dbCursor = DataBaseHelper.getLastRow(dataBase);
+		/** Flag for database access type */
+		boolean splitAccess = false;
 		if (dbCursor.getCount() != 0) { // local database not empty, need to sync only missing
 			dbCursor.moveToFirst();
 
@@ -180,27 +183,44 @@ public class SyncService extends IntentService {
 					.substring(String.valueOf(lastMinute).length()); // add minute
 			urlString += "&get=all";
 		} else { // local database is empty, need to sync all data
-			urlString += "?date=" + syncMonth + "&get=all"; // get all of this month
+			//urlString += "?date=" + syncMonth + "&get=all"; // get all of this month
+			splitAccess = true;
+			urlString += "?date=" + syncMonth;
 		}
 		dbCursor.close();
 		dataBase.close();
 		dbHelper.close();
 
-		/** Request to spMonitor device */
-		Request request = new Request.Builder()
-				.url(urlString)
-				.build();
+		/** Repeat counter used when full database needs to be synced */
+		int loopCnt = 0;
+		/** URL used for access */
+		String thisURL = urlString;
+		if (splitAccess) {
+			loopCnt = 3;
+		}
 
-		if (request != null) {
-			try {
-				/** Response from spMonitor device */
-				Response response = client.newCall(request).execute();
-				if (response != null) {
-					resultData = response.body().string();
-				}
-			} catch (IOException ignore) {
+		for (int loop = 0; loop <= loopCnt; loop++) {
+			if (splitAccess) {
+				urlString = thisURL + "-" + String.valueOf(loop);
+				if (BuildConfig.DEBUG) Log.d("spMonitor", "URL = " + urlString);
 			}
-			if (Utilities.isJSONValid(resultData)) {
+			// Set timeout to 5 minutes in case we have a lot of data to load
+			client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
+			client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
+			/** Request to spMonitor device */
+			Request request = new Request.Builder()
+					.url(urlString)
+					.build();
+
+			if (request != null) {
+				try {
+					/** Response from spMonitor device */
+					Response response = client.newCall(request).execute();
+					if (response != null) {
+						resultData = response.body().string();
+					}
+				} catch (IOException ignore) {
+				}
 				try {
 					/** JSON array with the data received from spMonitor device */
 					JSONArray jsonFromDevice = new JSONArray(resultData);
@@ -210,8 +230,10 @@ public class SyncService extends IntentService {
 					dataBase = dbHelper.getWritableDatabase();
 
 					// Get received data into local database
-					// skip first data record from device, it is already in the database
-					for (int i=1; i<jsonFromDevice.length(); i++) {
+					dataBase.beginTransactionNonExclusive();
+					for (int i=0; i<jsonFromDevice.length(); i++) {
+						// skip first data record from device if we are just updating the database
+						if (i == 0 && !splitAccess) i++;
 						/** JSONObject with a single record */
 						JSONObject jsonRecord = jsonFromDevice.getJSONObject(i);
 						String record = jsonRecord.getString("d");
@@ -221,7 +243,10 @@ public class SyncService extends IntentService {
 						record += ","+jsonRecord.getString("c");
 						DataBaseHelper.addDay(dataBase, record);
 					}
+					dataBase.setTransactionSuccessful();
+					dataBase.endTransaction();
 				} catch (JSONException e) {
+					dataBase.endTransaction();
 					dataBase.close();
 					dbHelper.close();
 				}

@@ -249,21 +249,27 @@ class Utilities {
 			data.moveToNext();
 		}
 
+		/** Text for update of text view */
+		String updateTxt;
 		if (spMonitor.showingLog) {
 			/** Text view to show consumed / produced energy */
 			TextView energyText = (TextView) spMonitor.appView.findViewById(R.id.tv_cons_energy);
 			energyText.setVisibility(View.VISIBLE);
-			energyText.setText("Consumed: " + String.format("%.3f", spMonitor.consEnergy) + "kWh");
+			updateTxt = "Consumed: " + String.format("%.3f", spMonitor.consEnergy) + "kWh";
+			energyText.setText(updateTxt);
 			energyText = (TextView) spMonitor.appView.findViewById(R.id.tv_solar_energy);
 			energyText.setVisibility(View.VISIBLE);
-			energyText.setText("Produced: " + String.format("%.3f", spMonitor.solarEnergy) + "kWh");
+			updateTxt = "Produced: " + String.format("%.3f", spMonitor.solarEnergy) + "kWh";
+			energyText.setText(updateTxt);
 		}
 		/** Text view to show max consumed / produced power */
 		if (tempConsMStamps.size() != 0 && tempSolarStamps.size() != 0) {
 			TextView maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_cons_max);
-			maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempConsMStamps)) + "W)");
+			updateTxt = "(" + String.format("%.0f", Collections.max(tempConsMStamps)) + "W)";
+			maxPowerText.setText(updateTxt);
 			maxPowerText = (TextView) spMonitor.appView.findViewById(R.id.tv_solar_max);
-			maxPowerText.setText("(" + String.format("%.0f", Collections.max(tempSolarStamps)) + "W)");
+			updateTxt = "(" + String.format("%.0f", Collections.max(tempSolarStamps)) + "W)";
+			maxPowerText.setText(updateTxt);
 		}
 	}
 

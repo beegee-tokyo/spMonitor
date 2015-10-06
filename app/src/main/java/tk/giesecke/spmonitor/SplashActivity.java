@@ -160,6 +160,18 @@ public class SplashActivity extends Activity implements View.OnClickListener {
 			spMonitor.client.setConnectTimeout(1, TimeUnit.MINUTES); // connect timeout
 			spMonitor.client.setReadTimeout(1, TimeUnit.MINUTES);    // socket timeout
 			if (toDo.equalsIgnoreCase("find_new")) { // no info about Arduino device, search for it
+				// First try on default address
+				/** Result of check if spMonitor is still on same IP address */
+				String result;
+				for (int i=0; i<3; i++) { //try three times before giving up
+					result = Utilities.checkDeviceIP("192.168.0.140");
+					if (result.startsWith("F ")) {
+						spMonitor.deviceIP = "http://192.168.0.140/arduino/";
+						spMonitor.mPrefs.edit().putString("spMonitorIP", spMonitor.deviceIP).apply();
+						return "true";
+					}
+				}
+
 				spMonitor.deviceIP = Utilities.searchDeviceIP();
 				if (spMonitor.deviceIP.equalsIgnoreCase("")) {
 					return "false";

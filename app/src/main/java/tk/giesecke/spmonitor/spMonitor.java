@@ -90,6 +90,8 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	private final Handler handler = new Handler();
 	/** Flag for communication active */
 	public static boolean isCommunicating = false;
+	/** Flag for last month update request */
+	private static boolean needLastMonth = false;
 
 	/** The url to access the spMonitor device */
 	private String url = "";
@@ -353,7 +355,8 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			Cursor dbCursor = DataBaseHelper.getLastRow(dataBase);
 			if (dbCursor != null) {
 				if (dbCursor.getCount() == 0) { // local database is empty, need to sync all data
-					new syncDBtoDB().execute(dbNamesList[1]);
+					needLastMonth = true;
+//					new syncDBtoDB().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, dbNamesList[1]);
 				} else { // fill last log file array
 					lastLogDates.clear();
 					/** List with years in the database */
@@ -449,15 +452,15 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (timer == null) {
-			if (isWAN) { // When on mobile connection update only every 5 minutes
-				startTimer(300000);
-			} else if (calModeOn) { // When in calibration mode, update every 5 seconds
-				startTimer(5000);
-			} else { // Normal WiFi mode, update every 1 minute
-				startTimer(60000);
-			}
-		}
+//		if (timer == null) {
+//			if (isWAN) { // When on mobile connection update only every 5 minutes
+//				startTimer(300000);
+//			} else if (calModeOn) { // When in calibration mode, update every 5 seconds
+//				startTimer(5000);
+//			} else { // Normal WiFi mode, update every 1 minute
+//				startTimer(60000);
+//			}
+//		}
 	}
 
 	@Override
@@ -1011,6 +1014,8 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 					urlString = "http://desire.giesecke.tk/s/l.php";
 				}
 			}
+			if (BuildConfig.DEBUG) Log.d("spMonitor","callArduino = " + urlString);
+
 			/** Request to spMonitor device */
 			Request request = new Request.Builder()
 					.url(urlString)
@@ -1086,7 +1091,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			result.syncMonth = params[0];
 
 			/** Response from the spMonitor device or error message */
-			result.taskResult = getResources().getString(R.string.filesSyncFail);
+			result.taskResult = result.syncMonth + " " + getResources().getString(R.string.filesSyncFail);
 
 			// Make call only if valid url is given
 			if (deviceIP.startsWith("No")) {
@@ -1109,6 +1114,8 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
 				/** Cursor with data from database */
 				Cursor dbCursor = DataBaseHelper.getLastRow(dataBase);
+				/** Flag for database access type */
+				boolean splitAccess = false;
 				if (dbCursor != null) {
 					if (dbCursor.getCount() != 0) { // local database not empty, need to sync only missing
 						dbCursor.moveToFirst();
@@ -1131,47 +1138,69 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 								.substring(String.valueOf(lastMinute).length()); // add minute
 						urlString += "&get=all";
 					} else { // local database is empty, need to sync all data
-						urlString += "?date=" + result.syncMonth + "&get=all"; // get all of this month
+						//urlString += "?date=" + result.syncMonth + "&get=all"; // get all of this month
+						/* TODO in this case we need to split the request. Otherwise the JSON array is getting too
+						   big to process */
+						splitAccess = true;
+						urlString += "?date=" + result.syncMonth;
 					}
+				} else { // something went wrong with the database access
+					result.taskResult = result.syncMonth + " " + getResources().getString(R.string.filesSyncFail);
+					dataBase.close();
+					dbHelper.close();
+					return result;
 				}
-				if (dbCursor != null) {
-					dbCursor.close();
-				}
+				dbCursor.close();
 				dataBase.close();
 				dbHelper.close();
 
-				// Set timeout to 5 minutes in case we have a lot of data to load
-				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
-				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
-				/** Request to spMonitor device */
-				Request request = new Request.Builder()
-						.url(urlString)
-						.build();
+				/** Repeat counter used when full database needs to be synced */
+				int loopCnt = 0;
+				/** URL used for access */
+				String thisURL = urlString;
+				if (splitAccess) {
+					loopCnt = 3;
+				}
 
-				if (request != null) {
-					try {
-						/** Response from spMonitor device */
-						Response response = client.newCall(request).execute();
-						if (response != null) {
-							result.taskResult = response.body().string();
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-						result.taskResult = e.getMessage();
-						try {
-							if (result.taskResult.contains("EHOSTUNREACH")) {
-								result.taskResult = getApplicationContext().getString(R.string.err_arduino);
-							}
-							if (result.taskResult.equalsIgnoreCase("")) {
-								result.taskResult = getApplicationContext().getString(R.string.err_arduino);
-							}
-							return result;
-						} catch (NullPointerException en) {
-							result.taskResult = getResources().getString(R.string.err_no_device);
-							return result;
-						}
+				for (int loop = 0; loop <= loopCnt; loop++) {
+					if (splitAccess) {
+						urlString = thisURL + "-" + String.valueOf(loop);
+						if (BuildConfig.DEBUG) Log.d("spMonitor","URL = " + urlString);
 					}
-					if (Utilities.isJSONValid(result.taskResult)) {
+					// Set timeout to 5 minutes in case we have a lot of data to load
+					client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
+					client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
+					/** Request to spMonitor device */
+					Request request = new Request.Builder()
+							.url(urlString)
+							.build();
+
+					if (request != null) {
+						try {
+							/** Response from spMonitor device */
+							Response response = client.newCall(request).execute();
+							if (response != null) {
+								result.taskResult = response.body().string();
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+							result.taskResult = e.getMessage();
+							try {
+								if (result.taskResult.contains("EHOSTUNREACH")) {
+									result.taskResult = getApplicationContext().getString(R.string.err_arduino);
+								}
+								if (result.taskResult.equalsIgnoreCase("")) {
+									result.taskResult = getApplicationContext().getString(R.string.err_arduino);
+								}
+								return result;
+							} catch (NullPointerException en) {
+								result.taskResult = getResources().getString(R.string.err_no_device);
+								return result;
+							}
+						}
+
+						if (BuildConfig.DEBUG) Log.d("spMonitor","JSON size = " + result.taskResult.length());
+
 						try {
 							/** JSON array with the data received from spMonitor device */
 							JSONArray jsonFromDevice = new JSONArray(result.taskResult);
@@ -1184,27 +1213,34 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 							dataBase = dbHelper.getWritableDatabase();
 
 							// Get received data into local database
-							// skip first data record from device, it is already in the database
-							for (int i=1; i<jsonFromDevice.length(); i++) {
+							/** Data string for insert into database */
+							String record = "";
+							dataBase.beginTransactionNonExclusive();
+							for (int i=0; i<jsonFromDevice.length(); i++) {
+								// skip first data record from device if we are just updating the database
+								if (i == 0 && !splitAccess) i++;
 								/** JSONObject with a single record */
 								JSONObject jsonRecord = jsonFromDevice.getJSONObject(i);
-								String record = jsonRecord.getString("d");
+								record = jsonRecord.getString("d");
 								record = record.replace("-",",");
 								record += ","+jsonRecord.getString("l");
 								record += ","+jsonRecord.getString("s");
 								record += ","+jsonRecord.getString("c");
+								if (BuildConfig.DEBUG && i <= 1) Log.d("spMonitor","DB insert: " + record);
 								DataBaseHelper.addDay(dataBase, record);
 							}
-							result.taskResult = getResources().getString(R.string.filesSynced);
+							dataBase.setTransactionSuccessful();
+							dataBase.endTransaction();
+							if (BuildConfig.DEBUG) Log.d("spMonitor","DB insert: " + record);
+							result.taskResult = result.syncMonth + " " + getResources().getString(R.string.filesSynced);
 						} catch (JSONException e) {
-							result.taskResult = getResources().getString(R.string.filesSyncFail);
+							result.taskResult = result.syncMonth + " " + getResources().getString(R.string.filesSyncFail);
+							dataBase.endTransaction();
 							dataBase.close();
 							dbHelper.close();
 						}
 						dataBase.close();
 						dbHelper.close();
-					} else {
-						result.taskResult = getResources().getString(R.string.filesSyncFail);
 					}
 				}
 			}
@@ -1213,6 +1249,10 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 
 		protected void onPostExecute(onPostExecuteWrapper result) {
 			updateSynced(result.taskResult, result.syncMonth);
+			if (needLastMonth) {
+				new syncDBtoDB().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, dbNamesList[1]);
+				needLastMonth = false;
+			}
 		}
 	}
 
@@ -1457,14 +1497,20 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 								double resultPowerSec = solarPowerSec + consPowerSec;
 
 								valueFields = (TextView) findViewById(R.id.tv_solar_val);
+								/** String for display */
+								String displayTxt;
 								if (calModeOn) {
-									valueFields.setText(String.format("%.0f", solarPowerSec) + "W");
+									displayTxt = String.format("%.0f", solarPowerSec) + "W";
+									valueFields.setText(displayTxt);
 									valueFields = (TextView) findViewById(R.id.tv_cons_val);
-									valueFields.setText(String.format("%.0f", resultPowerSec) + "W");
+									displayTxt = String.format("%.0f", resultPowerSec) + "W";
+									valueFields.setText(displayTxt);
 								} else {
-									valueFields.setText(String.format("%.0f", solarPowerMin) + "W");
+									displayTxt = String.format("%.0f", solarPowerMin) + "W";
+									valueFields.setText(displayTxt);
 									valueFields = (TextView) findViewById(R.id.tv_cons_val);
-									valueFields.setText(String.format("%.0f", resultPowerMin) + "W");
+									displayTxt = String.format("%.0f", resultPowerMin) + "W";
+									valueFields.setText(displayTxt);
 								}
 								resultTextView.setText(result);
 
@@ -1481,7 +1527,8 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 										valueFields.setTextColor(getResources()
 												.getColor(android.R.color.holo_green_light));
 									}
-									valueFields.setText(String.format("%.0f", Math.abs(consPowerSec)) + "W");
+									displayTxt = String.format("%.0f", Math.abs(consPowerSec)) + "W";
+									valueFields.setText(displayTxt);
 								} else {
 									if (consPowerMin > 0.0d) {
 										valueFields.setText(getString(R.string.tv_result_txt_im));
@@ -1494,14 +1541,17 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 										valueFields.setTextColor(getResources()
 												.getColor(android.R.color.holo_green_light));
 									}
-									valueFields.setText(String.format("%.0f", Math.abs(consPowerMin)) + "W");
+									displayTxt = String.format("%.0f", Math.abs(consPowerMin)) + "W";
+									valueFields.setText(displayTxt);
 								}
 
 								valueFields = (TextView) findViewById(R.id.tv_light_value);
 								if (calModeOn) {
-									valueFields.setText(String.valueOf(lightValSec) + "lux");
+									displayTxt = String.valueOf(lightValSec) + "lux";
+									valueFields.setText(displayTxt);
 								} else {
-									valueFields.setText(String.valueOf(lightValMin) + "lux");
+									displayTxt = String.valueOf(lightValMin) + "lux";
+									valueFields.setText(displayTxt);
 								}
 
 								if (autoRefreshOn && !isSimpleUI) {
@@ -1573,11 +1623,13 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 
 									/** Text view to show min and max poser values */
 									TextView maxPowerText = (TextView) findViewById(R.id.tv_cons_max);
-									maxPowerText.setText("(" + String.format("%.0f",
-											Collections.max(consumMPowerCont)) + "W)");
+									displayTxt = "(" + String.format("%.0f",
+											Collections.max(consumMPowerCont)) + "W)";
+									maxPowerText.setText(displayTxt);
 									maxPowerText = (TextView) findViewById(R.id.tv_solar_max);
-									maxPowerText.setText("(" + String.format("%.0f",
-											Collections.max(solarPowerCont)) + "W)");
+									displayTxt = "(" + String.format("%.0f",
+											Collections.max(solarPowerCont)) + "W)";
+									maxPowerText.setText(displayTxt);
 
 									// let the chart know it's data has changed
 									lineChart.notifyDataSetChanged();
@@ -1680,27 +1732,28 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 							}
 						}
 					}
-					if (syncMonth.equalsIgnoreCase(dbNamesList[0])) {
-						logDatesIndex = thisLogDates.size() - 1;
-					} else {
-						lastLogDatesIndex = thisLogDates.size() - 1;
-					}
 
 					dataBase.close();
 					dbHelper.close();
 
-					if (timer == null) {
-						if (isWAN) { // When on mobile connection update only every 5 minutes
-							startTimer(300000);
-						} else if (calModeOn) { // When in calibration mode, update every 5 seconds
-							startTimer(5000);
-						} else { // Normal WiFi mode, update every 1 minute
-							startTimer(60000);
+					if (syncMonth.equalsIgnoreCase(dbNamesList[0])) {
+						logDatesIndex = thisLogDates.size() - 1;
+
+						if (timer == null) {
+							if (isWAN) { // When on mobile connection update only every 5 minutes
+								startTimer(300000);
+							} else if (calModeOn) { // When in calibration mode, update every 5 seconds
+								startTimer(5000);
+							} else { // Normal WiFi mode, update every 1 minute
+								startTimer(60000);
+							}
 						}
+						initChart(true);
+						Utilities.stopRefreshAnim();
+					} else {
+						lastLogDatesIndex = thisLogDates.size() - 1;
 					}
-					initChart(true);
 				}
-				Utilities.stopRefreshAnim();
 			}
 		});
 	}
@@ -1743,11 +1796,17 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	 * Start async task to get last measurements from spMonitor
 	 */
 	private void autoRefresh() {
-		Utilities.startRefreshAnim();
-		/** String list with parts of the URL */
-		String[] ipValues = deviceIP.split("/");
-		url = "http://"+ipValues[2]+"/data/get";
-		new callArduino().execute(url);
+		if (!isCommunicating) {
+			Utilities.startRefreshAnim();
+			/** String list with parts of the URL */
+			String[] ipValues = deviceIP.split("/");
+			url = "http://"+ipValues[2]+"/data/get";
+			if (needLastMonth) {
+				new callArduino().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+			} else {
+				new callArduino().execute(url);
+			}
+		}
 	}
 
 	/**
@@ -1983,8 +2042,11 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			}
 
 			tvMarkerTime.setText(timeSeries.get(dataIndex));
-			tvMarkerCons.setText((Float.toString(touchCons.getVal())+"W"));
-			tvMarkerSolar.setText((Float.toString(touchSolar.getVal())+"W"));
+			/** Text for update text view */
+			String updateTxt = (Float.toString(touchCons.getVal())+"W");
+			tvMarkerCons.setText(updateTxt);
+			updateTxt = (Float.toString(touchSolar.getVal())+"W");
+			tvMarkerSolar.setText(updateTxt);
 		}
 
 		@Override
