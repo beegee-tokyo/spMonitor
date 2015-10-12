@@ -16,7 +16,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"
@@ -74,9 +73,14 @@
         </service>
 
         <service
-            android:name=".EventReceiverService"
+            android:name=".BroadcastRegisterService"
             android:enabled="true"
             android:exported="true" >
+        </service>
+
+        <service
+            android:name=".NotifService"
+            android:exported="false" >
         </service>
 
     </application>

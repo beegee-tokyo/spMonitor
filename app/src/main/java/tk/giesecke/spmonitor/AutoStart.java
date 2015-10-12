@@ -24,27 +24,39 @@ public class AutoStart extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-			/** Access to shared preferences of app widget */
-			SharedPreferences wPrefs = context.getSharedPreferences("spMonitor",0);
-			if (wPrefs.getInt("wNums",0) != 0) {
-				/** Update interval in ms */
-				int alarmTime = 60000;
+//			/** Access to shared preferences of app widget */
+//			SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
+//			/** Update interval in ms */
+//			int alarmTime = 60000;
+//			if (mPrefs.getInt("wNums",0) != 0) {
+//
+//				/** Intent for broadcast message to update widgets */
+//				Intent widgetIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
+//				/** Pending intent for broadcast message to update widgets */
+//				PendingIntent pendingWidgetIntent = PendingIntent.getBroadcast(
+//						context, 2701, widgetIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+//				/** Alarm manager for scheduled widget updates */
+//				AlarmManager alarmManager = (AlarmManager) context.getSystemService
+//						(Context.ALARM_SERVICE);
+//				alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+//						System.currentTimeMillis() + 10000,
+//						alarmTime, pendingWidgetIntent);
+//
+//			} else {
+//				if (mPrefs.getBoolean("notif",true)) {
+//					/** Pending intent for notification updates */
+//					PendingIntent pi = PendingIntent.getService(context, 2703,
+//							new Intent(context, NotifService.class),PendingIntent.FLAG_UPDATE_CURRENT);
+//					/** Alarm manager for daily sync */
+//					AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//					am.setRepeating(AlarmManager.RTC_WAKEUP,
+//							System.currentTimeMillis() + 10000,
+//							alarmTime, pi);
+//				}
+//			}
 
-				/** Intent for broadcast message to update widgets */
-				Intent widgetIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
-				/** Pending intent for broadcast message to update widgets */
-				PendingIntent pendingWidgetIntent = PendingIntent.getBroadcast(
-						context, 2701, widgetIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-				/** Alarm manager for scheduled widget updates */
-				AlarmManager alarmManager = (AlarmManager) context.getSystemService
-						(Context.ALARM_SERVICE);
-				alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-						System.currentTimeMillis() + 10000,
-						alarmTime, pendingWidgetIntent);
-
-				// Start service to register EventReceiverService
-				context.startService(new Intent(context, EventReceiverService.class));
-			}
+			// Start service to register BroadcastRegisterService
+			context.startService(new Intent(context, BroadcastRegisterService.class));
 
 			/** Calendar instance to setup daily sync */
 			Calendar calendar = Calendar.getInstance();

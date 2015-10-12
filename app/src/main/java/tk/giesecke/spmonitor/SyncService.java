@@ -39,7 +39,7 @@ public class SyncService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		if (BuildConfig.DEBUG) Log.d("spMonitor SyncService","started");
+		if (BuildConfig.DEBUG) Log.d("spMsync","started");
 		if (intent != null) {
 
 			/** Context of application */
@@ -74,12 +74,12 @@ public class SyncService extends IntentService {
 
 			// Make call only if valid url is given
 			if (deviceIP.startsWith("No")) {
-				if (BuildConfig.DEBUG) Log.d("spMonitor SyncService","no valid IP");
+				if (BuildConfig.DEBUG) Log.d("spMsync","no valid IP");
 			} else {
 				// Get today's day for the online database name
 				String[] dbNamesList = Utilities.getDateStrings();
-				if (BuildConfig.DEBUG) Log.d("spMonitor","This month = " + dbNamesList[0]);
-				if (BuildConfig.DEBUG) Log.d("spMonitor", "Last month = " + dbNamesList[1]);
+				if (BuildConfig.DEBUG) Log.d("spMsync","This month = " + dbNamesList[0]);
+				if (BuildConfig.DEBUG) Log.d("spMsync", "Last month = " + dbNamesList[1]);
 
 				/** Instance of DataBaseHelper */
 				DataBaseHelper dbHelper;
@@ -202,7 +202,7 @@ public class SyncService extends IntentService {
 		for (int loop = 0; loop <= loopCnt; loop++) {
 			if (splitAccess) {
 				urlString = thisURL + "-" + String.valueOf(loop);
-				if (BuildConfig.DEBUG) Log.d("spMonitor", "URL = " + urlString);
+				if (BuildConfig.DEBUG) Log.d("spMsync", "URL = " + urlString);
 			}
 			// Set timeout to 5 minutes in case we have a lot of data to load
 			client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout

@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -293,6 +294,22 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
 		isWAN = mPrefs.getBoolean("access_type", false);
 		connSSID = mPrefs.getString("SSID", "none");
+
+		// TODO check if EventReceiver is already registered
+		if (BroadcastRegisterService.mReceiver == null) {
+			if (BuildConfig.DEBUG) Log.d("spMonitor","EventReceiver was not registered");
+			if (mPrefs.getInt("wNums", 0) != 0) {
+				/** IntentFilter to receive screen on/off broadcast msgs */
+				IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+				filter.addAction(Intent.ACTION_SCREEN_OFF);
+				filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
+				/** Receiver for screen on/off broadcast msgs */
+				BroadcastRegisterService.mReceiver = new EventReceiver();
+				registerReceiver(BroadcastRegisterService.mReceiver, filter);
+			}
+		} else {
+			if (BuildConfig.DEBUG) Log.d("spMonitor","EventReceiver already registered");
+		}
 
 		notifUriSel = "android.resource://"
 				+ this.getPackageName() + "/"
@@ -887,8 +904,14 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 					NotificationManager nMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 					nMgr.cancel(1);
 					mPrefs.edit().putBoolean("notif",false).apply();
+					if (mPrefs.getInt("wNums", 0) == 0) {
+						Utilities.startStopNotifUpdates(this,false);
+					}
 				} else {
 					mPrefs.edit().putBoolean("notif",true).apply();
+					if (mPrefs.getInt("wNums", 0) == 0) {
+						Utilities.startStopNotifUpdates(this,true);
+					}
 				}
 				menuDialog.dismiss();
 				break;

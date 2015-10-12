@@ -23,18 +23,36 @@ public class EventReceiver extends BroadcastReceiver {
 		/* Access to shared preferences of app widget */
 		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
 
-		if (mPrefs.getInt("wNums", 0) != 0) {
-			if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-				if (BuildConfig.DEBUG) Log.d("spMonitor Event", "Screen off");
-				Utilities.startStopUpdates(context, false);
-			} else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-				if (BuildConfig.DEBUG) Log.d("spMonitor Event", "Screen on");
-				Utilities.startStopUpdates(context,true);
-			} if (intent.getAction().equals
-					(android.net.ConnectivityManager.CONNECTIVITY_ACTION)) {
-				// CONNECTIVITY CHANGE
-				if (BuildConfig.DEBUG) Log.d("spMonitor Event", "Connection Change");
-				Utilities.startStopUpdates(context,true);
+		if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+			if (BuildConfig.DEBUG) Log.d("spMonitor Event", "Screen off");
+			if (mPrefs.getInt("wNums", 0) != 0) {
+				Utilities.startStopWidgetUpdates(context, false);
+			} else if (mPrefs.getBoolean("notif",true)) {
+				Utilities.startStopNotifUpdates(context, false);
+			}
+		} else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+			if (BuildConfig.DEBUG) Log.d("spMonitor Event", "Screen on");
+			if (mPrefs.getInt("wNums", 0) != 0) {
+				Utilities.startStopWidgetUpdates(context, true);
+			} else if (mPrefs.getBoolean("notif",true)) {
+				Utilities.startStopNotifUpdates(context, true);
+			}
+		} if (intent.getAction().equals
+				(android.net.ConnectivityManager.CONNECTIVITY_ACTION)) {
+			// CONNECTIVITY CHANGE
+			if (BuildConfig.DEBUG) Log.d("spMonitor Event", "Connection Change");
+			if (Utilities.isConnectionAvailable(context)) {
+				if (mPrefs.getInt("wNums", 0) != 0) {
+					Utilities.startStopWidgetUpdates(context, true);
+				} else if (mPrefs.getBoolean("notif",true)) {
+					Utilities.startStopNotifUpdates(context, true);
+				}
+			} else {
+				if (mPrefs.getInt("wNums", 0) != 0) {
+					Utilities.startStopWidgetUpdates(context, false);
+				} else if (mPrefs.getBoolean("notif",true)) {
+					Utilities.startStopNotifUpdates(context, false);
+				}
 			}
 		}
 	}

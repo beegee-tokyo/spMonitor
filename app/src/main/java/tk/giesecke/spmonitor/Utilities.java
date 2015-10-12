@@ -413,7 +413,7 @@ class Utilities {
 	 * @param isStart
 	 *            flag if timer should be started or stopped
 	 */
-	public static void startStopUpdates(Context context, boolean isStart) {
+	public static void startStopWidgetUpdates(Context context, boolean isStart) {
 
 		/** Intent to start scheduled update of the widgets */
 		Intent timerIntent;
@@ -441,34 +441,74 @@ class Utilities {
 			/** SSID of Wifi network */
 			String connSSID = getSSID(context);
 
-			if ((connSSID != null) && (connSSID.equalsIgnoreCase(mPrefs.getString("SSID","none")))) {
-				/** Intent for broadcast message to update widgets */
-				timerIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
-				/** Pending intent for broadcast message to update widgets */
-				pendingIntent = PendingIntent.getBroadcast(
-						context, 2701, timerIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-				/** Alarm manager for scheduled widget updates */
-				alarmManager = (AlarmManager) context.getSystemService
-						(Context.ALARM_SERVICE);
-				alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-						System.currentTimeMillis(),
-						alarmTime, pendingIntent);
-			} else {
+			if (!((connSSID != null) && (connSSID.equalsIgnoreCase(mPrefs.getString("SSID","none"))))) {
 				/** Update interval in ms */
 				alarmTime = 300000;
-
-				/** Intent for broadcast message to update widgets */
-				timerIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
-				/** Pending intent for broadcast message to update widgets */
-				pendingIntent = PendingIntent.getBroadcast(
-						context, 2701, timerIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-				/** Alarm manager for scheduled widget updates */
-				alarmManager = (AlarmManager) context.getSystemService
-						(Context.ALARM_SERVICE);
-				alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-						System.currentTimeMillis(),
-						alarmTime, pendingIntent);
 			}
+			/** Intent for broadcast message to update widgets */
+			timerIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
+			/** Pending intent for broadcast message to update widgets */
+			pendingIntent = PendingIntent.getBroadcast(
+					context, 2701, timerIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			/** Alarm manager for scheduled widget updates */
+			alarmManager = (AlarmManager) context.getSystemService
+					(Context.ALARM_SERVICE);
+			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+					System.currentTimeMillis(),
+					alarmTime, pendingIntent);
+		}
+	}
+
+	/**
+	 * Start or stop timer for notification updates
+	 * If connection is same LAN as spMonitor device then update is every 60 seconds
+	 * else the update is every 5 minutes
+	 *
+	 * @param context
+	 *            application context
+	 * @param isStart
+	 *            flag if timer should be started or stopped
+	 */
+	public static void startStopNotifUpdates(Context context, boolean isStart) {
+
+		/** Intent to start scheduled update of the notifications */
+		Intent notifIntent;
+		/** Pending intent for broadcast message to update notifications */
+		PendingIntent pendingIntent;
+		/** Alarm manager for scheduled notifications updates */
+		AlarmManager alarmManager;
+		/* Access to shared preferences of app */
+		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
+		/** Update interval in ms */
+		int alarmTime = 60000;
+
+		// Stop the update of the notifications
+		/** Intent to stop scheduled update of the notifications */
+		notifIntent = new Intent(context, NotifService.class);
+		/** Pending intent for broadcast message to update widgets */
+		pendingIntent = PendingIntent.getBroadcast(
+				context, 2703, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		/** Alarm manager for scheduled widget updates */
+		alarmManager = (AlarmManager) context.getSystemService
+				(Context.ALARM_SERVICE);
+		alarmManager.cancel(pendingIntent);
+
+		if (isStart) {
+			/** SSID of Wifi network */
+			String connSSID = getSSID(context);
+
+			if (!((connSSID != null) && (connSSID.equalsIgnoreCase(mPrefs.getString("SSID","none"))))) {
+				/** Update interval in ms */
+				alarmTime = 300000;
+			}
+			/** Pending intent for notification updates */
+			PendingIntent pi = PendingIntent.getService(context, 2703,
+					new Intent(context, NotifService.class),PendingIntent.FLAG_UPDATE_CURRENT);
+			/** Alarm manager for daily sync */
+			AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+			am.setRepeating(AlarmManager.RTC_WAKEUP,
+					System.currentTimeMillis() + 10000,
+					alarmTime, pi);
 		}
 	}
 
@@ -531,5 +571,58 @@ class Utilities {
 			}
 		}
 		return uriIndex;
+	}
+
+	/**
+	 * Check if an internet connection is available
+	 *
+	 * @param context
+	 *            Context of application
+	 *
+	 * @return <code>boolean</code>
+	 *            True if we have connection
+	 *            False if we do not have connection
+	 */
+	public static boolean isConnectionAvailable(Context context) {
+		/** Flag for WiFi available */
+		boolean bHaveWiFi;
+		/** Flag for mobile connection available */
+		boolean bHaveMobile;
+
+		/** Access to connectivity manager */
+		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		android.net.NetworkInfo wifiOn = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		android.net.NetworkInfo mobileOn = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+		// Check if wifi is available && if we are connected
+		// Result is false if there is no Wifi on the device
+		// Result is true if we have Wifi
+		// else result is false
+		if (wifiOn != null) {
+			if (wifiOn.isConnected()) {
+				if (BuildConfig.DEBUG) Log.d("spMonitor", "We have WiFi ");
+				bHaveWiFi = true;
+			} else {
+				bHaveWiFi = false;
+			}
+		} else {
+			bHaveWiFi = false;
+		}
+
+		// Check if we have mobile && if mobile is allowed && if roaming is on && allowed
+		// Result is false if there is no mobile on the device
+		// Result is true if we have mobile
+		if (mobileOn != null) {
+			if (mobileOn.isConnected()) {
+				if (BuildConfig.DEBUG) Log.d("spMonitor", "We have Mobile ");
+				bHaveMobile = true;
+			} else {
+				bHaveMobile = false;
+			}
+		} else {
+			bHaveMobile = false;
+		}
+
+		return bHaveWiFi || bHaveMobile;
 	}
 }
