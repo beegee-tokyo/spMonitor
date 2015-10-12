@@ -269,10 +269,27 @@ public class SPwidget extends AppWidgetProvider {
 						views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
 								.getColor(android.R.color.holo_red_light));
 						if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-							notifIcon = R.drawable.arrow_down_small;
+							if (consPowerMin < 50) {
+								notifIcon = R.drawable.p0;
+							} else if (consPowerMin < 100) {
+								notifIcon = R.drawable.p50;
+							} else if (consPowerMin < 150) {
+								notifIcon = R.drawable.p100;
+							} else if (consPowerMin < 200) {
+								notifIcon = R.drawable.p150;
+							} else if (consPowerMin < 250) {
+								notifIcon = R.drawable.p200;
+							} else if (consPowerMin < 300) {
+								notifIcon = R.drawable.p250;
+							} else if (consPowerMin < 350) {
+								notifIcon = R.drawable.p300;
+							} else if (consPowerMin < 400) {
+								notifIcon = R.drawable.p350;
+							} else {
+								notifIcon = R.drawable.p400;
+							}
 						} else {
 							notifIcon = R.drawable.arrow_red_down_small;
-
 						}
 						notifText = context.getString(R.string.tv_result_txt_im) + " " +
 								String.format("%.0f", Math.abs(consPowerMin)) + "W";
@@ -282,7 +299,25 @@ public class SPwidget extends AppWidgetProvider {
 						views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
 								.getColor(android.R.color.holo_green_light));
 						if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-							notifIcon = R.drawable.arrow_up_small;
+							if (consPowerMin < -400) {
+								notifIcon = R.drawable.m400;
+							} else if (consPowerMin < -350) {
+								notifIcon = R.drawable.m350;
+							} else if (consPowerMin < -300) {
+								notifIcon = R.drawable.m300;
+							} else if (consPowerMin < -250) {
+								notifIcon = R.drawable.m250;
+							} else if (consPowerMin < -200) {
+								notifIcon = R.drawable.m200;
+							} else if (consPowerMin < -150) {
+								notifIcon = R.drawable.m150;
+							} else if (consPowerMin < -100) {
+								notifIcon = R.drawable.m100;
+							} else if (consPowerMin < -500) {
+								notifIcon = R.drawable.m50;
+							} else {
+								notifIcon = R.drawable.m0;
+							}
 						} else {
 							notifIcon = R.drawable.arrow_green_up_small;
 
