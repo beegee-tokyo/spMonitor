@@ -252,11 +252,20 @@ public class SPwidget extends AppWidgetProvider {
 
 					views.setTextViewText(R.id.tv_widgetRow1Value, String.format("%.0f", resultPowerMin) + "W");
 					views.setTextViewText(R.id.tv_widgetRow2Value, String.format("%.0f", Math.abs(consPowerMin)) + "W");
-					if (isWAN) {
-						views.setTextViewText(R.id.tv_widgetRow3Value, String.format("%.0f", solarPowerMin) + "W");
-					} else {
-						views.setTextViewText(R.id.tv_widgetRow3Value, String.format("%.0f", solarPowerMin) + "W");
+					views.setTextViewText(R.id.tv_widgetRow3Value, String.format("%.0f", solarPowerMin) + "W");
+
+					/** Flag if consumption is sending or receiving */
+					boolean isSending = consPowerMin > 0.0d;
+
+					if (SolarDayDream.isDayDreaming) {
+						SolarDayDream.setNewText(context, String.format("%.0f", resultPowerMin) + "W",
+								String.format("%.0f", Math.abs(consPowerMin)) + "W",
+								isSending,
+								String.format("%.0f", solarPowerMin) + "W");
 					}
+					SolarDayDream.powerVal = resultPowerMin;
+					SolarDayDream.consVal = consPowerMin;
+					SolarDayDream.solarVal = solarPowerMin;
 
 					/** Icon for notification */
 					int notifIcon;

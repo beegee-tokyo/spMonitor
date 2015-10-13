@@ -209,4 +209,3 @@ public class SPwidgetConfigureActivity extends Activity implements AdapterView.O
 		notifUriSel = notifUri.get(position);
 	}
 }
-

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent" >
+
+    <tk.giesecke.spmonitor.AnimatedView
+        android:id="@+id/anim_view"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"/>
+
+    <TextView
+        android:id="@+id/dream_power"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50sp"
+        android:focusableInTouchMode="false"
+        android:textColor="@android:color/holo_blue_light"
+        android:text="@string/tv_result"/>
+
+    <TextView
+        android:id="@+id/dream_cons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50sp"
+        android:text="@string/tv_result"
+        android:textColor="@android:color/holo_red_dark"/>
+
+    <TextView
+        android:id="@+id/dream_solar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50sp"
+        android:textColor="@android:color/holo_orange_light"
+        android:text="@string/tv_result"/>
+
+</RelativeLayout>

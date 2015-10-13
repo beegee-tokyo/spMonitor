@@ -464,6 +464,16 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				return true;
 			}
 		});
+		/** Button to close app when long click => daydream) */
+		Button btClose = (Button) findViewById(R.id.bt_close);
+		btClose.setOnLongClickListener(new View.OnLongClickListener() {
+			public boolean onLongClick(View v) {
+				final Intent intent = new Intent(Intent.ACTION_MAIN);
+				intent.setClassName("com.android.systemui", "com.android.systemui.Somnambulator");
+				startActivity(intent);
+				return true;
+			}
+		});
 	}
 
 	@Override
@@ -792,11 +802,16 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				url = deviceIP + "b";
 				menuDialog.dismiss();
 				break;
-			case R.id.bt_restore:
-				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
-				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
-				url = deviceIP + "r";
+			case R.id.bt_dream:
+				final Intent intent = new Intent(Intent.ACTION_MAIN);
+				intent.setClassName("com.android.systemui", "com.android.systemui.Somnambulator");
+				startActivity(intent);
+				//client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
+				//client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
+				//url = deviceIP + "r";
 				menuDialog.dismiss();
+				//stopTimer();
+				//finish();
 				break;
 			case R.id.bt_switch_net:
 				if (isWAN) {
@@ -959,7 +974,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				Button dialogButton = (Button) menuDialog.findViewById(R.id.bt_backup);
 				dialogButton.setOnClickListener(this);
 				dialogButton.setEnabled(true);
-				dialogButton = (Button) menuDialog.findViewById(R.id.bt_restore);
+				dialogButton = (Button) menuDialog.findViewById(R.id.bt_dream);
 				dialogButton.setOnClickListener(this);
 				dialogButton.setEnabled(true);
 				dialogButton = (Button) menuDialog.findViewById(R.id.bt_sw_ui);
@@ -991,7 +1006,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				if (isWAN) {
 					dialogButton = (Button) menuDialog.findViewById(R.id.bt_backup);
 					dialogButton.setEnabled(false);
-					dialogButton = (Button) menuDialog.findViewById(R.id.bt_restore);
+					dialogButton = (Button) menuDialog.findViewById(R.id.bt_dream);
 					dialogButton.setEnabled(false);
 					dialogButton = (Button) menuDialog.findViewById(R.id.bt_sw_ui);
 					dialogButton.setEnabled(false);

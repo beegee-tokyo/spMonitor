@@ -18,8 +18,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bt_restore_remote_txt"
-        android:id="@+id/bt_restore"
+        android:text="@string/bt_daydream"
+        android:id="@+id/bt_dream"
         style="@android:style/Widget.DeviceDefault.Button"
         android:layout_toRightOf="@+id/bt_backup"/>
 
@@ -37,7 +37,7 @@
         android:id="@+id/bt_switch_net"
         style="@android:style/Widget.DeviceDefault.Button"
         android:text="@string/bt_switch_WAN_txt"
-        android:layout_alignRight="@+id/bt_restore"
+        android:layout_alignRight="@+id/bt_dream"
         android:layout_below="@+id/bt_backup"/>
 
     <Button
@@ -55,7 +55,7 @@
         style="@android:style/Widget.DeviceDefault.Button"
         android:text="@string/alarm_diag_title"
         android:layout_below="@+id/bt_sw_ui"
-        android:layout_alignRight="@+id/bt_restore"/>
+        android:layout_alignRight="@+id/bt_dream"/>
 
     <Button
         android:layout_width="wrap_content"

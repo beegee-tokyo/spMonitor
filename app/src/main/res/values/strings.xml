@@ -45,7 +45,7 @@
     <string name="rb_small_txt">Small text</string>
     <string name="bt_place_txt">Add</string>
     <string name="bt_backup_remote_txt">Backup database</string>
-    <string name="bt_restore_remote_txt">Restore database</string>
+    <string name="bt_daydream">DayDream now</string>
     <string name="notif_export">Exporting %1$sW at %2$s</string>
     <string name="noExtStorage">No external storage</string>
     <string name="backupSaved">Backup file saved</string>
