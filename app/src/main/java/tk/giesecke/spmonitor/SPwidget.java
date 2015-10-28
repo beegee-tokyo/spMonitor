@@ -2,8 +2,6 @@ package tk.giesecke.spmonitor;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -11,11 +9,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Build;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.squareup.okhttp.OkHttpClient;
@@ -56,14 +51,7 @@ public class SPwidget extends AppWidgetProvider {
 		/** List of all active widgets */
 		int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
 
-		/** Remote views of the widgets */
-		//RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.sp_widget);
-
 		if (SP_WIDGET_UPDATE.equals(intent.getAction())) {
-//			for (int appWidgetId : appWidgetIds) {
-//				appWidgetManager.updateAppWidget(appWidgetId, views);
-//			}
-
 			onUpdate(context, appWidgetManager, appWidgetIds);
 		}
 	}
@@ -267,130 +255,12 @@ public class SPwidget extends AppWidgetProvider {
 					SolarDayDream.consVal = consPowerMin;
 					SolarDayDream.solarVal = solarPowerMin;
 
-					/** Icon for notification */
-					int notifIcon;
-					/** String for notification */
-					String notifText;
-					/** Background color for notification icon in SDK Lollipop and newer */
-					int notifColor;
-
 					if (consPowerMin > 0.0d) {
 						views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
 								.getColor(android.R.color.holo_red_light));
-						if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-							if (consPowerMin < 50) {
-								notifIcon = R.drawable.p0;
-							} else if (consPowerMin < 100) {
-								notifIcon = R.drawable.p50;
-							} else if (consPowerMin < 150) {
-								notifIcon = R.drawable.p100;
-							} else if (consPowerMin < 200) {
-								notifIcon = R.drawable.p150;
-							} else if (consPowerMin < 250) {
-								notifIcon = R.drawable.p200;
-							} else if (consPowerMin < 300) {
-								notifIcon = R.drawable.p250;
-							} else if (consPowerMin < 350) {
-								notifIcon = R.drawable.p300;
-							} else if (consPowerMin < 400) {
-								notifIcon = R.drawable.p350;
-							} else {
-								notifIcon = R.drawable.p400;
-							}
-						} else {
-							notifIcon = R.drawable.arrow_red_down_small;
-						}
-						notifText = context.getString(R.string.tv_result_txt_im) + " " +
-								String.format("%.0f", Math.abs(consPowerMin)) + "W";
-						notifColor = context.getResources()
-								.getColor(android.R.color.holo_red_light);
 					} else {
 						views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
 								.getColor(android.R.color.holo_green_light));
-						if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-							if (consPowerMin < -400) {
-								notifIcon = R.drawable.m400;
-							} else if (consPowerMin < -350) {
-								notifIcon = R.drawable.m350;
-							} else if (consPowerMin < -300) {
-								notifIcon = R.drawable.m300;
-							} else if (consPowerMin < -250) {
-								notifIcon = R.drawable.m250;
-							} else if (consPowerMin < -200) {
-								notifIcon = R.drawable.m200;
-							} else if (consPowerMin < -150) {
-								notifIcon = R.drawable.m150;
-							} else if (consPowerMin < -100) {
-								notifIcon = R.drawable.m100;
-							} else if (consPowerMin < -500) {
-								notifIcon = R.drawable.m50;
-							} else {
-								notifIcon = R.drawable.m0;
-							}
-						} else {
-							notifIcon = R.drawable.arrow_green_up_small;
-
-						}
-						notifText = context.getString(R.string.tv_result_txt_ex) + " " +
-								String.format("%.0f", Math.abs(consPowerMin)) + "W";
-						notifColor = context.getResources()
-								.getColor(android.R.color.holo_green_light);
-						if (consPowerMin < -200.0d) {
-							/** Uri of selected alarm */
-							String selUri = mPrefs.getString("alarmUri","");
-							if (!selUri.equalsIgnoreCase("")) {
-								NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-										.setContentTitle(context.getString(R.string.app_name))
-										.setContentIntent(PendingIntent.getActivity(context, 0,
-												new Intent(context, spMonitor.class), 0))
-										.setContentText(context.getString(R.string.notif_export,
-												String.format("%.0f", Math.abs(consPowerMin)),
-												Utilities.getCurrentTime()))
-										.setAutoCancel(true)
-										.setSound(Uri.parse(selUri))
-										.setDefaults(Notification.FLAG_ONLY_ALERT_ONCE)
-										.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-										.setVisibility(Notification.VISIBILITY_PUBLIC)
-										.setWhen(System.currentTimeMillis())
-										.setSmallIcon(android.R.drawable.ic_dialog_info);
-
-								Notification notification = builder.build();
-								NotificationManager notificationManager =
-										(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-								notificationManager.notify(0, notification);
-							}
-						} else {
-							// Instance of notification manager to cancel the existing notification */
-							NotificationManager nMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-							nMgr.cancel(0);
-						}
-					}
-
-					// Instance of notification manager to cancel the existing notification */
-					NotificationManager nMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-					nMgr.cancel(1);
-
-					if (mPrefs.getBoolean("notif",true)) {
-						/* Pointer to notification builder for export/import arrow */
-						NotificationCompat.Builder builder1 = new NotificationCompat.Builder(context)
-								.setContentTitle(context.getString(R.string.app_name))
-								.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, spMonitor.class), 0))
-								.setAutoCancel(false)
-								.setPriority(NotificationCompat.PRIORITY_DEFAULT)
-								.setVisibility(Notification.VISIBILITY_PUBLIC)
-								.setWhen(System.currentTimeMillis());
-						/* Pointer to notification manager for export/import arrow */
-						NotificationManager notificationManager1 = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-						builder1.setSmallIcon(notifIcon);
-						builder1.setContentText(notifText);
-						builder1.setTicker(String.format("%.0f", Math.abs(consPowerMin)) + "W");
-						if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-							builder1.setColor(notifColor);
-						}
-						/* Pointer to notification for export/import arrow */
-						Notification notification1 = builder1.build();
-						notificationManager1.notify(1, notification1);
 					}
 				} catch (Exception ignore) {
 					views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().

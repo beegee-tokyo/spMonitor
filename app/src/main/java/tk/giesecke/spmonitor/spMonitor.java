@@ -468,9 +468,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		Button btClose = (Button) findViewById(R.id.bt_close);
 		btClose.setOnLongClickListener(new View.OnLongClickListener() {
 			public boolean onLongClick(View v) {
-				final Intent intent = new Intent(Intent.ACTION_MAIN);
-				intent.setClassName("com.android.systemui", "com.android.systemui.Somnambulator");
-				startActivity(intent);
+				Utilities.startDayDreaming(appContext);
 				return true;
 			}
 		});
@@ -803,15 +801,8 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				menuDialog.dismiss();
 				break;
 			case R.id.bt_dream:
-				final Intent intent = new Intent(Intent.ACTION_MAIN);
-				intent.setClassName("com.android.systemui", "com.android.systemui.Somnambulator");
-				startActivity(intent);
-				//client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
-				//client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
-				//url = deviceIP + "r";
+				Utilities.startDayDreaming(appContext);
 				menuDialog.dismiss();
-				//stopTimer();
-				//finish();
 				break;
 			case R.id.bt_switch_net:
 				if (isWAN) {
@@ -919,14 +910,10 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 					NotificationManager nMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 					nMgr.cancel(1);
 					mPrefs.edit().putBoolean("notif",false).apply();
-					if (mPrefs.getInt("wNums", 0) == 0) {
-						Utilities.startStopNotifUpdates(this,false);
-					}
+					Utilities.startStopNotifUpdates(this,false);
 				} else {
 					mPrefs.edit().putBoolean("notif",true).apply();
-					if (mPrefs.getInt("wNums", 0) == 0) {
-						Utilities.startStopNotifUpdates(this,true);
-					}
+					Utilities.startStopNotifUpdates(this,true);
 				}
 				menuDialog.dismiss();
 				break;

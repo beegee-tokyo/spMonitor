@@ -68,7 +68,8 @@ public class BroadcastRegisterService extends Service {
 					System.currentTimeMillis() + 10000,
 					alarmTime, pendingWidgetIntent);
 
-		} else if (mPrefs.getBoolean("notif",true)) {
+		}
+		if (mPrefs.getBoolean("notif",true)) {
 			/** Pending intent for notification updates */
 			PendingIntent pi = PendingIntent.getService(intentContext, 2703,
 					new Intent(intentContext, NotifService.class),PendingIntent.FLAG_UPDATE_CURRENT);

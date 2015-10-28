@@ -77,6 +77,8 @@ public class NotifService extends IntentService {
 
 			/** Consumption received from spMonitor device as minute average */
 			Float consPowerMin = 0.0f;
+			/** Solar power received from spMonitor device as minute average */
+			Float solarPowerMin = 0.0f;
 
 			/** Request to spMonitor device */
 			Request request = new Request.Builder()
@@ -107,6 +109,7 @@ public class NotifService extends IntentService {
 
 							try {
 								consPowerMin = Float.parseFloat(jsonValues.getString("C"));
+								solarPowerMin = Float.parseFloat(jsonValues.getString("S"));
 							} catch (Exception ignore) {
 							}
 						} else {
@@ -115,6 +118,7 @@ public class NotifService extends IntentService {
 
 							try {
 								consPowerMin = Float.parseFloat(jsonValues.getString("c"));
+								solarPowerMin = Float.parseFloat(jsonValues.getString("s"));
 							} catch (Exception ignore) {
 								return;
 							}
@@ -127,59 +131,61 @@ public class NotifService extends IntentService {
 						/** Background color for notification icon in SDK Lollipop and newer */
 						int notifColor;
 
+						notifIcon = Utilities.getNotifIcon(consPowerMin);
+
 						if (consPowerMin > 0.0d) {
-							if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-								if (consPowerMin < 50) {
-									notifIcon = R.drawable.p0;
-								} else if (consPowerMin < 100) {
-									notifIcon = R.drawable.p50;
-								} else if (consPowerMin < 150) {
-									notifIcon = R.drawable.p100;
-								} else if (consPowerMin < 200) {
-									notifIcon = R.drawable.p150;
-								} else if (consPowerMin < 250) {
-									notifIcon = R.drawable.p200;
-								} else if (consPowerMin < 300) {
-									notifIcon = R.drawable.p250;
-								} else if (consPowerMin < 350) {
-									notifIcon = R.drawable.p300;
-								} else if (consPowerMin < 400) {
-									notifIcon = R.drawable.p350;
-								} else {
-									notifIcon = R.drawable.p400;
-								}
-							} else {
-								notifIcon = R.drawable.arrow_red_down_small;
-							}
+//							if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//								if (consPowerMin < 50) {
+//									notifIcon = R.drawable.p0;
+//								} else if (consPowerMin < 100) {
+//									notifIcon = R.drawable.p50;
+//								} else if (consPowerMin < 150) {
+//									notifIcon = R.drawable.p100;
+//								} else if (consPowerMin < 200) {
+//									notifIcon = R.drawable.p150;
+//								} else if (consPowerMin < 250) {
+//									notifIcon = R.drawable.p200;
+//								} else if (consPowerMin < 300) {
+//									notifIcon = R.drawable.p250;
+//								} else if (consPowerMin < 350) {
+//									notifIcon = R.drawable.p300;
+//								} else if (consPowerMin < 400) {
+//									notifIcon = R.drawable.p350;
+//								} else {
+//									notifIcon = R.drawable.p400;
+//								}
+//							} else {
+//								notifIcon = R.drawable.arrow_red_down_small;
+//							}
 							notifText = intentContext.getString(R.string.tv_result_txt_im) + " " +
 									String.format("%.0f", Math.abs(consPowerMin)) + "W";
 							notifColor = intentContext.getResources()
 									.getColor(android.R.color.holo_red_light);
 						} else {
-							if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-								if (consPowerMin < -400) {
-									notifIcon = R.drawable.m400;
-								} else if (consPowerMin < -350) {
-									notifIcon = R.drawable.m350;
-								} else if (consPowerMin < -300) {
-									notifIcon = R.drawable.m300;
-								} else if (consPowerMin < -250) {
-									notifIcon = R.drawable.m250;
-								} else if (consPowerMin < -200) {
-									notifIcon = R.drawable.m200;
-								} else if (consPowerMin < -150) {
-									notifIcon = R.drawable.m150;
-								} else if (consPowerMin < -100) {
-									notifIcon = R.drawable.m100;
-								} else if (consPowerMin < -500) {
-									notifIcon = R.drawable.m50;
-								} else {
-									notifIcon = R.drawable.m0;
-								}
-							} else {
-								notifIcon = R.drawable.arrow_green_up_small;
-
-							}
+//							if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//								if (consPowerMin < -400) {
+//									notifIcon = R.drawable.m400;
+//								} else if (consPowerMin < -350) {
+//									notifIcon = R.drawable.m350;
+//								} else if (consPowerMin < -300) {
+//									notifIcon = R.drawable.m300;
+//								} else if (consPowerMin < -250) {
+//									notifIcon = R.drawable.m250;
+//								} else if (consPowerMin < -200) {
+//									notifIcon = R.drawable.m200;
+//								} else if (consPowerMin < -150) {
+//									notifIcon = R.drawable.m150;
+//								} else if (consPowerMin < -100) {
+//									notifIcon = R.drawable.m100;
+//								} else if (consPowerMin < -500) {
+//									notifIcon = R.drawable.m50;
+//								} else {
+//									notifIcon = R.drawable.m0;
+//								}
+//							} else {
+//								notifIcon = R.drawable.arrow_green_up_small;
+//
+//							}
 							notifText = intentContext.getString(R.string.tv_result_txt_ex) + " " +
 									String.format("%.0f", Math.abs(consPowerMin)) + "W";
 							notifColor = intentContext.getResources()
@@ -215,10 +221,6 @@ public class NotifService extends IntentService {
 							}
 						}
 
-						// Instance of notification manager to cancel the existing notification */
-						NotificationManager nMgr = (NotificationManager) intentContext.getSystemService(Context.NOTIFICATION_SERVICE);
-						nMgr.cancel(1);
-
 						if (mPrefs.getBoolean("notif",true)) {
 						/* Pointer to notification builder for export/import arrow */
 							NotificationCompat.Builder builder1 = new NotificationCompat.Builder(intentContext)
@@ -240,6 +242,26 @@ public class NotifService extends IntentService {
 						/* Pointer to notification for export/import arrow */
 							Notification notification1 = builder1.build();
 							notificationManager1.notify(1, notification1);
+						} else {
+							// Instance of notification manager to cancel the existing notification */
+							NotificationManager nMgr = (NotificationManager) intentContext.getSystemService(Context.NOTIFICATION_SERVICE);
+							nMgr.cancel(1);
+						}
+
+						if (SolarDayDream.isDayDreaming) {
+							/** Flag if consumption is sending or receiving */
+							boolean isSending = consPowerMin > 0.0d;
+
+							/** Double for the result of solar current and consumption used at 1min updates */
+							double resultPowerMin = solarPowerMin + consPowerMin;
+
+							SolarDayDream.setNewText(intentContext, String.format("%.0f", resultPowerMin) + "W",
+									String.format("%.0f", Math.abs(consPowerMin)) + "W",
+									isSending,
+									String.format("%.0f", solarPowerMin) + "W");
+							SolarDayDream.powerVal = resultPowerMin;
+							SolarDayDream.consVal = consPowerMin;
+							SolarDayDream.solarVal = solarPowerMin;
 						}
 					} catch (Exception ignore) {
 					}

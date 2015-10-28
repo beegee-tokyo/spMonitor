@@ -1,8 +1,6 @@
 package tk.giesecke.spmonitor;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -40,92 +38,102 @@ public class SyncService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (BuildConfig.DEBUG) Log.d("spMsync","started");
+		//if (BuildConfig.DEBUG) Toast.makeText(this, "spMonitor SyncService started", Toast.LENGTH_LONG).show();
+
 		if (intent != null) {
 
 			/** Context of application */
 			Context intentContext = getApplicationContext();
 
-			// Start the background updates of widget and notifications
-			/** Update interval in ms */
-			int alarmTime = 60000;
-
-			/** Intent for broadcast message to update widgets */
-			Intent startIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
-			/** Pending intent for broadcast message to update widgets */
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(
-					intentContext, 2701, startIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-			/** Alarm manager for scheduled widget updates */
-			AlarmManager alarmManager = (AlarmManager) intentContext.getSystemService
-					(Context.ALARM_SERVICE);
-			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-					System.currentTimeMillis(),
-					alarmTime, pendingIntent);
-
-			if (android.os.Build.VERSION.SDK_INT > 9) {
-				StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-				StrictMode.setThreadPolicy(policy);
-			}
-
 			/** Access to shared preferences of app widget */
 			SharedPreferences mPrefs = intentContext.getSharedPreferences("spMonitor", 0);
 
-			/** URL of the spMonitor device */
-			String deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
+			// Try to sync only if we have connection and are on same WiFi as the spMonitor device
+			if (Utilities.isConnectionAvailable(intentContext)) {
+				/** SSID current connected or NULL if none */
+				String connSSID = Utilities.getSSID(intentContext);
+				if (connSSID != null && connSSID.equalsIgnoreCase(mPrefs.getString("SSID", "none"))) {
+					/** URL of the spMonitor device */
+					String deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
 
-			// Make call only if valid url is given
-			if (deviceIP.startsWith("No")) {
-				if (BuildConfig.DEBUG) Log.d("spMsync","no valid IP");
-			} else {
-				// Get today's day for the online database name
-				String[] dbNamesList = Utilities.getDateStrings();
-				if (BuildConfig.DEBUG) Log.d("spMsync","This month = " + dbNamesList[0]);
-				if (BuildConfig.DEBUG) Log.d("spMsync", "Last month = " + dbNamesList[1]);
+					// Make call only if valid url is given
+					if (deviceIP.startsWith("No")) {
+						if (BuildConfig.DEBUG) Log.d("spMsync","no valid IP");
+					} else {
+						// TODO check why we start widget updates here again ?????
+						// Start the background updates of widget and notifications
+						/** Update interval in ms */
+//						int alarmTime = 60000;
+//
+//						/** Intent for broadcast message to update widgets */
+//						Intent startIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
+//						/** Pending intent for broadcast message to update widgets */
+//						PendingIntent pendingIntent = PendingIntent.getBroadcast(
+//								intentContext, 2701, startIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+//						/** Alarm manager for scheduled widget updates */
+//						AlarmManager alarmManager = (AlarmManager) intentContext.getSystemService
+//								(Context.ALARM_SERVICE);
+//						alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+//								System.currentTimeMillis(),
+//								alarmTime, pendingIntent);
 
-				/** Instance of DataBaseHelper */
-				DataBaseHelper dbHelper;
-				/** Instance of data base */
-				SQLiteDatabase dataBase;
+						if (android.os.Build.VERSION.SDK_INT > 9) {
+							StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+							StrictMode.setThreadPolicy(policy);
+						}
 
-				String syncedMonth = mPrefs.getString("synced_month", "");
-				if (!syncedMonth.equalsIgnoreCase(dbNamesList[0])) {
-					deleteDatabase(DataBaseHelper.DATABASE_NAME);
-					deleteDatabase(DataBaseHelper.DATABASE_NAME_LAST);
-					mPrefs.edit().putString("synced_month", dbNamesList[0]).apply();
-					/** Instance of DataBaseHelper */
-					dbHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME);
-					/** Instance of data base */
-					dataBase = dbHelper.getReadableDatabase();
-					dataBase.close();
-					dbHelper.close();
-					/** Instance of DataBaseHelper */
-					dbHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME_LAST);
-					/** Instance of data base */
-					dataBase = dbHelper.getReadableDatabase();
-					dataBase.close();
-					dbHelper.close();
-				}
+						// Get today's day for the online database name
+						String[] dbNamesList = Utilities.getDateStrings();
+						if (BuildConfig.DEBUG) Log.d("spMsync","This month = " + dbNamesList[0]);
+						if (BuildConfig.DEBUG) Log.d("spMsync", "Last month = " + dbNamesList[1]);
 
-				// Sync this months database
-				syncDB(DataBaseHelper.DATABASE_NAME, dbNamesList[0], deviceIP, intentContext);
+						/** Instance of DataBaseHelper */
+						DataBaseHelper dbHelper;
+						/** Instance of data base */
+						SQLiteDatabase dataBase;
 
-				// Check if we have already synced the last month
-				/** Instance of DataBaseHelper */
-				dbHelper = new DataBaseHelper(intentContext, DataBaseHelper.DATABASE_NAME_LAST);
-				/** Instance of data base */
-				dataBase = dbHelper.getReadableDatabase();
-				/** Cursor with data from database */
-				Cursor dbCursor = DataBaseHelper.getLastRow(dataBase);
-				if (dbCursor != null) {
-					if (dbCursor.getCount() == 0) { // local database is empty, need to sync all data
+						String syncedMonth = mPrefs.getString("synced_month", "");
+						if (!syncedMonth.equalsIgnoreCase(dbNamesList[0])) {
+							deleteDatabase(DataBaseHelper.DATABASE_NAME);
+							deleteDatabase(DataBaseHelper.DATABASE_NAME_LAST);
+							mPrefs.edit().putString("synced_month", dbNamesList[0]).apply();
+							/** Instance of DataBaseHelper */
+							dbHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME);
+							/** Instance of data base */
+							dataBase = dbHelper.getReadableDatabase();
+							dataBase.close();
+							dbHelper.close();
+							/** Instance of DataBaseHelper */
+							dbHelper = new DataBaseHelper(this, DataBaseHelper.DATABASE_NAME_LAST);
+							/** Instance of data base */
+							dataBase = dbHelper.getReadableDatabase();
+							dataBase.close();
+							dbHelper.close();
+						}
+
 						// Sync this months database
-						syncDB(DataBaseHelper.DATABASE_NAME_LAST, dbNamesList[1], deviceIP, intentContext);
+						syncDB(DataBaseHelper.DATABASE_NAME, dbNamesList[0], deviceIP, intentContext);
+
+						// Check if we have already synced the last month
+						/** Instance of DataBaseHelper */
+						dbHelper = new DataBaseHelper(intentContext, DataBaseHelper.DATABASE_NAME_LAST);
+						/** Instance of data base */
+						dataBase = dbHelper.getReadableDatabase();
+						/** Cursor with data from database */
+						Cursor dbCursor = DataBaseHelper.getLastRow(dataBase);
+						if (dbCursor != null) {
+							if (dbCursor.getCount() == 0) { // local database is empty, need to sync all data
+								// Sync this months database
+								syncDB(DataBaseHelper.DATABASE_NAME_LAST, dbNamesList[1], deviceIP, intentContext);
+							}
+						}
+						if (dbCursor != null) {
+							dbCursor.close();
+						}
+						dataBase.close();
+						dbHelper.close();
 					}
 				}
-				if (dbCursor != null) {
-					dbCursor.close();
-				}
-				dataBase.close();
-				dbHelper.close();
 			}
 		}
 	}

@@ -3,6 +3,8 @@ package tk.giesecke.spmonitor;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +13,9 @@ import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.Log;
@@ -624,5 +628,133 @@ class Utilities {
 		}
 
 		return bHaveWiFi || bHaveMobile;
+	}
+
+	/**
+	 * Start day dream if it is enabled by the user
+	 *
+	 * @param context
+	 *            Context of application
+	 */
+	public static void startDayDreaming(Context context) {
+		// Check if Android version supports day dream
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			// Check if day dream is enabled
+			if (Settings.Secure.getInt(context.getContentResolver(), SCREENSAVER_ENABLED , -1) == 1) {
+				String availDayDreams = Settings.Secure.getString(context.getContentResolver(), SCREENSAVER_COMPONENTS );
+				String[] namesArray = availDayDreams.split(",");
+				ComponentName[] componentNames = new ComponentName[namesArray.length];
+				for (int i = 0; i < namesArray.length; i++) {
+					componentNames[i] = ComponentName.unflattenFromString(namesArray[i]);
+				}
+				String selectedDayDream = componentNames[0].getClassName();
+				if (BuildConfig.DEBUG) Log.d("spMonitor", "Avail day dreams: "+availDayDreams);
+				if (BuildConfig.DEBUG) Log.d("spMonitor", "Selected day dream: "+selectedDayDream);
+
+				if (selectedDayDream.equalsIgnoreCase("tk.giesecke.spmonitor.SolarDayDream")) {
+					final Intent intent = new Intent(Intent.ACTION_MAIN);
+					intent.setClassName("com.android.systemui", "com.android.systemui.Somnambulator");
+					context.startActivity(intent);
+					return;
+				}
+			}
+		}
+		// TODO start our own (fake) daydream activity -  for now we open daydream settings
+		startDaydreamsSettings(context);
+	}
+
+	/**
+	 * Starts the Daydream settings menu page of the Android settings menu
+	 * @param context
+	 *          the context to use
+	 * @throws ActivityNotFoundException when there's no Daydream settings page found
+	 */
+	private static void startDaydreamsSettings(Context context) throws ActivityNotFoundException {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+			context.startActivity(new Intent(Settings.ACTION_DREAM_SETTINGS));
+		} else {
+			// Running JB_MR1, fall back to constant string
+			context.startActivity(new Intent(ACTION_DREAM_SETTINGS));
+		}
+	}
+
+	/** *******************************************
+	 * Gotta love that Android is open source :)
+	 * ********************************************/
+
+	/**
+	 * Whether screensavers are enabled. (integer value, 1 if enabled)
+	 */
+	private static final String SCREENSAVER_ENABLED = "screensaver_enabled";
+
+	/**
+	 * The user's chosen screensaver components. (string value)
+	 *
+	 * These will be launched by the PhoneWindowManager after a timeout when not on
+	 * battery, or upon dock insertion (if SCREENSAVER_ACTIVATE_ON_DOCK is set to 1).
+	 */
+	private static final String SCREENSAVER_COMPONENTS = "screensaver_components";
+
+	/**
+	 * Activity Action: Show Daydream settings.
+	 * <p>
+	 * In some cases, a matching Activity may not exist, so ensure you
+	 * safeguard against this.
+	 */
+	private static final String ACTION_DREAM_SETTINGS = "android.settings.DREAM_SETTINGS";
+
+	/**
+	 * Return notification icon ID as int
+	 * @param currPower
+	 *          power value as float
+	 * @return <code>int</code>
+	 *          ID of matching icon
+	 */
+	public static int getNotifIcon(float currPower) {
+		if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			if (currPower > 0.0d) {
+				return R.drawable.arrow_red_down_small;
+			} else {
+				return R.drawable.arrow_green_up_small;
+			}
+		}
+
+		if (currPower < -400) {
+			return R.drawable.m400;
+		} else if (currPower < -350) {
+			return R.drawable.m350;
+		} else if (currPower < -300) {
+			return R.drawable.m300;
+		} else if (currPower < -250) {
+			return R.drawable.m250;
+		} else if (currPower < -200) {
+			return R.drawable.m200;
+		} else if (currPower < -150) {
+			return R.drawable.m150;
+		} else if (currPower < -100) {
+			return R.drawable.m100;
+		} else if (currPower < -50) {
+			return R.drawable.m50;
+		} else if (currPower < 0){
+			return R.drawable.m0;
+		} else if (currPower < 50) {
+			return R.drawable.p0;
+		} else if (currPower < 100) {
+			return R.drawable.p50;
+		} else if (currPower < 150) {
+			return R.drawable.p100;
+		} else if (currPower < 200) {
+			return R.drawable.p150;
+		} else if (currPower < 250) {
+			return R.drawable.p200;
+		} else if (currPower < 300) {
+			return R.drawable.p250;
+		} else if (currPower < 350) {
+			return R.drawable.p300;
+		} else if (currPower < 400) {
+			return R.drawable.p350;
+		} else {
+			return R.drawable.p400;
+		}
 	}
 }

@@ -92,7 +92,7 @@ void saveData () {
                + timeString + "\","
                + String ( solar ) + ","
                + String ( cons ) + ","
-               + String ( light ) + ");'";
+               + String ( light ) + ");' &";
 
   dataSave.runShellCommand ( dataString );
 
@@ -100,7 +100,7 @@ void saveData () {
 //               + timeString + "\","
 //               + String ( solar ) + ","
 //               + String ( cons ) + ","
-//               + String ( light ) + ");'";
+//               + String ( light ) + ");' &";
 
 //  dataSave.runShellCommand ( dataString );
 
@@ -112,7 +112,7 @@ void saveData () {
   dataString += String ( cons );
   dataString += ",l:";
   dataString += String ( light );
-  dataString += "}\"";
+  dataString += "}\" &";
   dataSave.runShellCommand ( dataString );
 
   /* Send current data to mySQL database */
@@ -123,7 +123,7 @@ void saveData () {
 //  dataString += String ( cons );
 //  dataString += "&l=";
 //  dataString += String ( light );
-//  dataString += "\"";
+//  dataString += "\" &";
 //  dataSave.runShellCommand ( dataString );
 
   collPower[0] = collPower[1] = 0.0;
