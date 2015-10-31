@@ -79,7 +79,7 @@
         </service>
 
         <service
-            android:name=".NotifService"
+            android:name=".UpdateService"
             android:exported="false" >
         </service>
 

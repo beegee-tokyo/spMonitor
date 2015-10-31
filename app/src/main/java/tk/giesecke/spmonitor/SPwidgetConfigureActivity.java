@@ -1,13 +1,9 @@
 package tk.giesecke.spmonitor;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -161,41 +157,17 @@ public class SPwidgetConfigureActivity extends Activity implements AdapterView.O
 						mPrefs.edit().putString("alarmUri",notifUriSel).apply();
 					}
 
-					// It is the responsibility of the configuration activity to update the app widget
-					/** App widget manager for this widget */
-					AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-					SPwidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
-
-					// Make sure we pass back the original appWidgetId
-					/** Intent to report successful added widget */
-					Intent resultValue = new Intent();
-					resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-					setResult(RESULT_OK, resultValue);
-
 					if (mPrefs.getInt("wNums",0)== 0) {
 						mPrefs.edit().putInt("wNums",1).apply();
-						/** Update interval in ms */
-						int alarmTime = 60000;
 
-						/** Intent for broadcast message to update widgets */
-						Intent widgetIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
-						/** Pending intent for broadcast message to update widgets */
-						PendingIntent pendingWidgetIntent = PendingIntent.getBroadcast(
-								context, 2701, widgetIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-						/** Alarm manager for scheduled widget updates */
-						AlarmManager alarmManager = (AlarmManager) getSystemService
-								(Context.ALARM_SERVICE);
-						alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-								System.currentTimeMillis() + 10000,
-								alarmTime, pendingWidgetIntent);
-
-						/** IntentFilter to receive Screen on/off broadcast msgs */
-						IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-						filter.addAction(Intent.ACTION_SCREEN_OFF);
-						filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
-						/** BroadcastReceiver to receive Screen on/off broadcast msgs */
-						BroadcastReceiver mReceiver = new EventReceiver();
-						registerReceiver(mReceiver, filter);
+						// Check if broadcast receiver and timers are already initialized
+						if (BroadcastRegisterService.mReceiver == null) {
+							if (BuildConfig.DEBUG) Log.d("spWidget","EventReceiver was not registered");
+							// Start service to register BroadcastRegisterService
+							context.startService(new Intent(context, BroadcastRegisterService.class));
+						} else {
+							if (BuildConfig.DEBUG) Log.d("spWidget","EventReceiver already registered");
+						}
 					}
 					finish();
 					break;

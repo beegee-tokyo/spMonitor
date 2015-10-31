@@ -39,15 +39,6 @@ public class BroadcastRegisterService extends Service {
 		/** Access to shared preferences of app widget */
 		SharedPreferences wPrefs = this.getSharedPreferences("spMonitor", 0);
 		if (BuildConfig.DEBUG) Log.d("spMonitor ScreenService", "Widget number = " + wPrefs.getInt("wNums", 0));
-		if (wPrefs.getInt("wNums", 0) != 0) {
-			/** IntentFilter to receive screen on/off broadcast msgs */
-			IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-			filter.addAction(Intent.ACTION_SCREEN_OFF);
-			filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
-			/** Receiver for screen on/off broadcast msgs */
-			mReceiver = new EventReceiver();
-			registerReceiver(mReceiver, filter);
-		}
 
 		/** Context of application */
 		Context intentContext = getApplicationContext();
@@ -55,29 +46,34 @@ public class BroadcastRegisterService extends Service {
 		SharedPreferences mPrefs = intentContext.getSharedPreferences("spMonitor", 0);
 		/** Update interval in ms */
 		int alarmTime = 60000;
-		if (mPrefs.getInt("wNums",0) != 0) {
-			/** Intent for broadcast message to update widgets */
-			Intent widgetIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
-			/** Pending intent for broadcast message to update widgets */
-			PendingIntent pendingWidgetIntent = PendingIntent.getBroadcast(
-					intentContext, 2701, widgetIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-			/** Alarm manager for scheduled widget updates */
-			AlarmManager alarmManager = (AlarmManager) intentContext.getSystemService
-					(Context.ALARM_SERVICE);
-			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-					System.currentTimeMillis() + 10000,
-					alarmTime, pendingWidgetIntent);
 
-		}
-		if (mPrefs.getBoolean("notif",true)) {
-			/** Pending intent for notification updates */
-			PendingIntent pi = PendingIntent.getService(intentContext, 2703,
-					new Intent(intentContext, NotifService.class),PendingIntent.FLAG_UPDATE_CURRENT);
+		if ((mPrefs.getBoolean("notif",true)) || (mPrefs.getInt("wNums",0) != 0)) {
+			/** IntentFilter to receive screen on/off broadcast msgs */
+			IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+			filter.addAction(Intent.ACTION_SCREEN_OFF);
+			filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
+			/** Receiver for screen on/off broadcast msgs */
+			mReceiver = new EventReceiver();
+			registerReceiver(mReceiver, filter);
+
+			/** Pending intent for updates */
+			PendingIntent pi = PendingIntent.getService(intentContext, 3001,
+					new Intent(intentContext, UpdateService.class),PendingIntent.FLAG_UPDATE_CURRENT);
 			/** Alarm manager for daily sync */
 			AlarmManager am = (AlarmManager) intentContext.getSystemService(Context.ALARM_SERVICE);
 			am.setRepeating(AlarmManager.RTC_WAKEUP,
 					System.currentTimeMillis() + 10000,
 					alarmTime, pi);
 		}
+
+
+		/** Pending intent for daily sync */
+		PendingIntent pi = PendingIntent.getService(intentContext, 3002,
+				new Intent(intentContext, SyncService.class),PendingIntent.FLAG_UPDATE_CURRENT);
+		/** Alarm manager for sync every 2 hours*/
+		AlarmManager am = (AlarmManager) intentContext.getSystemService(Context.ALARM_SERVICE);
+		// TODO testing hourly update of the database
+		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000,
+				7200000, pi);
 	}
 }

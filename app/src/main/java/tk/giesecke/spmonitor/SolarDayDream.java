@@ -8,6 +8,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.TimeInterpolator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Build;
 import android.service.dreams.DreamService;
@@ -81,7 +84,9 @@ public class SolarDayDream extends DreamService {
 	public void onDreamingStarted() {
 		super.onDreamingStarted();
 
-		// TODO: Begin animations or other behaviors here.
+		/** Context of application */
+		Context intentContext = getApplicationContext();
+		Utilities.startStopUpdates(intentContext, true);
 
 		startTextViewScrollAnimation();
 
@@ -92,7 +97,13 @@ public class SolarDayDream extends DreamService {
 	public void onDreamingStopped() {
 		super.onDreamingStopped();
 
-		// TODO: Stop anything that was started in onDreamingStarted()
+		/** Context of application */
+		Context intentContext = getApplicationContext();
+		/** Access to shared preferences of app widget */
+		SharedPreferences mPrefs = intentContext.getSharedPreferences("spMonitor", 0);
+		if (!(mPrefs.getBoolean("notif",true)) && (mPrefs.getInt("wNums",0) == 0)) {
+			Utilities.startStopUpdates(intentContext, false);
+		}
 
 		mAnimatorPower.cancel();
 
@@ -100,6 +111,9 @@ public class SolarDayDream extends DreamService {
 	}
 
 	private void startTextViewScrollAnimation() {
+		/** Context of day dream */
+		Context ddContext = getApplicationContext();
+
 		// Refresh Size of Window
 		getWindowManager().getDefaultDisplay().getSize(mPointSize);
 
@@ -125,21 +139,34 @@ public class SolarDayDream extends DreamService {
 		// Create an Animator and keep a reference to it
 		mAnimatorPower = mDreamTextPower.animate().translationX(windowWidth)
 				.setDuration(30000)
-				//.setStartDelay(500)
 				.setListener(mAnimListener)
 				.setInterpolator(sInterpolator);
 		mDreamTextCons.animate().translationX(windowWidth)
 				.setDuration(30000)
-				//.setStartDelay(500)
-				.setListener(mAnimListener)
 				.setInterpolator(sInterpolator);
 		mDreamTextSolar.animate().translationX(windowWidth)
 				.setDuration(30000)
-				//.setStartDelay(500)
-				.setListener(mAnimListener)
 				.setInterpolator(sInterpolator);
 
-		// Set initial values
+		// Set initial values if first time
+		if (consVal == 0) {
+			/** Instance of DataBaseHelper */
+			DataBaseHelper dbHelper = new DataBaseHelper(ddContext, DataBaseHelper.DATABASE_NAME);
+			/** Instance of data base */
+			SQLiteDatabase dataBase = dbHelper.getReadableDatabase();
+
+			/** Cursor with data from the database */
+			Cursor newDataSet = DataBaseHelper.getLastRow(dataBase);
+			newDataSet.moveToFirst();
+
+			consVal = newDataSet.getFloat(6);
+			solarVal = newDataSet.getFloat(5);
+			powerVal = (double) (solarVal + consVal);
+
+			newDataSet.close();
+			dataBase.close();
+			dbHelper.close();
+		}
 		setNewText(getApplicationContext(), String.format("%.0f", powerVal) + "W",
 				String.format("%.0f", Math.abs(consVal)) + "W",
 				consVal > 0.0d,
@@ -149,7 +176,7 @@ public class SolarDayDream extends DreamService {
 		mAnimatorPower.start();
 	}
 
-	public static void setNewText(Context context, String power, String cons, boolean isSending, String solar) {
+	private static void setNewText(Context context, String power, String cons, boolean isSending, String solar) {
 		String viewText = "Power now = " + power;
 		mDreamTextPower.setText(viewText);
 

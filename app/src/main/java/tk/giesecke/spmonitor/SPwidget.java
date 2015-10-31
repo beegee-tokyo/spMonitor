@@ -1,26 +1,14 @@
 package tk.giesecke.spmonitor;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
-
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /** spMonitor - SPwidget
  *
@@ -31,69 +19,32 @@ import java.util.concurrent.TimeUnit;
  */
 public class SPwidget extends AppWidgetProvider {
 
-	/** broadcast signature for widget update */
-	public static final String SP_WIDGET_UPDATE = "SP_WIDGET_UPDATE";
-
-	@Override
-	public void onReceive(@NonNull Context context, @NonNull Intent intent) {
-		//*******************************************************
-		// Receiver for the widget (click on widget, update service,
-		// disable, ... we handle only the update requests here
-		//*******************************************************
-
-		super.onReceive(context, intent);
-
-		/** App widget manager for all widgets of this app */
-		AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-		/** Component name of this widget */
-		ComponentName thisAppWidget = new ComponentName(context.getPackageName(),
-				SPwidget.class.getName());
-		/** List of all active widgets */
-		int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
-
-		if (SP_WIDGET_UPDATE.equals(intent.getAction())) {
-			onUpdate(context, appWidgetManager, appWidgetIds);
-		}
-	}
-
-	@Override
-	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-		// There may be multiple widgets active, so update all of them
-		for (int appWidgetId : appWidgetIds) {
-			updateAppWidget(context, appWidgetManager, appWidgetId);
-		}
-	}
-
-	@Override
-	public void onDeleted(Context context, int[] appWidgetIds) {
-		// When the user deletes the widget, delete the preference associated with it.
-	}
-
-	@Override
-	public void onEnabled(Context context) {
-		// Enter relevant functionality for when the first widget is created
-	}
-
 	@Override
 	public void onDisabled(Context context) {
 		/** Instance of the shared preferences */
 		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor",0);
 		mPrefs.edit().putInt("wNums",0).apply();
-		/** Intent to start scheduled update of the widgets */
-		Intent intent = new Intent(SPwidget.SP_WIDGET_UPDATE);
-		/** Pending intent for broadcast message to update widgets */
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(
-				context, 2701, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-		/** Alarm manager for scheduled widget updates */
-		AlarmManager alarmManager = (AlarmManager) context.getSystemService
-				(Context.ALARM_SERVICE);
-		alarmManager.cancel(pendingIntent);
-
 	}
 
+	/**
+	 * Updates a widgets
+	 *
+	 * @param context
+	 *            Context of this application
+	 * @param appWidgetManager
+	 *            Instance of the appWidgetManager
+	 * @param appWidgetId
+	 *            ID of the widget to be updated
+	 * @param solarPowerMin
+	 *            Power produced by the solar panels
+	 * @param consPowerMin
+	 *            Power imported/exported by the house
+	 */
 	@SuppressLint("InlinedApi")
 	static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-	                            int appWidgetId) {
+	                            int appWidgetId,
+	                            Float solarPowerMin,
+	                            Float consPowerMin ) {
 
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -104,8 +55,7 @@ public class SPwidget extends AppWidgetProvider {
 		RemoteViews views;
 		/** Access to shared preferences of app widget */
 		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
-		/** Flag for WAN connection */
-		boolean isWAN = false;
+
 		if (mPrefs.getBoolean("wSizeLarge",true)) {
 			views = new RemoteViews(context.getPackageName(), R.layout.sp_widget_large);
 		} else {
@@ -124,158 +74,19 @@ public class SPwidget extends AppWidgetProvider {
 		//  Attach an on-click listener to the battery icon
 		views.setOnClickPendingIntent(R.id.rlWidget1, pendingIntent1);
 
-		/** URL of the spMonitor device */
-		String deviceIP = mPrefs.getString("spMonitorIP", "no IP saved");
+		/** Double for the result of solar current and consumption used at 1min updates */
+		double resultPowerMin = solarPowerMin + consPowerMin;
 
-		// Check if we are connected to home network
-		/** SSID current connected or NULL if none */
-		String connSSID = Utilities.getSSID(context);
+		views.setTextViewText(R.id.tv_widgetRow1Value, String.format("%.0f", resultPowerMin) + "W");
+		views.setTextViewText(R.id.tv_widgetRow2Value, String.format("%.0f", Math.abs(consPowerMin)) + "W");
+		views.setTextViewText(R.id.tv_widgetRow3Value, String.format("%.0f", solarPowerMin) + "W");
 
-		/** String list with parts of the URL */
-		String[] ipValues = deviceIP.split("/");
-		/** String with the URL to get the data */
-		String urlString = "http://"+ipValues[2]+"/data/get"; // URL to call
-
-		/** Response from the spMonitor device or error message */
-		String resultToDisplay = "";
-		/** A HTTP client to access the spMonitor device */
-		OkHttpClient client = new OkHttpClient();
-
-		client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
-		client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
-
-		if (connSSID != null) {
-			if (!connSSID.equalsIgnoreCase(mPrefs.getString("SSID","none"))) {
-				urlString = "http://www.desire.giesecke.tk/s/l.php";
-				isWAN = true;
-			}
+		if (consPowerMin > 0.0d) {
+			views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
+					.getColor(android.R.color.holo_red_light));
 		} else {
-			urlString = "http://www.desire.giesecke.tk/s/l.php";
-			isWAN = true;
-		}
-
-		/** Solar power received from spMonitor device as minute average */
-		Float solarPowerMin = 0.0f;
-		/** Consumption received from spMonitor device as minute average */
-		Float consPowerMin = 0.0f;
-
-		/** Request to spMonitor device */
-		Request request = new Request.Builder()
-				.url(urlString)
-				.build();
-
-		if (request != null) {
-			try {
-				/** Response from spMonitor device */
-				Response response = client.newCall(request).execute();
-				if (response != null) {
-					resultToDisplay = response.body().string();
-				}
-			} catch (IOException e) {
-				views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().
-						getString(R.string.widgetCommError1));
-				views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().
-						getString(R.string.widgetCommError2));
-				views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().
-						getString(R.string.widgetCommError3));
-				// Instruct the widget manager to update the widget
-				appWidgetManager.updateAppWidget(appWidgetId, views);
-				return;
-			}
-		}
-
-		if (resultToDisplay.equalsIgnoreCase("")) {
-			views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().
-					getString(R.string.widgetCommError1));
-			views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().
-					getString(R.string.widgetCommError2));
-			views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().
-					getString(R.string.widgetCommError3));
-			// Instruct the widget manager to update the widget
-			appWidgetManager.updateAppWidget(appWidgetId, views);
-			return;
-		} else {
-			// decode JSON
-			if (Utilities.isJSONValid(resultToDisplay)) {
-				try {
-					if (!isWAN) {
-						/** JSON object containing result from server */
-						JSONObject jsonResult = new JSONObject(resultToDisplay);
-						/** JSON object containing the values */
-						JSONObject jsonValues = jsonResult.getJSONObject("value");
-
-						try {
-							solarPowerMin = Float.parseFloat(jsonValues.getString("S"));
-							consPowerMin = Float.parseFloat(jsonValues.getString("C"));
-						} catch (Exception ignore) {
-							views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().
-									getString(R.string.widgetCommError1));
-							views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().
-									getString(R.string.widgetCommError2));
-							views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().
-									getString(R.string.widgetCommError3)+" L");
-						}
-					} else {
-						/** JSON object containing result from server */
-						JSONObject jsonValues = new JSONObject(resultToDisplay.substring(1,resultToDisplay.length()-1));
-
-						try {
-							solarPowerMin = Float.parseFloat(jsonValues.getString("s"));
-							consPowerMin = Float.parseFloat(jsonValues.getString("c"));
-						} catch (Exception ignore) {
-							views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().
-									getString(R.string.widgetCommError1));
-							views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().
-									getString(R.string.widgetCommError2));
-							views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().
-									getString(R.string.widgetCommError3)+" W");
-							// Instruct the widget manager to update the widget
-							appWidgetManager.updateAppWidget(appWidgetId, views);
-							return;
-						}
-					}
-
-					/** Double for the result of solar current and consumption used at 1min updates */
-					double resultPowerMin = solarPowerMin + consPowerMin;
-
-					views.setTextViewText(R.id.tv_widgetRow1Value, String.format("%.0f", resultPowerMin) + "W");
-					views.setTextViewText(R.id.tv_widgetRow2Value, String.format("%.0f", Math.abs(consPowerMin)) + "W");
-					views.setTextViewText(R.id.tv_widgetRow3Value, String.format("%.0f", solarPowerMin) + "W");
-
-					/** Flag if consumption is sending or receiving */
-					boolean isSending = consPowerMin > 0.0d;
-
-					if (SolarDayDream.isDayDreaming) {
-						SolarDayDream.setNewText(context, String.format("%.0f", resultPowerMin) + "W",
-								String.format("%.0f", Math.abs(consPowerMin)) + "W",
-								isSending,
-								String.format("%.0f", solarPowerMin) + "W");
-					}
-					SolarDayDream.powerVal = resultPowerMin;
-					SolarDayDream.consVal = consPowerMin;
-					SolarDayDream.solarVal = solarPowerMin;
-
-					if (consPowerMin > 0.0d) {
-						views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
-								.getColor(android.R.color.holo_red_light));
-					} else {
-						views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
-								.getColor(android.R.color.holo_green_light));
-					}
-				} catch (Exception ignore) {
-					views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().
-							getString(R.string.widgetCommError1));
-					views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().
-							getString(R.string.widgetCommError2));
-					views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().
-							getString(R.string.widgetCommError3));
-				}
-			} else {
-				views.setTextViewText(R.id.tv_widgetRow1Value, "JSON");
-				views.setTextViewText(R.id.tv_widgetRow2Value,"Error");
-				views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().
-						getString(R.string.widgetCommError3));
-			}
+			views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()
+					.getColor(android.R.color.holo_green_light));
 		}
 		// Instruct the widget manager to update the widget
 		appWidgetManager.updateAppWidget(appWidgetId, views);

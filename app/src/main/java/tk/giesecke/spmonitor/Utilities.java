@@ -319,7 +319,7 @@ class Utilities {
 		/** Time format */
 		@SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yy-MM");
 		dateStrings[0] = df.format(cal.getTime());
-		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)-1);
+		cal.add(Calendar.MONTH,-1);
 		dateStrings[1] = df.format(cal.getTime());
 
 		return dateStrings;
@@ -408,62 +408,6 @@ class Utilities {
 	}
 
 	/**
-	 * Start or stop timer for widget updates
-	 * If connection is same LAN as spMonitor device then update is every 60 seconds
-	 * else the update is every 5 minutes
-	 *
-	 * @param context
-	 *            application context
-	 * @param isStart
-	 *            flag if timer should be started or stopped
-	 */
-	public static void startStopWidgetUpdates(Context context, boolean isStart) {
-
-		/** Intent to start scheduled update of the widgets */
-		Intent timerIntent;
-		/** Pending intent for broadcast message to update widgets */
-		PendingIntent pendingIntent;
-		/** Alarm manager for scheduled widget updates */
-		AlarmManager alarmManager;
-		/* Access to shared preferences of app widget */
-		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
-		/** Update interval in ms */
-		int alarmTime = 60000;
-
-		// Stop the update of the widgets
-		/** Intent to stop scheduled update of the widgets */
-		timerIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
-		/** Pending intent for broadcast message to update widgets */
-		pendingIntent = PendingIntent.getBroadcast(
-				context, 2701, timerIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-		/** Alarm manager for scheduled widget updates */
-		alarmManager = (AlarmManager) context.getSystemService
-				(Context.ALARM_SERVICE);
-		alarmManager.cancel(pendingIntent);
-
-		if (isStart) {
-			/** SSID of Wifi network */
-			String connSSID = getSSID(context);
-
-			if (!((connSSID != null) && (connSSID.equalsIgnoreCase(mPrefs.getString("SSID","none"))))) {
-				/** Update interval in ms */
-				alarmTime = 300000;
-			}
-			/** Intent for broadcast message to update widgets */
-			timerIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
-			/** Pending intent for broadcast message to update widgets */
-			pendingIntent = PendingIntent.getBroadcast(
-					context, 2701, timerIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-			/** Alarm manager for scheduled widget updates */
-			alarmManager = (AlarmManager) context.getSystemService
-					(Context.ALARM_SERVICE);
-			alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-					System.currentTimeMillis(),
-					alarmTime, pendingIntent);
-		}
-	}
-
-	/**
 	 * Start or stop timer for notification updates
 	 * If connection is same LAN as spMonitor device then update is every 60 seconds
 	 * else the update is every 5 minutes
@@ -473,26 +417,26 @@ class Utilities {
 	 * @param isStart
 	 *            flag if timer should be started or stopped
 	 */
-	public static void startStopNotifUpdates(Context context, boolean isStart) {
+	public static void startStopUpdates(Context context, boolean isStart) {
 
-		/** Intent to start scheduled update of the notifications */
+		/** Intent to start scheduled update */
 		Intent notifIntent;
 		/** Pending intent for broadcast message to update notifications */
 		PendingIntent pendingIntent;
-		/** Alarm manager for scheduled notifications updates */
+		/** Alarm manager for scheduled updates */
 		AlarmManager alarmManager;
 		/* Access to shared preferences of app */
 		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
 		/** Update interval in ms */
 		int alarmTime = 60000;
 
-		// Stop the update of the notifications
-		/** Intent to stop scheduled update of the notifications */
-		notifIntent = new Intent(context, NotifService.class);
-		/** Pending intent for broadcast message to update widgets */
+		// Stop the update
+		/** Intent to stop scheduled update */
+		notifIntent = new Intent(context, UpdateService.class);
+		/** Pending intent for broadcast message to update */
 		pendingIntent = PendingIntent.getBroadcast(
-				context, 2703, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-		/** Alarm manager for scheduled widget updates */
+				context, 3001, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		/** Alarm manager for scheduled updates */
 		alarmManager = (AlarmManager) context.getSystemService
 				(Context.ALARM_SERVICE);
 		alarmManager.cancel(pendingIntent);
@@ -506,8 +450,8 @@ class Utilities {
 				alarmTime = 300000;
 			}
 			/** Pending intent for notification updates */
-			PendingIntent pi = PendingIntent.getService(context, 2703,
-					new Intent(context, NotifService.class),PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent pi = PendingIntent.getService(context, 3001,
+					new Intent(context, UpdateService.class),PendingIntent.FLAG_UPDATE_CURRENT);
 			/** Alarm manager for daily sync */
 			AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			am.setRepeating(AlarmManager.RTC_WAKEUP,

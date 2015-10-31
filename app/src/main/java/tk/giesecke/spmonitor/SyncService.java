@@ -60,23 +60,6 @@ public class SyncService extends IntentService {
 					if (deviceIP.startsWith("No")) {
 						if (BuildConfig.DEBUG) Log.d("spMsync","no valid IP");
 					} else {
-						// TODO check why we start widget updates here again ?????
-						// Start the background updates of widget and notifications
-						/** Update interval in ms */
-//						int alarmTime = 60000;
-//
-//						/** Intent for broadcast message to update widgets */
-//						Intent startIntent = new Intent(SPwidget.SP_WIDGET_UPDATE);
-//						/** Pending intent for broadcast message to update widgets */
-//						PendingIntent pendingIntent = PendingIntent.getBroadcast(
-//								intentContext, 2701, startIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-//						/** Alarm manager for scheduled widget updates */
-//						AlarmManager alarmManager = (AlarmManager) intentContext.getSystemService
-//								(Context.ALARM_SERVICE);
-//						alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-//								System.currentTimeMillis(),
-//								alarmTime, pendingIntent);
-
 						if (android.os.Build.VERSION.SDK_INT > 9) {
 							StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 							StrictMode.setThreadPolicy(policy);

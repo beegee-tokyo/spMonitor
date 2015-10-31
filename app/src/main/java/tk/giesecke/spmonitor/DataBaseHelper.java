@@ -159,7 +159,7 @@ class DataBaseHelper extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * Read data of day "dayNumber" and returns the data as a cursor
+	 * Read data of the last database entry and returns the data as a cursor
 	 *
 	 * @param db
 	 *            pointer to database

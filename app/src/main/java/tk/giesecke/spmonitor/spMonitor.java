@@ -2,15 +2,12 @@ package tk.giesecke.spmonitor;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -295,18 +292,11 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		isWAN = mPrefs.getBoolean("access_type", false);
 		connSSID = mPrefs.getString("SSID", "none");
 
-		// TODO check if EventReceiver is already registered
+		// Check if broadcast receiver and timers are already initialized
 		if (BroadcastRegisterService.mReceiver == null) {
 			if (BuildConfig.DEBUG) Log.d("spMonitor","EventReceiver was not registered");
-			if (mPrefs.getInt("wNums", 0) != 0) {
-				/** IntentFilter to receive screen on/off broadcast msgs */
-				IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-				filter.addAction(Intent.ACTION_SCREEN_OFF);
-				filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
-				/** Receiver for screen on/off broadcast msgs */
-				BroadcastRegisterService.mReceiver = new EventReceiver();
-				registerReceiver(BroadcastRegisterService.mReceiver, filter);
-			}
+			// Start service to register BroadcastRegisterService
+			this.startService(new Intent(this, BroadcastRegisterService.class));
 		} else {
 			if (BuildConfig.DEBUG) Log.d("spMonitor","EventReceiver already registered");
 		}
@@ -475,40 +465,9 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-//		if (timer == null) {
-//			if (isWAN) { // When on mobile connection update only every 5 minutes
-//				startTimer(300000);
-//			} else if (calModeOn) { // When in calibration mode, update every 5 seconds
-//				startTimer(5000);
-//			} else { // Normal WiFi mode, update every 1 minute
-//				startTimer(60000);
-//			}
-//		}
-	}
-
-	@Override
 	public void onPause() {
 		super.onPause();
 		stopTimer();
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		/** Calendar instance to setup daily sync */
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.HOUR_OF_DAY, 5); // trigger at 5am
-		calendar.set(Calendar.MINUTE, 0);
-		calendar.set(Calendar.SECOND, 0);
-		/** Pending intent for daily sync */
-		PendingIntent pi = PendingIntent.getService(this, 2702,
-				new Intent(this, SyncService.class),PendingIntent.FLAG_UPDATE_CURRENT);
-		/** Alarm manager for daily sync */
-		AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-				AlarmManager.INTERVAL_DAY, pi);
 	}
 
 	@Override
@@ -910,10 +869,10 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 					NotificationManager nMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 					nMgr.cancel(1);
 					mPrefs.edit().putBoolean("notif",false).apply();
-					Utilities.startStopNotifUpdates(this,false);
+					Utilities.startStopUpdates(this, false);
 				} else {
 					mPrefs.edit().putBoolean("notif",true).apply();
-					Utilities.startStopNotifUpdates(this,true);
+					Utilities.startStopUpdates(this, true);
 				}
 				menuDialog.dismiss();
 				break;
@@ -1164,8 +1123,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						urlString += "&get=all";
 					} else { // local database is empty, need to sync all data
 						//urlString += "?date=" + result.syncMonth + "&get=all"; // get all of this month
-						/* TODO in this case we need to split the request. Otherwise the JSON array is getting too
-						   big to process */
 						splitAccess = true;
 						urlString += "?date=" + result.syncMonth;
 					}
