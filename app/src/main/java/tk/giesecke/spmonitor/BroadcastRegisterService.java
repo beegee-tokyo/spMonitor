@@ -73,7 +73,7 @@ public class BroadcastRegisterService extends Service {
 		/** Alarm manager for sync every 2 hours*/
 		AlarmManager am = (AlarmManager) intentContext.getSystemService(Context.ALARM_SERVICE);
 		// TODO testing hourly update of the database
-		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000,
+		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 360000,
 				7200000, pi);
 	}
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.os.StrictMode;
 import android.util.Log;
 
@@ -218,10 +219,21 @@ public class SyncService extends IntentService {
 					/** Instance of DataBaseHelper */
 					dbHelper = new DataBaseHelper(intentContext, dbName);
 					/** Instance of data base */
-					dataBase = dbHelper.getWritableDatabase();
 
+					dataBase = dbHelper.getWritableDatabase();
+					if (dataBase == null) {
+						dbHelper.close();
+						return;
+					}
 					// Get received data into local database
-					dataBase.beginTransactionNonExclusive();
+					try {
+						dataBase.beginTransactionNonExclusive();
+					} catch (SQLiteDatabaseLockedException e) {
+						dataBase.close();
+						dbHelper.close();
+						if (BuildConfig.DEBUG) Log.d("spMsync", "Database locked"+e);
+						return;
+					}
 					for (int i=0; i<jsonFromDevice.length(); i++) {
 						// skip first data record from device if we are just updating the database
 						if (i == 0 && !splitAccess) i++;

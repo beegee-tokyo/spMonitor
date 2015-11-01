@@ -157,6 +157,17 @@ public class SPwidgetConfigureActivity extends Activity implements AdapterView.O
 						mPrefs.edit().putString("alarmUri",notifUriSel).apply();
 					}
 
+					// It is the responsibility of the configuration activity to update the app widget
+					/** App widget manager for this widget */
+					AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+					SPwidget.updateAppWidget(context, appWidgetManager, mAppWidgetId,0f,0f);
+
+					// Make sure we pass back the original appWidgetId
+					/** Intent to report successful added widget */
+					Intent resultValue = new Intent();
+					resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+					setResult(RESULT_OK, resultValue);
+
 					if (mPrefs.getInt("wNums",0)== 0) {
 						mPrefs.edit().putInt("wNums",1).apply();
 

@@ -40,6 +40,10 @@ public class UpdateService extends IntentService {
 		if (intent != null) {
 			if (BuildConfig.DEBUG) Log.d("spUpdate", "UpdateStart");
 
+			if(spMonitor.isCommunicating) {
+				if (BuildConfig.DEBUG) Log.d("spUpdate", "Update skipped");
+				return;
+			}
 			/** Context of application */
 			Context intentContext = getApplicationContext();
 			/** Access to shared preferences of app widget */

@@ -434,8 +434,11 @@ class Utilities {
 		/** Intent to stop scheduled update */
 		notifIntent = new Intent(context, UpdateService.class);
 		/** Pending intent for broadcast message to update */
-		pendingIntent = PendingIntent.getBroadcast(
-				context, 3001, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		//pendingIntent = PendingIntent.getBroadcast(
+		//		context, 3001, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		pendingIntent = PendingIntent.getService(context, 3001,
+				new Intent(context, UpdateService.class),PendingIntent.FLAG_CANCEL_CURRENT);
+
 		/** Alarm manager for scheduled updates */
 		alarmManager = (AlarmManager) context.getSystemService
 				(Context.ALARM_SERVICE);
@@ -450,13 +453,13 @@ class Utilities {
 				alarmTime = 300000;
 			}
 			/** Pending intent for notification updates */
-			PendingIntent pi = PendingIntent.getService(context, 3001,
+			pendingIntent = PendingIntent.getService(context, 3001,
 					new Intent(context, UpdateService.class),PendingIntent.FLAG_UPDATE_CURRENT);
 			/** Alarm manager for daily sync */
 			AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 			am.setRepeating(AlarmManager.RTC_WAKEUP,
 					System.currentTimeMillis() + 10000,
-					alarmTime, pi);
+					alarmTime, pendingIntent);
 		}
 	}
 

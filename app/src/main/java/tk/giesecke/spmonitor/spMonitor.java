@@ -352,6 +352,9 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				dataBase.close();
 				dbHelper.close();
 			}
+			isCommunicating = true;
+			Utilities.startStopUpdates(appContext,false);
+
 			new syncDBtoDB().execute(dbNamesList[0]);
 			// Check if we have already synced the last month
 			/** Instance of DataBaseHelper */
@@ -1217,7 +1220,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 							result.taskResult = result.syncMonth + " " + getResources().getString(R.string.filesSynced);
 						} catch (JSONException e) {
 							result.taskResult = result.syncMonth + " " + getResources().getString(R.string.filesSyncFail);
-							dataBase.endTransaction();
+							//dataBase.endTransaction();
 							dataBase.close();
 							dbHelper.close();
 						}
@@ -1234,6 +1237,9 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			if (needLastMonth) {
 				new syncDBtoDB().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, dbNamesList[1]);
 				needLastMonth = false;
+			} else {
+				isCommunicating = false;
+				Utilities.startStopUpdates(appContext,true);
 			}
 		}
 	}
@@ -1930,20 +1936,22 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		lineChart.setAutoScaleMinMaxEnabled(true);
 		lineChart.setData(plotData);
 
-		TextView chartTitle = (TextView) findViewById(R.id.tv_plotTitle);
+		if (dayToShow != null) {
+			TextView chartTitle = (TextView) findViewById(R.id.tv_plotTitle);
 
-		Calendar c = Calendar.getInstance();
-		@SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yy-MM-dd");
-		try {
-			Date myDate = df.parse(dayToShow.trim());
-			c.setTime(myDate);
-			df = new SimpleDateFormat("yyyy-MMM-dd");
-			dayToShow = df.format(c.getTime());
-		} catch (ParseException e) {
-			e.printStackTrace();
+			Calendar c = Calendar.getInstance();
+			@SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yy-MM-dd");
+			try {
+				Date myDate = df.parse(dayToShow.trim());
+				c.setTime(myDate);
+				df = new SimpleDateFormat("yyyy-MMM-dd");
+				dayToShow = df.format(c.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			chartTitle.setText(dayToShow);
 		}
-
-		chartTitle.setText(dayToShow);
 
 		/** Instance of left y axis */
 		YAxis lYAx = lineChart.getAxisLeft();

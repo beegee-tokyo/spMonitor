@@ -58,6 +58,10 @@ class DataBaseHelper extends SQLiteOpenHelper {
 
 		/* Parse the string into its single values */
 		String[] valuesPerLine = recordLine.split(",");
+
+		if (valuesPerLine.length == 1) {
+			return;
+		}
 		/** String list with hour & minute values */
 		String[] hourSplit = valuesPerLine[3].split(":");
 
