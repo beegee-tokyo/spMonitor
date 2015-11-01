@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['updateappwidget',['updateAppWidget',['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a8b5cb0e6cb969940750257e3708858b8',1,'tk::giesecke::spmonitor::SPwidget']]],
-  ['updatesynced',['updateSynced',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a89a009028a8003041ee3281f235219b6',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['updatetext',['updateText',['../classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html#a5c9c511d0a271d597b4b19766f958404',1,'tk::giesecke::spmonitor::SplashActivity']]],
-  ['updateui',['updateUI',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a150bd48766e88881c23b87b802344373',1,'tk::giesecke::spmonitor::spMonitor']]]
+  ['mkcurl',['mkCurl',['../classDropbox_1_1Client.html#abd7508c0ae23beb2b5df6b909eddacd9',1,'Dropbox\Client\mkCurl()'],['../classDropbox_1_1RequestUtil.html#a5a9488d834fc63e6876574e08d04e896',1,'Dropbox\RequestUtil\mkCurl()']]],
+  ['mkcurlwithauth',['mkCurlWithAuth',['../classDropbox_1_1RequestUtil.html#ac41b88adb62d92dd85eca1295ecd9f9c',1,'Dropbox::RequestUtil']]],
+  ['mkcurlwithoauth',['mkCurlWithOAuth',['../classDropbox_1_1RequestUtil.html#a2c53bb6e20034dba64a19d0794c725c1',1,'Dropbox::RequestUtil']]],
+  ['move',['move',['../classDropbox_1_1Client.html#af8e58c757600624ff3079f177f210555',1,'Dropbox::Client']]]
 ];

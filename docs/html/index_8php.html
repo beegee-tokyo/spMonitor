@@ -108,12 +108,14 @@ Variables</h2></td></tr>
 <tr class="separator:acc1e62674bb7200ea73767c19dc1344d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b65f5e33e00e50c03561b2e94012e00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#a9b65f5e33e00e50c03561b2e94012e00">$yearsAvail</a> = array()</td></tr>
 <tr class="separator:a9b65f5e33e00e50c03561b2e94012e00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc2b8845a4b33d30c54ebdb8c4ac382d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#acc2b8845a4b33d30c54ebdb8c4ac382d">$monthsAvail</a> = array()</td></tr>
-<tr class="separator:acc2b8845a4b33d30c54ebdb8c4ac382d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab60c8402ad782688779156c3d085997e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#ab60c8402ad782688779156c3d085997e">$daysAvail</a> = array()</td></tr>
-<tr class="separator:ab60c8402ad782688779156c3d085997e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb75b97fdba6df486bbecce4900e51f2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#aeb75b97fdba6df486bbecce4900e51f2">$recordsAvail</a></td></tr>
 <tr class="separator:aeb75b97fdba6df486bbecce4900e51f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a372d3fda43e4ad3a349c8b20a6d0a487"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#a372d3fda43e4ad3a349c8b20a6d0a487">$firstYear</a> = &quot;&quot;</td></tr>
+<tr class="separator:a372d3fda43e4ad3a349c8b20a6d0a487"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a623593670a82a4f5d94b1b1d1ca371c8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#a623593670a82a4f5d94b1b1d1ca371c8">$firstMonth</a> = &quot;&quot;</td></tr>
+<tr class="separator:a623593670a82a4f5d94b1b1d1ca371c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaba232dd83d438f8defa61ae4ae20ca2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#aaba232dd83d438f8defa61ae4ae20ca2">$firstDay</a> = &quot;&quot;</td></tr>
+<tr class="separator:aaba232dd83d438f8defa61ae4ae20ca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af59a5f7cd609e592c41dc3643efd3c98"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#af59a5f7cd609e592c41dc3643efd3c98">$query</a> = &quot;SELECT DISTINCT SUBSTR(d,1,2) y FROM s&quot;</td></tr>
 <tr class="separator:af59a5f7cd609e592c41dc3643efd3c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa9126f9664959c02795be300a135f93"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#afa9126f9664959c02795be300a135f93">$sth</a> = $dbh-&gt;query($query)</td></tr>
@@ -122,19 +124,21 @@ Variables</h2></td></tr>
 <tr class="separator:a5cd0cc27177e4c113337991109d62db2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58f2e5378dde9803fbd2d5d5884594b7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#a58f2e5378dde9803fbd2d5d5884594b7">for</a> ($year=0;$year&lt; count($yearsAvail);$year++)</td></tr>
 <tr class="separator:a58f2e5378dde9803fbd2d5d5884594b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f4c96ccdac4e5ab312243d249b006d9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="index_8php.html#a5f4c96ccdac4e5ab312243d249b006d9">$datePickerMin</a> = &quot;$firstYear-$firstMonth-$firstDay&quot;</td></tr>
+<tr class="separator:a5f4c96ccdac4e5ab312243d249b006d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="ab60c8402ad782688779156c3d085997e"></a>
+<a class="anchor" id="a5f4c96ccdac4e5ab312243d249b006d9"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">$daysAvail = array()</td>
+          <td class="memname">$datePickerMin = &quot;$firstYear-$firstMonth-$firstDay&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00034">34</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00099">99</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
@@ -148,7 +152,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00021">21</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00035">35</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
@@ -162,7 +166,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00030">30</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00044">44</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
@@ -176,21 +180,49 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00028">28</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00042">42</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="acc2b8845a4b33d30c54ebdb8c4ac382d"></a>
+<a class="anchor" id="aaba232dd83d438f8defa61ae4ae20ca2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">$monthsAvail = array()</td>
+          <td class="memname">$firstDay = &quot;&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00033">33</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00055">55</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a623593670a82a4f5d94b1b1d1ca371c8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">$firstMonth = &quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="index_8php_source.html#l00054">54</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a372d3fda43e4ad3a349c8b20a6d0a487"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">$firstYear = &quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="index_8php_source.html#l00053">53</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
@@ -204,7 +236,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00022">22</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00036">36</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
@@ -218,7 +250,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00041">41</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00057">57</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
@@ -232,7 +264,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00035">35</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00047">47</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
@@ -246,7 +278,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00042">42</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00058">58</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
@@ -260,7 +292,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00032">32</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00046">46</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
@@ -274,7 +306,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00046">46</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00062">62</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
@@ -288,14 +320,14 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="index_8php_source.html#l00043">43</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
+<p>Definition at line <a class="el" href="index_8php_source.html#l00059">59</a> of file <a class="el" href="index_8php_source.html">index.php</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 23 2015 10:16:26 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 1 2015 19:24:12 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

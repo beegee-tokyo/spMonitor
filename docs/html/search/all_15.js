@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['zeroseries',['zeroSeries',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a001c4e8a55c86270244c84de7449c19d',1,'tk::giesecke::spmonitor::spMonitor']]]
+  ['valuestore',['ValueStore',['../interfaceDropbox_1_1ValueStore.html',1,'Dropbox']]],
+  ['valuestore_2ephp',['ValueStore.php',['../ValueStore_8php.html',1,'']]],
+  ['vcal',['vCal',['../spMonitor__a__definitions_8ino.html#ae633c2b5abe166c2dbde22702a013c0f',1,'spMonitor_a_definitions.ino']]]
 ];

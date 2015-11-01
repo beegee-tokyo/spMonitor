@@ -1,12 +1,21 @@
 var searchData=
 [
-  ['table_5fname',['TABLE_NAME',['../classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#a40d8c149ecc08351374fd27eb000428d',1,'tk::giesecke::spmonitor::DataBaseHelper']]],
-  ['timer',['timer',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a18d5ddccc3199e6d2e39ccf52eb5d5a6',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['timeseries',['timeSeries',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a63b53a6a2d5d0dd39d28739923965cae',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['timestamps',['timeStamps',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a89506b967cd4ce507a53c087b05062e8',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['timestampscont',['timeStampsCont',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ae9e061f5243a42b50a5cb9df587867cf',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['tsl',['tsl',['../spMonitor__a__definitions_8ino.html#a34dc1ffbb166b7afbf402f717b871f77',1,'spMonitor_a_definitions.ino']]],
-  ['tvmarkercons',['tvMarkerCons',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#ae777bce5da11efed285ebb0f2e4e40c0',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]],
-  ['tvmarkersolar',['tvMarkerSolar',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#a3ba0c8e970ff6c9d82f2398882cf6e03',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]],
-  ['tvmarkertime',['tvMarkerTime',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#a6bad0456e7884738cfffc152a7947b86',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]]
+  ['screensaver_5fcomponents',['SCREENSAVER_COMPONENTS',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a522abee731d009c55d9fd6541233b580',1,'tk::giesecke::spmonitor::Utilities']]],
+  ['screensaver_5fenabled',['SCREENSAVER_ENABLED',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#acf97cbc376d3eed4cc6ef33b42efa52f',1,'tk::giesecke::spmonitor::Utilities']]],
+  ['server',['server',['../spMonitor__a__definitions_8ino.html#a4e0c9ea4f8c666a7b51971ca06aae4e0',1,'spMonitor_a_definitions.ino']]],
+  ['showcons',['showCons',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a0fe9cd703340daa822cc6c597f736aed',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['showinglast',['showingLast',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#abe86d8f48d370eb0d721ab901f1034dd',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['showinglog',['showingLog',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a5e993d77b656cf67a18227febaa0f8c3',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['showlight',['showLight',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a37f8bba6a0bc7fec6887dd4dc50e931a',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['showsolar',['showSolar',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a41b1e52401db78524fc09f4d3428a2ee',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['sinterpolator',['sInterpolator',['../classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#a324324882645a20e8965e630fb24edf6',1,'tk::giesecke::spmonitor::SolarDayDream']]],
+  ['solar',['solar',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ab719b15304a1bbc7610d36937dece9d8',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['solarenergy',['solarEnergy',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#aff5938616686e24cbd923c6d23cdce19',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['solarpower',['solarPower',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a637baf44e9116b77194be9cf075999dd',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['solarpowercont',['solarPowerCont',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a0e701ac373ec73c89dc9aa7f83bad130',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['solarpowermin',['solarPowerMin',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a892ea039a85cc31b9bae34267f228737',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['solarpowersec',['solarPowerSec',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a863869f3b924e30a9705a3cc463afa93',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['solarseries',['solarSeries',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a7ef28ba811295f909b29f711d6bb032e',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['solarval',['solarVal',['../classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#aaab457807920ab57f7685d714bddbd3e',1,'tk::giesecke::spmonitor::SolarDayDream']]],
+  ['syncmonth',['syncMonth',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1onPostExecuteWrapper.html#a642e07057c24ec8834cc87fce6661a14',1,'tk::giesecke::spmonitor::spMonitor::onPostExecuteWrapper']]]
 ];

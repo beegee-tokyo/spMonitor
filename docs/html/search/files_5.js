@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['query_2ephp',['query.php',['../query_8php.html',1,'']]]
+  ['fusioncharts_2ephp',['fusioncharts.php',['../fusioncharts_8php.html',1,'']]]
 ];

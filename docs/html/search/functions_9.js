@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['readlux',['readLux',['../spMonitor__c__lightsensor_8ino.html#a859aa0a0b759c18a64f0cb20469c190a',1,'spMonitor_c_lightsensor.ino']]],
-  ['refreshcontent',['refreshContent',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#a76ebf006e83a6c3efd742b91a1f03a13',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]],
-  ['render',['render',['../classFusionCharts.html#a110f64dda20dee1eb571107eec86cc70',1,'FusionCharts']]]
+  ['initchart',['initChart',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a9bcade02cc23490ab3e5e34ffc917974',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['isconnectionavailable',['isConnectionAvailable',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a340b27682c1887cbc892b4c2a2cee089',1,'tk::giesecke::spmonitor::Utilities']]],
+  ['isexternalstoragewritable',['isExternalStorageWritable',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#aef8f8b3a9918fae1617d21c41e06e071',1,'tk::giesecke::spmonitor::Utilities']]],
+  ['isjsonvalid',['isJSONValid',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a6109572dc807fcb8a67010dabdb55ff2',1,'tk::giesecke::spmonitor::Utilities']]],
+  ['isvalid',['isValid',['../classDropbox_1_1Path.html#a8ce34f871990439db9c0d6d2e473a276',1,'Dropbox::Path']]],
+  ['isvalidnonroot',['isValidNonRoot',['../classDropbox_1_1Path.html#a35aa1a4528e90f8b54933f410d7643c3',1,'Dropbox::Path']]]
 ];

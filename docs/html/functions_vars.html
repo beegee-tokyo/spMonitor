@@ -51,8 +51,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
                onmouseout="return searchBox.OnSearchSelectHide()"
                alt=""/>
           <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)"
-               onblur="searchBox.OnSearchFieldFocus(false)"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
                onkeyup="searchBox.OnSearchFieldChange(event)"/>
           </span><span class="right">
             <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
@@ -86,12 +86,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_i"><span>i</span></a></li>
       <li><a href="#index_l"><span>l</span></a></li>
       <li><a href="#index_m"><span>m</span></a></li>
+      <li><a href="#index_n"><span>n</span></a></li>
       <li><a href="#index_p"><span>p</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
       <li><a href="#index_t"><span>t</span></a></li>
       <li><a href="#index_u"><span>u</span></a></li>
-      <li class="current"><a href="#index_z"><span>z</span></a></li>
+      <li><a href="#index_x"><span>x</span></a></li>
+      <li class="current"><a href="#index_y"><span>y</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -104,7 +106,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0"
+<iframe src="javascript:void(0)" frameborder="0" 
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -113,19 +115,133 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 &#160;
 
 <h3><a class="anchor" id="index_$"></a>- $ -</h3><ul>
+<li>$accessToken
+: <a class="el" href="classDropbox_1_1Client.html#a9e3a65d7d649c286e6d0cacbe68cbd71">Dropbox\Client</a>
+</li>
+<li>$addInstance
+: <a class="el" href="classDropbox_1_1WriteMode.html#ad56f244ecfae08b84a560097bde45763">Dropbox\WriteMode</a>
+</li>
+<li>$api
+: <a class="el" href="classDropbox_1_1Host.html#aabf344564866de9cd67a0ff430f23d0d">Dropbox\Host</a>
+</li>
+<li>$apiHost
+: <a class="el" href="classDropbox_1_1Client.html#ac0e9f9f49810e5152413a765dc179f83">Dropbox\Client</a>
+</li>
+<li>$appInfo
+: <a class="el" href="classDropbox_1_1AuthBase.html#a46f57f4f12b7be2cc6640e710d285dbc">Dropbox\AuthBase</a>
+</li>
+<li>$array
+: <a class="el" href="classDropbox_1_1ArrayEntryStore.html#a3756e42326bbd59a457a13acc112ec44">Dropbox\ArrayEntryStore</a>
+</li>
+<li>$AUTO_CHUNKED_UPLOAD_THRESHOLD
+: <a class="el" href="classDropbox_1_1Client.html#aa73432c9757bc00d08535b17dcb2bedb">Dropbox\Client</a>
+</li>
+<li>$body
+: <a class="el" href="classDropbox_1_1HttpResponse.html#ac2db5b78765c10088348a25b073ce84b">Dropbox\HttpResponse</a>
+</li>
+<li>$clientIdentifier
+: <a class="el" href="classDropbox_1_1AuthBase.html#ace6237ce4bc02ded71c9052f45a2e789">Dropbox\AuthBase</a>
+, <a class="el" href="classDropbox_1_1Client.html#a3dfe77e2488c89fdc616c391d4408b5a">Dropbox\Client</a>
+</li>
 <li>$constructorOptions
 : <a class="el" href="classFusionCharts.html#aacc17459f846514b2932170d4a301cae">FusionCharts</a>
 </li>
 <li>$constructorTemplate
 : <a class="el" href="classFusionCharts.html#a25a8eb011a99b45fb454f7440e453254">FusionCharts</a>
 </li>
+<li>$content
+: <a class="el" href="classDropbox_1_1Host.html#aa70287121f16162845c70c24af7e774f">Dropbox\Host</a>
+</li>
+<li>$contentHost
+: <a class="el" href="classDropbox_1_1Client.html#a01f754b38af0123b3daff53bdcfdb99a">Dropbox\Client</a>
+</li>
+<li>$csrfTokenStore
+: <a class="el" href="classDropbox_1_1WebAuth.html#a6457aecddd2381c73ed493f2636f4165">Dropbox\WebAuth</a>
+</li>
+<li>$dateTimeFormat
+: <a class="el" href="classDropbox_1_1Client.html#ac4c4ecb8933f65bc73683ec7abcbf9cc">Dropbox\Client</a>
+</li>
+<li>$DEFAULT_CHUNK_SIZE
+: <a class="el" href="classDropbox_1_1Client.html#a44162095cbe5a7e3d0a1a57822f3adfe">Dropbox\Client</a>
+</li>
+<li>$defaultValue
+: <a class="el" href="classDropbox_1_1Host.html#a8c72d57f3d1b9c320808ec1002e4e9ba">Dropbox\Host</a>
+</li>
+<li>$error
+: <a class="el" href="classDropbox_1_1DropboxMetadataHeaderCatcher.html#ad190f78c32e094c0668d3d161cd3bb1d">Dropbox\DropboxMetadataHeaderCatcher</a>
+</li>
+<li>$errorData
+: <a class="el" href="classDropbox_1_1CurlStreamRelay.html#a6083466f2a958e19f95913afb3f147b8">Dropbox\CurlStreamRelay</a>
+</li>
+<li>$extraParams
+: <a class="el" href="classDropbox_1_1WriteMode.html#a5adec79c7f74e1bc690e711861ef3544">Dropbox\WriteMode</a>
+</li>
+<li>$forceInstance
+: <a class="el" href="classDropbox_1_1WriteMode.html#a5fa1e3abed7f8878f980499f91530e04">Dropbox\WriteMode</a>
+</li>
+<li>$handle
+: <a class="el" href="classDropbox_1_1Curl.html#a2646a6f9716b2bff2c06f15ff7e59341">Dropbox\Curl</a>
+</li>
+<li>$headers
+: <a class="el" href="classDropbox_1_1Curl.html#a50d1528984b44217c01960820537d9cf">Dropbox\Curl</a>
+</li>
+<li>$host
+: <a class="el" href="classDropbox_1_1AppInfo.html#a0cbac296d3b95aac7cb5eb23d7aa4928">Dropbox\AppInfo</a>
+</li>
+<li>$isError
+: <a class="el" href="classDropbox_1_1CurlStreamRelay.html#a812e4f757559f15bd95ef4a44952ac83">Dropbox\CurlStreamRelay</a>
+</li>
+<li>$key
+: <a class="el" href="classDropbox_1_1AppInfo.html#afb0bd8d32cd49d06a3280af88b0cc3cc">Dropbox\AppInfo</a>
+, <a class="el" href="classDropbox_1_1ArrayEntryStore.html#ae48cd4bcbe59458cdb8ebb1c4c90f1a7">Dropbox\ArrayEntryStore</a>
+, <a class="el" href="classDropbox_1_1OAuth1AccessToken.html#a1796f07138e2fb5575944da32f936173">Dropbox\OAuth1AccessToken</a>
+</li>
+<li>$metadata
+: <a class="el" href="classDropbox_1_1DropboxMetadataHeaderCatcher.html#a6ff72a635bc09662d5b79e3eac211a7b">Dropbox\DropboxMetadataHeaderCatcher</a>
+</li>
+<li>$originalPath
+: <a class="el" href="classDropbox_1_1RootCertificates.html#a4598e9b4a6c55fd7d8aca7355ad9dc22">Dropbox\RootCertificates</a>
+</li>
+<li>$outStream
+: <a class="el" href="classDropbox_1_1CurlStreamRelay.html#a5fc839917516517bc1c8bdc5c643b6b8">Dropbox\CurlStreamRelay</a>
+</li>
+<li>$paths
+: <a class="el" href="classDropbox_1_1RootCertificates.html#a0ebb987373415b06d8467e847a12123f">Dropbox\RootCertificates</a>
+</li>
+<li>$redirectUri
+: <a class="el" href="classDropbox_1_1WebAuth.html#a28db2d2867fe668289358db2249df687">Dropbox\WebAuth</a>
+</li>
 <li>$renderTemplate
 : <a class="el" href="classFusionCharts.html#a5d58a2f809fcf5aba361489f6e390688">FusionCharts</a>
+</li>
+<li>$secret
+: <a class="el" href="classDropbox_1_1AppInfo.html#a05e71892eea04a89bc0726b64c934190">Dropbox\AppInfo</a>
+, <a class="el" href="classDropbox_1_1OAuth1AccessToken.html#a501232a54a2465cc93cc23ae6f7c35ec">Dropbox\OAuth1AccessToken</a>
+</li>
+<li>$skippedFirstLine
+: <a class="el" href="classDropbox_1_1DropboxMetadataHeaderCatcher.html#a6c5b8e693e05a6ba66abda850a6263f1">Dropbox\DropboxMetadataHeaderCatcher</a>
+</li>
+<li>$statusCode
+: <a class="el" href="classDropbox_1_1Exception__BadResponseCode.html#ad5419693b3ccb9becf9d7bc6896deca5">Dropbox\Exception_BadResponseCode</a>
+, <a class="el" href="classDropbox_1_1HttpResponse.html#ab45c7cfc710875896ceb4fc12392910d">Dropbox\HttpResponse</a>
+</li>
+<li>$useExternalFile
+: <a class="el" href="classDropbox_1_1RootCertificates.html#a036f6df8ad245599c8de5450ba4798e9">Dropbox\RootCertificates</a>
+</li>
+<li>$userLocale
+: <a class="el" href="classDropbox_1_1AuthBase.html#aba3f83d190c860b692f2c4bb8d2690f9">Dropbox\AuthBase</a>
+, <a class="el" href="classDropbox_1_1Client.html#ad812e9a634b94538b244fccfa20b40ef">Dropbox\Client</a>
+</li>
+<li>$web
+: <a class="el" href="classDropbox_1_1Host.html#a9d36163bd35ea2be192f2e0821886756">Dropbox\Host</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
+<li>ACTION_DREAM_SETTINGS
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a9dfb2e1d474758b31a47c8af47b320e0">tk.giesecke.spmonitor.Utilities</a>
+</li>
 <li>appContext
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a296801c0f1f1cec68fb2f2976491fade">tk.giesecke.spmonitor.spMonitor</a>
 </li>
@@ -148,11 +264,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>client
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#adba35b9a1c5339899be9fb54632e0e88">tk.giesecke.spmonitor.spMonitor</a>
 </li>
-<li>cons
-: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ae070fe13e41bcd16f16a23d09bf99cff">tk.giesecke.spmonitor.spMonitor</a>
+<li>confContext
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#af19171c2d484b2c529b0b849701e9841">tk.giesecke.spmonitor.SPwidgetConfigureActivity</a>
+</li>
+<li>connSSID
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html#a293c8cc9ecab700514f7103f7e942089">tk.giesecke.spmonitor.SplashActivity</a>
+, <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ae70080ef4b78a0730c4b5e52e962b667">tk.giesecke.spmonitor.spMonitor</a>
 </li>
 <li>consEnergy
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#afd963c449001c06b72b97470331f0ebe">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>consM
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a5935cb37382b142be4fe401b82aaac63">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>consMSeries
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a83ea747741498d80b76b53fe3dfd0040">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>consP
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#aea6a4dc0da00bafd1ec98382d051d325">tk.giesecke.spmonitor.spMonitor</a>
 </li>
 <li>consPowerMin
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#abf0df4617ec2aee298db2cabec992725">tk.giesecke.spmonitor.spMonitor</a>
@@ -160,14 +289,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>consPowerSec
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a35b28a9afc8e12b022d420891c1a818e">tk.giesecke.spmonitor.spMonitor</a>
 </li>
-<li>consSeries
-: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#aa8da3e01062141f8451b1bab0c1cea26">tk.giesecke.spmonitor.spMonitor</a>
+<li>consPSeries
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a0ddcb783941523ae8f8196229436908f">tk.giesecke.spmonitor.spMonitor</a>
 </li>
-<li>consumPower
-: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#aa56f210cdb41d5c209515448275c5d91">tk.giesecke.spmonitor.spMonitor</a>
+<li>consumMPower
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a605b9220b47ba5fb015ea457cae286a8">tk.giesecke.spmonitor.spMonitor</a>
 </li>
-<li>consumPowerCont
-: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a8894d77e8d5441044d09fdb1478c25dd">tk.giesecke.spmonitor.spMonitor</a>
+<li>consumMPowerCont
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#aae12592791d21cfa9069b043ff49f73a">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>consumPPower
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#aa6a8913e12fe55312ec5fb9596ccb589">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>consumPPowerCont
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a9b29344b5dc26873e95e6166a3bb7c6e">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>consVal
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#a384f446418c8101f19f833f942eabcf6">tk.giesecke.spmonitor.SolarDayDream</a>
 </li>
 </ul>
 
@@ -176,11 +314,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>DATABASE_NAME
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#aceba84dc459c8d1d7e220651ab3469cd">tk.giesecke.spmonitor.DataBaseHelper</a>
 </li>
+<li>DATABASE_NAME_LAST
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#ae2dd86c5c24c95c350c65db3393e05c6">tk.giesecke.spmonitor.DataBaseHelper</a>
+</li>
 <li>dayToShow
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a78cd940cfa17a5c99caba7566ffdd722">tk.giesecke.spmonitor.spMonitor</a>
 </li>
-<li>delay
-: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html#a6db060ade498c8b3d997a2993d7888b9">tk.giesecke.spmonitor.SplashActivity</a>
+<li>dbNamesList
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ab61c4387a0909fece475220aea3d1028">tk.giesecke.spmonitor.spMonitor</a>
 </li>
 <li>deviceIP
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a080c828a9311ebe0712a5504d7e6199e">tk.giesecke.spmonitor.spMonitor</a>
@@ -189,6 +330,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_h"></a>- h -</h3><ul>
+<li>h
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1AnimatedView.html#a933d06480cee72c343cde3bd09eca8c5">tk.giesecke.spmonitor.AnimatedView</a>
+</li>
 <li>handler
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ad70d4b2ab759b9618cf2f7b98232568c">tk.giesecke.spmonitor.spMonitor</a>
 </li>
@@ -199,8 +343,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>isCommunicating
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a14a0e90bb0ae452f87a04637fe600330">tk.giesecke.spmonitor.spMonitor</a>
 </li>
+<li>isDayDreaming
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#af9210c4f75d684713fabc33b4af6cffc">tk.giesecke.spmonitor.SolarDayDream</a>
+</li>
+<li>isManual
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html#a065b708adf56923d84bc44c9de1168a4">tk.giesecke.spmonitor.SplashActivity</a>
+</li>
+<li>isSimpleUI
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#adee9308aac825c6ddc0b0c7b52cdc9f1">tk.giesecke.spmonitor.spMonitor</a>
+</li>
 <li>isTextLarge
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a10a1b6d7d6fa957b5652a1fffa549be5">tk.giesecke.spmonitor.SPwidgetConfigureActivity</a>
+</li>
+<li>isWAN
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#aad72d0c2b5333ce01366e4e93c343fe8">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>isWANonStart
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a223083dab3b537fd25ec79caaf58dbc2">tk.giesecke.spmonitor.spMonitor</a>
 </li>
 </ul>
 
@@ -211,6 +370,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>lastLightValMin
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ae732ba03253caab9c08b2101a69fc858">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>lastLogDates
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a244177574cd43bdccdd14e62c535c492">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>lastLogDatesIndex
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a3dade34f573364120dba471f35e35f28">tk.giesecke.spmonitor.spMonitor</a>
 </li>
 <li>lastSolarPowerMin
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a52b9b13ca98be61339aa8f681267d1df">tk.giesecke.spmonitor.spMonitor</a>
@@ -246,6 +411,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_m"></a>- m -</h3><ul>
+<li>mAnimatorPower
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#a79ba0db10cfefb0801efbebdce60549a">tk.giesecke.spmonitor.SolarDayDream</a>
+</li>
+<li>mAnimListener
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#a8b3ba04a77641443a2685a6f31e0f468">tk.giesecke.spmonitor.SolarDayDream</a>
+</li>
 <li>manualEntry
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html#a6538035f75b3c8d66e3d3bdbe464d986">tk.giesecke.spmonitor.SplashActivity</a>
 </li>
@@ -255,11 +426,58 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>mAppWidgetId
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#aa0968c611e94ffc474dc5124316bb55e">tk.giesecke.spmonitor.SPwidgetConfigureActivity</a>
 </li>
+<li>mContext
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1AnimatedView.html#a0b5ee9c2e9626034f423072fecbe3f07">tk.giesecke.spmonitor.AnimatedView</a>
+</li>
+<li>mDreamTextCons
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#a0430d5a8d0697f39133c08c087121474">tk.giesecke.spmonitor.SolarDayDream</a>
+</li>
+<li>mDreamTextPower
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#a976cd85544e604881d24223f158ed020">tk.giesecke.spmonitor.SolarDayDream</a>
+</li>
+<li>mDreamTextSolar
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#ac302a8397fbd39ab342fff4d758b508b">tk.giesecke.spmonitor.SolarDayDream</a>
+</li>
+<li>menuDialog
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a3974bab6a79204424e769a76addc02c5">tk.giesecke.spmonitor.spMonitor</a>
+</li>
 <li>mOnClickListener
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a4ccdd976aac78d385ac6b4005fbfa164">tk.giesecke.spmonitor.SPwidgetConfigureActivity</a>
 </li>
+<li>mPointSize
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#a9ea22d8d21b0c58320e98a91cf261434">tk.giesecke.spmonitor.SolarDayDream</a>
+</li>
 <li>mPrefs
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a94ced38664a4937c0cb56733556c8b26">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>mRandom
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#a0b25965b2ca8e4c91fe281b5d223eeeb">tk.giesecke.spmonitor.SolarDayDream</a>
+</li>
+<li>mReceiver
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1BroadcastRegisterService.html#a644bfbe0e012c400454df20ab8ae26a9">tk.giesecke.spmonitor.BroadcastRegisterService</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
+<li>needLastMonth
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a98c674a590743232bc6bad7ba5352a40">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>notifNames
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a6f68127f00033aaf780cec8c3dbeefc6">tk.giesecke.spmonitor.spMonitor</a>
+, <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a0c3875762a37e1a8c9a611eb7df858b3">tk.giesecke.spmonitor.SPwidgetConfigureActivity</a>
+</li>
+<li>notifNameSel
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a0a99f9ba9ccf2ba3e3bc677f38ddc217">tk.giesecke.spmonitor.spMonitor</a>
+, <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a2b863054f0fd19aaff02d0bd4b025cfd">tk.giesecke.spmonitor.SPwidgetConfigureActivity</a>
+</li>
+<li>notifUri
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a5805f46ae8138207ad6884ba3dfaf393">tk.giesecke.spmonitor.spMonitor</a>
+, <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a1cc599e5053fbbf7f81d80a498311efe">tk.giesecke.spmonitor.SPwidgetConfigureActivity</a>
+</li>
+<li>notifUriSel
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a3951ccd5c6d83f47b6921003068e3218">tk.giesecke.spmonitor.spMonitor</a>
+, <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a04219f3b5716092c96d58ca8938481dc">tk.giesecke.spmonitor.SPwidgetConfigureActivity</a>
 </li>
 </ul>
 
@@ -268,10 +486,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>plotData
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ac346a8aa33751124140f01495a4be63e">tk.giesecke.spmonitor.spMonitor</a>
 </li>
+<li>powerVal
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#afe3d9e04002ba0f98a72f89ac6dff10a">tk.giesecke.spmonitor.SolarDayDream</a>
+</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
+<li>r
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1AnimatedView.html#a715f6e6a016eaf0561af920029ffc5ac">tk.giesecke.spmonitor.AnimatedView</a>
+</li>
 <li>resultTextView
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html#a10d5ff134257b4686855c74fa97f0eff">tk.giesecke.spmonitor.SplashActivity</a>
 , <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a446f9d035ac18bf548de69204f5f4fbd">tk.giesecke.spmonitor.spMonitor</a>
@@ -280,11 +504,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
-<li>screenOnOffReceiver
-: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1ScreenReceiver.html#afc1662df66d9040c3dc4c675b62e3b7e">tk.giesecke.spmonitor.EventReceiver</a>
+<li>SCREENSAVER_COMPONENTS
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a522abee731d009c55d9fd6541233b580">tk.giesecke.spmonitor.Utilities</a>
+</li>
+<li>SCREENSAVER_ENABLED
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#acf97cbc376d3eed4cc6ef33b42efa52f">tk.giesecke.spmonitor.Utilities</a>
 </li>
 <li>showCons
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a0fe9cd703340daa822cc6c597f736aed">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>showingLast
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#abe86d8f48d370eb0d721ab901f1034dd">tk.giesecke.spmonitor.spMonitor</a>
 </li>
 <li>showingLog
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a5e993d77b656cf67a18227febaa0f8c3">tk.giesecke.spmonitor.spMonitor</a>
@@ -294,6 +524,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>showSolar
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a41b1e52401db78524fc09f4d3428a2ee">tk.giesecke.spmonitor.spMonitor</a>
+</li>
+<li>sInterpolator
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#a324324882645a20e8965e630fb24edf6">tk.giesecke.spmonitor.SolarDayDream</a>
 </li>
 <li>solar
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ab719b15304a1bbc7610d36937dece9d8">tk.giesecke.spmonitor.spMonitor</a>
@@ -316,8 +549,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>solarSeries
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a7ef28ba811295f909b29f711d6bb032e">tk.giesecke.spmonitor.spMonitor</a>
 </li>
-<li>SP_WIDGET_UPDATE
-: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#ae49390b05af568b254e0298421dfad4c">tk.giesecke.spmonitor.SPwidget</a>
+<li>solarVal
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SolarDayDream.html#aaab457807920ab57f7685d714bddbd3e">tk.giesecke.spmonitor.SolarDayDream</a>
+</li>
+<li>syncMonth
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1onPostExecuteWrapper.html#a642e07057c24ec8834cc87fce6661a14">tk.giesecke.spmonitor.spMonitor.onPostExecuteWrapper</a>
 </li>
 </ul>
 
@@ -325,6 +561,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h3><a class="anchor" id="index_t"></a>- t -</h3><ul>
 <li>TABLE_NAME
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#a40d8c149ecc08351374fd27eb000428d">tk.giesecke.spmonitor.DataBaseHelper</a>
+</li>
+<li>taskResult
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1onPostExecuteWrapper.html#a2221a5e6c0aab4d104153ae3ecfa9bc2">tk.giesecke.spmonitor.spMonitor.onPostExecuteWrapper</a>
 </li>
 <li>timer
 : <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a18d5ddccc3199e6d2e39ccf52eb5d5a6">tk.giesecke.spmonitor.spMonitor</a>
@@ -357,15 +596,28 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 
 
-<h3><a class="anchor" id="index_z"></a>- z -</h3><ul>
-<li>zeroSeries
-: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a001c4e8a55c86270244c84de7449c19d">tk.giesecke.spmonitor.spMonitor</a>
+<h3><a class="anchor" id="index_x"></a>- x -</h3><ul>
+<li>x
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1AnimatedView.html#aeb2a5f125cf526057d4a5c7157c09085">tk.giesecke.spmonitor.AnimatedView</a>
+</li>
+<li>xVelocity
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1AnimatedView.html#a834ca8fbb1514956e7c3c63bf7587778">tk.giesecke.spmonitor.AnimatedView</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_y"></a>- y -</h3><ul>
+<li>y
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1AnimatedView.html#a5f802516980c8a974ee445e9d6e402d2">tk.giesecke.spmonitor.AnimatedView</a>
+</li>
+<li>yVelocity
+: <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1AnimatedView.html#a5ee6a2b862faf92f73a9d2e7ba7f3ca9">tk.giesecke.spmonitor.AnimatedView</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 23 2015 10:16:26 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 1 2015 19:24:12 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

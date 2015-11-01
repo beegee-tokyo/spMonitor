@@ -1,15 +1,16 @@
 var searchData=
 [
-  ['giesecke',['giesecke',['../namespacetk_1_1giesecke.html',1,'tk']]],
-  ['spmonitor',['spmonitor',['../namespacetk_1_1giesecke_1_1spmonitor.html',1,'tk::giesecke']]],
-  ['table_5fname',['TABLE_NAME',['../classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#a40d8c149ecc08351374fd27eb000428d',1,'tk::giesecke::spmonitor::DataBaseHelper']]],
-  ['timer',['timer',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a18d5ddccc3199e6d2e39ccf52eb5d5a6',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['timeseries',['timeSeries',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a63b53a6a2d5d0dd39d28739923965cae',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['timestamps',['timeStamps',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a89506b967cd4ce507a53c087b05062e8',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['timestampscont',['timeStampsCont',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ae9e061f5243a42b50a5cb9df587867cf',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['tk',['tk',['../namespacetk.html',1,'']]],
-  ['tsl',['tsl',['../spMonitor__a__definitions_8ino.html#a34dc1ffbb166b7afbf402f717b871f77',1,'spMonitor_a_definitions.ino']]],
-  ['tvmarkercons',['tvMarkerCons',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#ae777bce5da11efed285ebb0f2e4e40c0',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]],
-  ['tvmarkersolar',['tvMarkerSolar',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#a3ba0c8e970ff6c9d82f2398882cf6e03',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]],
-  ['tvmarkertime',['tvMarkerTime',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#a6bad0456e7884738cfffc152a7947b86',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]]
+  ['r',['r',['../classtk_1_1giesecke_1_1spmonitor_1_1AnimatedView.html#a715f6e6a016eaf0561af920029ffc5ac',1,'tk::giesecke::spmonitor::AnimatedView']]],
+  ['readfully',['readFully',['../classDropbox_1_1Client.html#aad2198899869d7dbea5bb0c5be768307',1,'Dropbox::Client']]],
+  ['readlux',['readLux',['../spMonitor__c__lightsensor_8ino.html#a859aa0a0b759c18a64f0cb20469c190a',1,'spMonitor_c_lightsensor.ino']]],
+  ['refreshcontent',['refreshContent',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#a76ebf006e83a6c3efd742b91a1f03a13',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]],
+  ['render',['render',['../classFusionCharts.html#a110f64dda20dee1eb571107eec86cc70',1,'FusionCharts']]],
+  ['requestutil',['RequestUtil',['../classDropbox_1_1RequestUtil.html',1,'Dropbox']]],
+  ['requestutil_2ephp',['RequestUtil.php',['../RequestUtil_8php.html',1,'']]],
+  ['restorefile',['restoreFile',['../classDropbox_1_1Client.html#a2786f78d95064bcb1781f678cb691d45',1,'Dropbox::Client']]],
+  ['resulttextview',['resultTextView',['../classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html#a10d5ff134257b4686855c74fa97f0eff',1,'tk.giesecke.spmonitor.SplashActivity.resultTextView()'],['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a446f9d035ac18bf548de69204f5f4fbd',1,'tk.giesecke.spmonitor.spMonitor.resultTextView()']]],
+  ['retrylater_2ephp',['RetryLater.php',['../RetryLater_8php.html',1,'']]],
+  ['rootcertificates',['RootCertificates',['../classDropbox_1_1RootCertificates.html',1,'Dropbox']]],
+  ['rootcertificates_2ephp',['RootCertificates.php',['../RootCertificates_8php.html',1,'']]],
+  ['runwithretry',['runWithRetry',['../classDropbox_1_1RequestUtil.html#a5811a1d3f2986c0618cf789adccb252d',1,'Dropbox::RequestUtil']]]
 ];

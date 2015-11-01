@@ -91,7 +91,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a>  </div>
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">tk.giesecke.spmonitor.SyncService Class Reference</div>  </div>
 </div><!--header-->
@@ -117,6 +118,12 @@ Public Member Functions</h2></td></tr>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a13decc36b128c54fc2f6e7a9ead386ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SyncService.html#a13decc36b128c54fc2f6e7a9ead386ef">onHandleIntent</a> (Intent intent)</td></tr>
 <tr class="separator:a13decc36b128c54fc2f6e7a9ead386ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ab84ba1664ec82a2b0cc0c5c0a7cb5506"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1SyncService.html#ab84ba1664ec82a2b0cc0c5c0a7cb5506">syncDB</a> (String dbName, String syncMonth, String deviceIP, Context intentContext)</td></tr>
+<tr class="memdesc:ab84ba1664ec82a2b0cc0c5c0a7cb5506"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sync local database with the <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a> database.  <a href="#ab84ba1664ec82a2b0cc0c5c0a7cb5506">More...</a><br /></td></tr>
+<tr class="separator:ab84ba1664ec82a2b0cc0c5c0a7cb5506"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a> - Daily sync service </p>
@@ -124,7 +131,7 @@ Protected Member Functions</h2></td></tr>
 <dl class="section author"><dt>Author</dt><dd>Bernd Giesecke </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>0.2 beta August 19, 2015. </dd></dl>
 
-<p>Definition at line <a class="el" href="SyncService_8java_source.html#l00031">31</a> of file <a class="el" href="SyncService_8java_source.html">SyncService.java</a>.</p>
+<p>Definition at line <a class="el" href="SyncService_8java_source.html#l00033">33</a> of file <a class="el" href="SyncService_8java_source.html">SyncService.java</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a60347191553958e0dfb0cb8d39b6ed11"></a>
 <div class="memitem">
@@ -139,7 +146,7 @@ Protected Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="SyncService_8java_source.html#l00033">33</a> of file <a class="el" href="SyncService_8java_source.html">SyncService.java</a>.</p>
+<p>Definition at line <a class="el" href="SyncService_8java_source.html#l00035">35</a> of file <a class="el" href="SyncService_8java_source.html">SyncService.java</a>.</p>
 
 </div>
 </div>
@@ -165,8 +172,78 @@ Protected Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Context of application</p>
 <p>Access to shared preferences of app widget</p>
+<p>SSID current connected or NULL if none</p>
 <p>URL of the <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a> device</p>
+<p>Instance of <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html" title="spMonitor - DataBaseHelper ">DataBaseHelper</a></p>
+<p>Instance of data base</p>
+<p>Instance of <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html" title="spMonitor - DataBaseHelper ">DataBaseHelper</a></p>
+<p>Instance of data base</p>
+<p>Instance of <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html" title="spMonitor - DataBaseHelper ">DataBaseHelper</a></p>
+<p>Instance of data base</p>
+<p>Instance of <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html" title="spMonitor - DataBaseHelper ">DataBaseHelper</a></p>
+<p>Instance of data base</p>
+<p>Cursor with data from database </p>
+
+<p>Definition at line <a class="el" href="SyncService_8java_source.html#l00040">40</a> of file <a class="el" href="SyncService_8java_source.html">SyncService.java</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab84ba1664ec82a2b0cc0c5c0a7cb5506"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tk.giesecke.spmonitor.SyncService.syncDB </td>
+          <td>(</td>
+          <td class="paramtype">String&#160;</td>
+          <td class="paramname"><em>dbName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">String&#160;</td>
+          <td class="paramname"><em>syncMonth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">String&#160;</td>
+          <td class="paramname"><em>deviceIP</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Context&#160;</td>
+          <td class="paramname"><em>intentContext</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sync local database with the <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a> database. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dbName</td><td>Name of database to be synced </td></tr>
+    <tr><td class="paramname">syncMonth</td><td>Month to be synced </td></tr>
+    <tr><td class="paramname">deviceIP</td><td>IP address of <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a> </td></tr>
+    <tr><td class="paramname">intentContext</td><td>Context of this intent </td></tr>
+  </table>
+  </dd>
+</dl>
 <p>String with data received from <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a> device</p>
 <p>A HTTP client to access the <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a> device</p>
 <p>String list with parts of the URL</p>
@@ -174,6 +251,9 @@ Protected Member Functions</h2></td></tr>
 <p>Instance of <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html" title="spMonitor - DataBaseHelper ">DataBaseHelper</a></p>
 <p>Instance of data base</p>
 <p>Cursor with data from database</p>
+<p>Flag for database access type</p>
+<p>Repeat counter used when full database needs to be synced</p>
+<p>URL used for access</p>
 <p>Request to <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a> device</p>
 <p>Response from <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a> device</p>
 <p>JSON array with the data received from <a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html" title="spMonitor - Main UI activity ">spMonitor</a> device</p>
@@ -181,7 +261,7 @@ Protected Member Functions</h2></td></tr>
 <p>Instance of data base</p>
 <p>JSONObject with a single record </p>
 
-<p>Definition at line <a class="el" href="SyncService_8java_source.html#l00038">38</a> of file <a class="el" href="SyncService_8java_source.html">SyncService.java</a>.</p>
+<p>Definition at line <a class="el" href="SyncService_8java_source.html#l00137">137</a> of file <a class="el" href="SyncService_8java_source.html">SyncService.java</a>.</p>
 
 </div>
 </div>
@@ -191,7 +271,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 23 2015 10:16:26 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 1 2015 19:24:12 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

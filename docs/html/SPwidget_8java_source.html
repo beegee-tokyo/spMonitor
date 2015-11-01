@@ -93,221 +93,80 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <a href="SPwidget_8java.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="keyword">package </span>tk.giesecke.spmonitor;</div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;</div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">import</span> android.app.AlarmManager;</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">import</span> android.annotation.SuppressLint;</div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">import</span> android.app.PendingIntent;</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">import</span> android.appwidget.AppWidgetManager;</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">import</span> android.appwidget.AppWidgetProvider;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">import</span> android.content.ComponentName;</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">import</span> android.content.Context;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">import</span> android.content.Intent;</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">import</span> android.content.SharedPreferences;</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">import</span> android.net.ConnectivityManager;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">import</span> android.os.StrictMode;</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">import</span> android.support.annotation.NonNull;</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">import</span> android.widget.RemoteViews;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">import</span> com.squareup.okhttp.OkHttpClient;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">import</span> com.squareup.okhttp.Request;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">import</span> com.squareup.okhttp.Response;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">import</span> org.json.JSONObject;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">import</span> android.content.Context;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">import</span> android.content.Intent;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">import</span> android.content.SharedPreferences;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">import</span> android.os.StrictMode;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">import</span> android.widget.RemoteViews;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html">   20</a></span>&#160;<span class="keyword">public</span> <span class="keyword">class </span><a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html">SPwidget</a> <span class="keyword">extends</span> AppWidgetProvider {</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">import</span> java.io.IOException;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html">   31</a></span>&#160;<span class="keyword">public</span> <span class="keyword">class </span><a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html">SPwidget</a> <span class="keyword">extends</span> AppWidgetProvider {</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#ae49390b05af568b254e0298421dfad4c">   34</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#ae49390b05af568b254e0298421dfad4c">SP_WIDGET_UPDATE</a> = <span class="stringliteral">&quot;SP_WIDGET_UPDATE&quot;</span>;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    @Override</div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a87ce609e8bc81c0f7baf10ee3bdb75c6">   37</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a87ce609e8bc81c0f7baf10ee3bdb75c6">onReceive</a>(@NonNull Context context, @NonNull Intent intent) {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="comment">//*******************************************************</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="comment">// Receiver for the widget (click on widget, update service,</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="comment">// disable, ... we handle only the update requests here</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="comment">//*******************************************************</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        super.onReceive(context, intent);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        ComponentName thisAppWidget = <span class="keyword">new</span> ComponentName(context.getPackageName(),</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html">SPwidget</a>.class.getName());</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordtype">int</span>[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        RemoteViews views = <span class="keyword">new</span> RemoteViews(context.getPackageName(), R.layout.sp_widget);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">if</span> (SP_WIDGET_UPDATE.equals(intent.getAction())) {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> appWidgetId : appWidgetIds) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                appWidgetManager.updateAppWidget(appWidgetId, views);</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            }</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a7515020cc3405c446abe8daea63d070c">onUpdate</a>(context, appWidgetManager, appWidgetIds);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        }</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    @Override</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a7882bfb6f08b8e2a3ecc805bffbdbea1">   23</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a7882bfb6f08b8e2a3ecc805bffbdbea1">onDisabled</a>(Context context) {</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        SharedPreferences mPrefs = context.getSharedPreferences(<span class="stringliteral">&quot;spMonitor&quot;</span>,0);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        mPrefs.edit().putInt(<span class="stringliteral">&quot;wNums&quot;</span>,0).apply();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    }</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    @SuppressLint(<span class="stringliteral">&quot;InlinedApi&quot;</span>)</div>
+<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a3cd86fca06df4b49b8aca44706089de3">   44</a></span>&#160;    static <span class="keywordtype">void</span> <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a3cd86fca06df4b49b8aca44706089de3">updateAppWidget</a>(Context context, AppWidgetManager appWidgetManager,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                                <span class="keywordtype">int</span> appWidgetId,</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                                Float solarPowerMin,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                Float consPowerMin ) {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">if</span> (android.os.Build.VERSION.SDK_INT &gt; 9) {</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            StrictMode.ThreadPolicy policy = <span class="keyword">new</span> StrictMode.ThreadPolicy.Builder().permitAll().build();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            StrictMode.setThreadPolicy(policy);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        RemoteViews views;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        SharedPreferences mPrefs = context.getSharedPreferences(<span class="stringliteral">&quot;spMonitor&quot;</span>, 0);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordflow">if</span> (mPrefs.getBoolean(<span class="stringliteral">&quot;wSizeLarge&quot;</span>,<span class="keyword">true</span>)) {</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            views = <span class="keyword">new</span> RemoteViews(context.getPackageName(), R.layout.sp_widget_large);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            views = <span class="keyword">new</span> RemoteViews(context.getPackageName(), R.layout.sp_widget);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        }</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    @Override</div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a7515020cc3405c446abe8daea63d070c">   66</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a7515020cc3405c446abe8daea63d070c">onUpdate</a>(Context context, AppWidgetManager appWidgetManager, <span class="keywordtype">int</span>[] appWidgetIds) {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="comment">// There may be multiple widgets active, so update all of them</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> appWidgetId : appWidgetIds) {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a8b5cb0e6cb969940750257e3708858b8">updateAppWidget</a>(context, appWidgetManager, appWidgetId);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    @Override</div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a1d17914973624980d33bf13550270afb">   74</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a1d17914973624980d33bf13550270afb">onDeleted</a>(Context context, <span class="keywordtype">int</span>[] appWidgetIds) {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">// When the user deletes the widget, delete the preference associated with it.</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    @Override</div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a373d30a85740c65ca101abfeea56d636">   79</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a373d30a85740c65ca101abfeea56d636">onEnabled</a>(Context context) {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        <span class="comment">// Enter relevant functionality for when the first widget is created</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    @Override</div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a7882bfb6f08b8e2a3ecc805bffbdbea1">   84</a></span>&#160;    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a7882bfb6f08b8e2a3ecc805bffbdbea1">onDisabled</a>(Context context) {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        SharedPreferences mPrefs = context.getSharedPreferences(<span class="stringliteral">&quot;spMonitor&quot;</span>,0);</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        mPrefs.edit().putInt(<span class="stringliteral">&quot;wNums&quot;</span>,0).apply();</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        Intent intent = <span class="keyword">new</span> Intent(<a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html">SPwidget</a>.<a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#ae49390b05af568b254e0298421dfad4c">SP_WIDGET_UPDATE</a>);</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        PendingIntent pendingIntent = PendingIntent.getBroadcast(</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                context, 2701, intent, PendingIntent.FLAG_CANCEL_CURRENT);</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        AlarmManager alarmManager = (AlarmManager) context.getSystemService</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                (Context.ALARM_SERVICE);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        alarmManager.cancel(pendingIntent);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a8b5cb0e6cb969940750257e3708858b8">   99</a></span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a8b5cb0e6cb969940750257e3708858b8">updateAppWidget</a>(Context context, AppWidgetManager appWidgetManager,</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                                <span class="keywordtype">int</span> appWidgetId) {</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordflow">if</span> (android.os.Build.VERSION.SDK_INT &gt; 9) {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            StrictMode.ThreadPolicy policy = <span class="keyword">new</span> StrictMode.ThreadPolicy.Builder().permitAll().build();</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            StrictMode.setThreadPolicy(policy);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="comment">// Construct the RemoteViews object</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        RemoteViews views;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        SharedPreferences mPrefs = context.getSharedPreferences(<span class="stringliteral">&quot;spMonitor&quot;</span>, 0);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keywordflow">if</span> (mPrefs.getBoolean(<span class="stringliteral">&quot;wSizeLarge&quot;</span>,<span class="keyword">true</span>)) {</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            views = <span class="keyword">new</span> RemoteViews(context.getPackageName(), R.layout.sp_widget_large);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            views = <span class="keyword">new</span> RemoteViews(context.getPackageName(), R.layout.sp_widget);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        }</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="comment">// Create an Intent to launch MainActivity</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="comment"></span>        Intent intent1 = <span class="keyword">new</span> Intent(context, <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html">SplashActivity</a>.class);</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        intent1.putExtra(<span class="stringliteral">&quot;appWidgetId&quot;</span>, appWidgetId);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        <span class="comment">// Creating a pending intent, which will be invoked when the user</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="comment">// clicks on the widget</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="comment"></span>        PendingIntent pendingIntent1 = PendingIntent.getActivity(context, 0,</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                intent1, PendingIntent.FLAG_UPDATE_CURRENT);</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="comment">//  Attach an on-click listener to the battery icon</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        views.setOnClickPendingIntent(R.id.rlWidget1, pendingIntent1);</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        String deviceIP = mPrefs.getString(<span class="stringliteral">&quot;spMonitorIP&quot;</span>, <span class="stringliteral">&quot;no IP saved&quot;</span>);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="comment">// 1) Check if we have an IP address</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="keywordflow">if</span> (deviceIP.equalsIgnoreCase(<span class="stringliteral">&quot;no IP saved&quot;</span>)) { <span class="comment">// No spMonitor device available</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            views.setTextViewText(R.id.tv_widgetRow1Value,</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                    context.getResources().getString(R.string.widgetCommError1));</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            views.setTextViewText(R.id.tv_widgetRow2Value,</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;                    context.getResources().getString(R.string.widgetCommError2));</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;            views.setTextViewText(R.id.tv_widgetRow3Value,</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;                    context.getResources().getString(R.string.widgetCommError3));</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;            <span class="comment">// 2) Check if WiFi is enabled</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="comment"></span>            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            android.net.NetworkInfo wifiOn = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            wifiOn.getDetailedState();</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            <span class="keywordflow">if</span> (wifiOn.getDetailedState().name().equalsIgnoreCase(<span class="stringliteral">&quot;DISCONNECTED&quot;</span>)) {</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;                views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;                views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                String[] ipValues = deviceIP.split(<span class="stringliteral">&quot;/&quot;</span>);</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                String urlString=<span class="stringliteral">&quot;http://&quot;</span>+ipValues[2]+<span class="stringliteral">&quot;/data/get&quot;</span>; <span class="comment">// URL to call</span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="comment"></span>                String resultToDisplay = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;                OkHttpClient <a class="code" href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a> = <span class="keyword">new</span> OkHttpClient();</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;                Float solarPowerMin = 0.0f;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                Float consPowerMin = 0.0f;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                Request request = <span class="keyword">new</span> Request.Builder()</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                        .url(urlString)</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;                        .build();</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;                <span class="keywordflow">if</span> (request != null) {</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;                        Response response = client.newCall(request).execute();</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;                        <span class="keywordflow">if</span> (response != null) {</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;                            resultToDisplay = response.body().string();</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;                        }</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;                    } <span class="keywordflow">catch</span> (IOException e) {</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;                        views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;                        views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;                        views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;                    }</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;                }</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;                <span class="keywordflow">if</span> (resultToDisplay.equalsIgnoreCase(<span class="stringliteral">&quot;&quot;</span>)) {</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;                    views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;                    views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;                    views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;                    <span class="comment">// decode JSON</span></div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                    <span class="keywordflow">if</span> (<a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html">Utilities</a>.<a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a6109572dc807fcb8a67010dabdb55ff2">isJSONValid</a>(resultToDisplay)) {</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;                        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;                            JSONObject jsonResult = <span class="keyword">new</span> JSONObject(resultToDisplay);</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                            JSONObject jsonValues = jsonResult.getJSONObject(<span class="stringliteral">&quot;value&quot;</span>);</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                            <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;                                solarPowerMin = Float.parseFloat(jsonValues.getString(<span class="stringliteral">&quot;S&quot;</span>));</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;                                consPowerMin = Float.parseFloat(jsonValues.getString(<span class="stringliteral">&quot;C&quot;</span>));</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;                            } <span class="keywordflow">catch</span> (Exception ignore) {</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;                                views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;                                views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;                                views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;                            }</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;                            <span class="keywordtype">double</span> resultPowerMin = solarPowerMin + consPowerMin;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;                            views.setTextViewText(R.id.tv_widgetRow1Value, String.format(<span class="stringliteral">&quot;%.0f&quot;</span>, resultPowerMin) + <span class="stringliteral">&quot;W&quot;</span>);</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;                            views.setTextViewText(R.id.tv_widgetRow2Value, String.format(<span class="stringliteral">&quot;%.0f&quot;</span>, Math.abs(consPowerMin)) + <span class="stringliteral">&quot;W&quot;</span>);</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;                            views.setTextViewText(R.id.tv_widgetRow3Value, String.format(<span class="stringliteral">&quot;%.0f&quot;</span>, solarPowerMin) + <span class="stringliteral">&quot;W&quot;</span>);</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;                            <span class="keywordflow">if</span> (consPowerMin &gt; 0.0d) {</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;                                views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;                                        .getColor(android.R.color.holo_red_light));</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;                            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;                                views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;                                        .getColor(android.R.color.holo_green_light));</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;                            }</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;                        } <span class="keywordflow">catch</span> (Exception ignore) {</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;                            views.setTextViewText(R.id.tv_widgetRow1Value, context.getResources().getString(R.string.widgetCommError1));</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;                            views.setTextViewText(R.id.tv_widgetRow2Value, context.getResources().getString(R.string.widgetCommError2));</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;                            views.setTextViewText(R.id.tv_widgetRow3Value, context.getResources().getString(R.string.widgetCommError3));</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;                        }</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;                    }</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;                }</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            }</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        }</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        <span class="comment">// Instruct the widget manager to update the widget</span></div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;        appWidgetManager.updateAppWidget(appWidgetId, views);</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    }</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;}</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;</div>
-<div class="ttc" id="spMonitor__a__definitions_8ino_html_a8c41dfd8517cd9f6fc24eb59f20f51d7"><div class="ttname"><a href="spMonitor__a__definitions_8ino.html#a8c41dfd8517cd9f6fc24eb59f20f51d7">client</a></div><div class="ttdeci">YunClient client</div><div class="ttdoc">Instance of client for incoming and outgoing HTTP requests. </div><div class="ttdef"><b>Definition:</b> <a href="spMonitor__a__definitions_8ino_source.html#l00074">spMonitor_a_definitions.ino:74</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html_a7882bfb6f08b8e2a3ecc805bffbdbea1"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a7882bfb6f08b8e2a3ecc805bffbdbea1">tk.giesecke.spmonitor.SPwidget.onDisabled</a></div><div class="ttdeci">void onDisabled(Context context)</div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00084">SPwidget.java:84</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1Utilities_html_a6109572dc807fcb8a67010dabdb55ff2"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a6109572dc807fcb8a67010dabdb55ff2">tk.giesecke.spmonitor.Utilities.isJSONValid</a></div><div class="ttdeci">static boolean isJSONValid(String test)</div><div class="ttdoc">Check if JSON object is valid. </div><div class="ttdef"><b>Definition:</b> <a href="Utilities_8java_source.html#l00137">Utilities.java:137</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity_html"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html">tk.giesecke.spmonitor.SplashActivity</a></div><div class="ttdoc">spMonitor - SplashActivity </div><div class="ttdef"><b>Definition:</b> <a href="SplashActivity_8java_source.html#l00031">SplashActivity.java:31</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html_a7515020cc3405c446abe8daea63d070c"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a7515020cc3405c446abe8daea63d070c">tk.giesecke.spmonitor.SPwidget.onUpdate</a></div><div class="ttdeci">void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)</div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00066">SPwidget.java:66</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html">tk.giesecke.spmonitor.SPwidget</a></div><div class="ttdoc">spMonitor - SPwidget </div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00031">SPwidget.java:31</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html_a373d30a85740c65ca101abfeea56d636"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a373d30a85740c65ca101abfeea56d636">tk.giesecke.spmonitor.SPwidget.onEnabled</a></div><div class="ttdeci">void onEnabled(Context context)</div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00079">SPwidget.java:79</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html_a87ce609e8bc81c0f7baf10ee3bdb75c6"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a87ce609e8bc81c0f7baf10ee3bdb75c6">tk.giesecke.spmonitor.SPwidget.onReceive</a></div><div class="ttdeci">void onReceive(@NonNull Context context,@NonNull Intent intent)</div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00037">SPwidget.java:37</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html_a1d17914973624980d33bf13550270afb"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a1d17914973624980d33bf13550270afb">tk.giesecke.spmonitor.SPwidget.onDeleted</a></div><div class="ttdeci">void onDeleted(Context context, int[] appWidgetIds)</div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00074">SPwidget.java:74</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html_ae49390b05af568b254e0298421dfad4c"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#ae49390b05af568b254e0298421dfad4c">tk.giesecke.spmonitor.SPwidget.SP_WIDGET_UPDATE</a></div><div class="ttdeci">static final String SP_WIDGET_UPDATE</div><div class="ttdoc">broadcast signature for widget update </div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00034">SPwidget.java:34</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html_a8b5cb0e6cb969940750257e3708858b8"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a8b5cb0e6cb969940750257e3708858b8">tk.giesecke.spmonitor.SPwidget.updateAppWidget</a></div><div class="ttdeci">static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId)</div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00099">SPwidget.java:99</a></div></div>
-<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1Utilities_html"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html">tk.giesecke.spmonitor.Utilities</a></div><div class="ttdoc">spMonitor - Utilities </div><div class="ttdef"><b>Definition:</b> <a href="Utilities_8java_source.html#l00035">Utilities.java:35</a></div></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="comment">// Create an Intent to launch MainActivity</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment"></span>        Intent intent1 = <span class="keyword">new</span> Intent(context, <a class="code" href="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html">SplashActivity</a>.class);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        intent1.putExtra(<span class="stringliteral">&quot;appWidgetId&quot;</span>, appWidgetId);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="comment">// Creating a pending intent, which will be invoked when the user</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="comment">// clicks on the widget</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="comment"></span>        PendingIntent pendingIntent1 = PendingIntent.getActivity(context, 0,</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                intent1, PendingIntent.FLAG_UPDATE_CURRENT);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="comment">//  Attach an on-click listener to the battery icon</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        views.setOnClickPendingIntent(R.id.rlWidget1, pendingIntent1);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordtype">double</span> resultPowerMin = solarPowerMin + consPowerMin;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        views.setTextViewText(R.id.tv_widgetRow1Value, String.format(<span class="stringliteral">&quot;%.0f&quot;</span>, resultPowerMin) + <span class="stringliteral">&quot;W&quot;</span>);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        views.setTextViewText(R.id.tv_widgetRow2Value, String.format(<span class="stringliteral">&quot;%.0f&quot;</span>, Math.abs(consPowerMin)) + <span class="stringliteral">&quot;W&quot;</span>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        views.setTextViewText(R.id.tv_widgetRow3Value, String.format(<span class="stringliteral">&quot;%.0f&quot;</span>, solarPowerMin) + <span class="stringliteral">&quot;W&quot;</span>);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">if</span> (consPowerMin &gt; 0.0d) {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                    .getColor(android.R.color.holo_red_light));</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            views.setTextColor(R.id.tv_widgetRow2Value, context.getResources()</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                    .getColor(android.R.color.holo_green_light));</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="comment">// Instruct the widget manager to update the widget</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        appWidgetManager.updateAppWidget(appWidgetId, views);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;}</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html_a7882bfb6f08b8e2a3ecc805bffbdbea1"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a7882bfb6f08b8e2a3ecc805bffbdbea1">tk.giesecke.spmonitor.SPwidget.onDisabled</a></div><div class="ttdeci">void onDisabled(Context context)</div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00023">SPwidget.java:23</a></div></div>
+<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity_html"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html">tk.giesecke.spmonitor.SplashActivity</a></div><div class="ttdoc">spMonitor - SplashActivity </div><div class="ttdef"><b>Definition:</b> <a href="SplashActivity_8java_source.html#l00029">SplashActivity.java:29</a></div></div>
+<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html_a3cd86fca06df4b49b8aca44706089de3"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html#a3cd86fca06df4b49b8aca44706089de3">tk.giesecke.spmonitor.SPwidget.updateAppWidget</a></div><div class="ttdeci">static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Float solarPowerMin, Float consPowerMin)</div><div class="ttdoc">Updates a widgets. </div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00044">SPwidget.java:44</a></div></div>
+<div class="ttc" id="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget_html"><div class="ttname"><a href="classtk_1_1giesecke_1_1spmonitor_1_1SPwidget.html">tk.giesecke.spmonitor.SPwidget</a></div><div class="ttdoc">spMonitor - SPwidget </div><div class="ttdef"><b>Definition:</b> <a href="SPwidget_8java_source.html#l00020">SPwidget.java:20</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 23 2015 10:16:25 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 1 2015 19:24:11 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['checkdeviceip',['checkDeviceIP',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a84a824c19e7cb40f0ad26f73c548b605',1,'tk::giesecke::spmonitor::Utilities']]],
-  ['configuresensor',['configureSensor',['../spMonitor__c__lightsensor_8ino.html#a7e1c18e815907812d519111d9a027f3f',1,'spMonitor_c_lightsensor.ino']]],
-  ['custommarkerview',['CustomMarkerView',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#a5e789ece867554b4c83582cb72c41a6e',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]]
+  ['broadcastregisterservice',['BroadcastRegisterService',['../classtk_1_1giesecke_1_1spmonitor_1_1BroadcastRegisterService.html#a2f8f51fec24606f6909b779e6538a93e',1,'tk::giesecke::spmonitor::BroadcastRegisterService']]],
+  ['buildpostbody',['buildPostBody',['../classDropbox_1_1RequestUtil.html#a1588b9eb80d9fe0be17b7f44e1d240c0',1,'Dropbox::RequestUtil']]],
+  ['builduri',['buildUri',['../classDropbox_1_1RequestUtil.html#a2e05f6067a47320aa9602ce0e853891e',1,'Dropbox::RequestUtil']]],
+  ['buildurlforgetorput',['buildUrlForGetOrPut',['../classDropbox_1_1Client.html#ab80a5cc5a4e1841819c4447393440163',1,'Dropbox\Client\buildUrlForGetOrPut()'],['../classDropbox_1_1RequestUtil.html#a60cccd4a7be4edb463e5921838b16d21',1,'Dropbox\RequestUtil\buildUrlForGetOrPut()']]]
 ];

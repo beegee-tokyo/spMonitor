@@ -1,12 +1,13 @@
 var searchData=
 [
-  ['getctvalues',['getCTValues',['../spMonitor__x__measurement_8ino.html#abd5299feec449fa74130a0305e217ae3',1,'spMonitor_x_measurement.ino']]],
-  ['getcurrentdate',['getCurrentDate',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a0172be0f38ca7e15aec40c14b66ccc08',1,'tk::giesecke::spmonitor::Utilities']]],
-  ['getcurrenttime',['getCurrentTime',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#aa5b37c5cf3d7b422ef6f92fc2a5371f9',1,'tk::giesecke::spmonitor::Utilities']]],
-  ['getday',['getDay',['../classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#ac0fd9ddb841564f25bf0b46765aed586',1,'tk::giesecke::spmonitor::DataBaseHelper']]],
-  ['getentries',['getEntries',['../classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#a02dccbe10318258995f114bb2814a783',1,'tk::giesecke::spmonitor::DataBaseHelper']]],
-  ['getlastrow',['getLastRow',['../classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#a0564fcf183fb6737b78ac818c74afe08',1,'tk::giesecke::spmonitor::DataBaseHelper']]],
-  ['gettimestamp',['getTimeStamp',['../spMonitor__b__utils_8ino.html#aba13adb5d48dea106cf1c8a2d55af4d7',1,'spMonitor_b_utils.ino']]],
-  ['getxoffset',['getXOffset',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#a3bde0075baad2d1c693550f333bca655',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]],
-  ['getyoffset',['getYOffset',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor_1_1CustomMarkerView.html#ad20d0f583b99ccda45bb4a290157dff2',1,'tk::giesecke::spmonitor::spMonitor::CustomMarkerView']]]
+  ['fclose',['fclose',['../csv2_8php.html#a9c3a7a2083aea338ef138e29187c58d4',1,'csv2.php']]],
+  ['fillseries',['fillSeries',['../classtk_1_1giesecke_1_1spmonitor_1_1Utilities.html#a11fc3c77f44f98d3b4fe63b5b4c5bdfa',1,'tk::giesecke::spmonitor::Utilities']]],
+  ['findarduino',['findArduino',['../classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity_1_1findArduino.html',1,'tk::giesecke::spmonitor::SplashActivity']]],
+  ['finderror',['findError',['../classDropbox_1_1Path.html#ad751b2b957174ffb21464c0789de195e',1,'Dropbox::Path']]],
+  ['finderrornonroot',['findErrorNonRoot',['../classDropbox_1_1Path.html#ae1fce1d8acf6766a98f1c944ba8c3ec5',1,'Dropbox::Path']]],
+  ['finish',['finish',['../classDropbox_1_1WebAuth.html#aaed1c879101549419b066e94c07a37e7',1,'Dropbox\WebAuth\finish()'],['../classDropbox_1_1WebAuthNoRedirect.html#a59641277aebaaf5a72ebafb3b71bea65',1,'Dropbox\WebAuthNoRedirect\finish()']]],
+  ['for',['for',['../dropbackup_8php.html#accd5f00cf51a7977c08456a9d575d816',1,'for():&#160;dropbackup.php'],['../index_8php.html#a58f2e5378dde9803fbd2d5d5884594b7',1,'for():&#160;index.php']]],
+  ['force',['force',['../classDropbox_1_1WriteMode.html#ae2726fe9a80c07fa090befdf52dc6bc4',1,'Dropbox::WriteMode']]],
+  ['fusioncharts',['FusionCharts',['../classFusionCharts.html',1,'']]],
+  ['fusioncharts_2ephp',['fusioncharts.php',['../fusioncharts_8php.html',1,'']]]
 ];

@@ -1,9 +1,24 @@
 var searchData=
 [
-  ['manualentry',['manualEntry',['../classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html#a6538035f75b3c8d66e3d3bdbe464d986',1,'tk::giesecke::spmonitor::SplashActivity']]],
-  ['manualentrytxt',['manualEntryTxt',['../classtk_1_1giesecke_1_1spmonitor_1_1SplashActivity.html#aa9e721e814d8a599bc3c527029ad3a50',1,'tk::giesecke::spmonitor::SplashActivity']]],
-  ['mappwidgetid',['mAppWidgetId',['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#aa0968c611e94ffc474dc5124316bb55e',1,'tk::giesecke::spmonitor::SPwidgetConfigureActivity']]],
-  ['measurefreq',['measureFreq',['../spMonitor__a__definitions_8ino.html#a6bc99f9a2570b64e51802f06fa057292',1,'spMonitor_a_definitions.ino']]],
-  ['monclicklistener',['mOnClickListener',['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a4ccdd976aac78d385ac6b4005fbfa164',1,'tk::giesecke::spmonitor::SPwidgetConfigureActivity']]],
-  ['mprefs',['mPrefs',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a94ced38664a4937c0cb56733556c8b26',1,'tk::giesecke::spmonitor::spMonitor']]]
+  ['lastconspowermin',['lastConsPowerMin',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a616cb2e330f9b30c4dfa62ae77031717',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lastlightvalmin',['lastLightValMin',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ae732ba03253caab9c08b2101a69fc858',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lastlogdates',['lastLogDates',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a244177574cd43bdccdd14e62c535c492',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lastlogdatesindex',['lastLogDatesIndex',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a3dade34f573364120dba471f35e35f28',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lastmeasure',['lastMeasure',['../spMonitor__a__definitions_8ino.html#a2ac22542c1cd2609dba924781699b8b4',1,'spMonitor_a_definitions.ino']]],
+  ['lastsave',['lastSave',['../spMonitor__a__definitions_8ino.html#a4b0d8d34df96d9eb9dbb61725b6e5ff7',1,'spMonitor_a_definitions.ino']]],
+  ['lastsolarpowermin',['lastSolarPowerMin',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a52b9b13ca98be61339aa8f681267d1df',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['light',['light',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#aaa9d21661e1dcdc19f2a9589c7fc20be',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lightinteg',['lightInteg',['../spMonitor__a__definitions_8ino.html#adcf905dc9634c400debd964599d4730e',1,'spMonitor_a_definitions.ino']]],
+  ['lightseries',['lightSeries',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a76036291ec608242f5dc60ed4352560f',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lightvalmin',['lightValMin',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a78957cc6972b090d3ba8c177ae2c5d4e',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lightvalsec',['lightValSec',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ae8a8344d2a2d6c284f0fe901d318dd18',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lightvalue',['lightValue',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a8a9e2c1cdeb7630ea98d3c61fc9916e1',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lightvaluecont',['lightValueCont',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a2b53a0d7e40eb95b6caca563b76957f0',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['linechart',['lineChart',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a527c06470eb6a4c8aa8bfa3d44bc75aa',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['loadfromjson',['loadFromJson',['../classDropbox_1_1AppInfo.html#af6aa8b7cb42f373459408ced870521b8',1,'Dropbox\AppInfo\loadFromJson()'],['../classDropbox_1_1AuthInfo.html#a865c24b42f768c75669a2040ff6aebfa',1,'Dropbox\AuthInfo\loadFromJson()']]],
+  ['loadfromjsonfile',['loadFromJsonFile',['../classDropbox_1_1AppInfo.html#a0065bfb345ce63df3ce8b3ebd0a800d5',1,'Dropbox\AppInfo\loadFromJsonFile()'],['../classDropbox_1_1AuthInfo.html#a125916ecd0c8dfc25c6111156fb3ce2c',1,'Dropbox\AuthInfo\loadFromJsonFile()']]],
+  ['loadfromjsonfilewithraw',['loadFromJsonFileWithRaw',['../classDropbox_1_1AppInfo.html#aaab72317da1bb7d8a5dd3b50adfadfa1',1,'Dropbox::AppInfo']]],
+  ['logdates',['logDates',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a065454fc0e730ef9e8a4be0597911be4',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['logdatesindex',['logDatesIndex',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a88394d3132035f2266ac7e03b11e02f4',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['loop',['loop',['../spMonitor__z__loop_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'spMonitor_z_loop.ino']]]
 ];

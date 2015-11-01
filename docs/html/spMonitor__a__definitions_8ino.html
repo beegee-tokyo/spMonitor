@@ -109,9 +109,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a9e8ee2405d47e654be2c22c5eba55737"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="spMonitor__a__definitions_8ino.html#a9e8ee2405d47e654be2c22c5eba55737">activityLED</a>&#160;&#160;&#160;8</td></tr>
-<tr class="memdesc:a9e8ee2405d47e654be2c22c5eba55737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timer for reset.  <a href="#a9e8ee2405d47e654be2c22c5eba55737">More...</a><br /></td></tr>
+<tr class="memdesc:a9e8ee2405d47e654be2c22c5eba55737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant value for activity LED port.  <a href="#a9e8ee2405d47e654be2c22c5eba55737">More...</a><br /></td></tr>
 <tr class="separator:a9e8ee2405d47e654be2c22c5eba55737"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6bc99f9a2570b64e51802f06fa057292"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="spMonitor__a__definitions_8ino.html#a6bc99f9a2570b64e51802f06fa057292">measureFreq</a>&#160;&#160;&#160;1000</td></tr>
+<tr class="memitem:a6bc99f9a2570b64e51802f06fa057292"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="spMonitor__a__definitions_8ino.html#a6bc99f9a2570b64e51802f06fa057292">measureFreq</a>&#160;&#160;&#160;5000</td></tr>
 <tr class="memdesc:a6bc99f9a2570b64e51802f06fa057292"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant value for measurement frequency in ms.  <a href="#a6bc99f9a2570b64e51802f06fa057292">More...</a><br /></td></tr>
 <tr class="separator:a6bc99f9a2570b64e51802f06fa057292"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12f25df644010f459781a7a52e4102e4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="spMonitor__a__definitions_8ino.html#a12f25df644010f459781a7a52e4102e4">iCal1</a>&#160;&#160;&#160;5.7</td></tr>
@@ -138,6 +138,9 @@ Variables</h2></td></tr>
 <tr class="memitem:a4b0d8d34df96d9eb9dbb61725b6e5ff7"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="spMonitor__a__definitions_8ino.html#a4b0d8d34df96d9eb9dbb61725b6e5ff7">lastSave</a></td></tr>
 <tr class="memdesc:a4b0d8d34df96d9eb9dbb61725b6e5ff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timer for saving.  <a href="#a4b0d8d34df96d9eb9dbb61725b6e5ff7">More...</a><br /></td></tr>
 <tr class="separator:a4b0d8d34df96d9eb9dbb61725b6e5ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0513f60a653bc8472e1be624ad284ec3"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="spMonitor__a__definitions_8ino.html#a0513f60a653bc8472e1be624ad284ec3">thisMonth</a> = 0</td></tr>
+<tr class="memdesc:a0513f60a653bc8472e1be624ad284ec3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timer for reset.  <a href="#a0513f60a653bc8472e1be624ad284ec3">More...</a><br /></td></tr>
+<tr class="separator:a0513f60a653bc8472e1be624ad284ec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34dc1ffbb166b7afbf402f717b871f77"><td class="memItemLeft" align="right" valign="top">Adafruit_TSL2561_Unified&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="spMonitor__a__definitions_8ino.html#a34dc1ffbb166b7afbf402f717b871f77">tsl</a> = Adafruit_TSL2561_Unified ( TSL2561_ADDR_FLOAT, 1 )</td></tr>
 <tr class="memdesc:a34dc1ffbb166b7afbf402f717b871f77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance of the Adafruit TSL2561 sensor.  <a href="#a34dc1ffbb166b7afbf402f717b871f77">More...</a><br /></td></tr>
 <tr class="separator:a34dc1ffbb166b7afbf402f717b871f77"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,10 +177,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Timer for reset. </p>
-<p>Constant value for activity LED port </p>
+<p>Constant value for activity LED port. </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00034">34</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00036">36</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -193,7 +195,7 @@ Variables</h2></td></tr>
 
 <p>iCal definition for CT 1 (solar) </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00050">50</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00052">52</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -209,7 +211,7 @@ Variables</h2></td></tr>
 
 <p>iCal definition for CT 2 (mains) </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00052">52</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00054">54</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -218,14 +220,14 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define measureFreq&#160;&#160;&#160;1000</td>
+          <td class="memname">#define measureFreq&#160;&#160;&#160;5000</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Constant value for measurement frequency in ms. </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00037">37</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00039">39</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -241,7 +243,7 @@ Variables</h2></td></tr>
 
 <p>Phase shift definition for voltage (solar) </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00054">54</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00056">56</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -257,7 +259,7 @@ Variables</h2></td></tr>
 
 <p>Phase shift definition for voltage (mains) </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00056">56</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00058">58</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -273,7 +275,7 @@ Variables</h2></td></tr>
 
 <p>vCal definition for voltage measurement </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00058">58</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00060">60</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -290,7 +292,7 @@ Variables</h2></td></tr>
 
 <p>Instance of client for incoming and outgoing HTTP requests. </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00074">74</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00076">76</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -306,7 +308,7 @@ Variables</h2></td></tr>
 
 <p>Counter for measurements per minute from sensors [0] = solar CT sensor [1] = mains CT sensor [2] = light sensor. </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00068">68</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00070">70</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -322,7 +324,7 @@ Variables</h2></td></tr>
 
 <p>Collector for average per minute light sensor. </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00044">44</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00046">46</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -338,7 +340,7 @@ Variables</h2></td></tr>
 
 <p>Collector for average power per minute CT sensors [0] = solar CT sensor [1] = mains CT sensor. </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00063">63</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00065">65</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -354,7 +356,7 @@ Variables</h2></td></tr>
 
 <p>Create an instance to emon for CT sensors. </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00047">47</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00049">49</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -405,7 +407,7 @@ Variables</h2></td></tr>
 
 <p>Currently used integration time for light sensor, 0 = 13.7ms, 1 = 101ms, 2 = 402ms. </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00042">42</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00044">44</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -421,7 +423,24 @@ Variables</h2></td></tr>
 
 <p>Listen to the default port 5555, the Yún webserver will forward there all the HTTP requests you send. </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00072">72</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00074">74</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0513f60a653bc8472e1be624ad284ec3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int thisMonth = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Timer for reset. </p>
+<p>Current month used for database </p>
+
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00033">33</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
@@ -437,14 +456,14 @@ Variables</h2></td></tr>
 
 <p>Instance of the Adafruit TSL2561 sensor. </p>
 
-<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00040">40</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
+<p>Definition at line <a class="el" href="spMonitor__a__definitions_8ino_source.html#l00042">42</a> of file <a class="el" href="spMonitor__a__definitions_8ino_source.html">spMonitor_a_definitions.ino</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 23 2015 10:16:26 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 1 2015 19:24:11 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

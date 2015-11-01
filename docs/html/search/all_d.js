@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['phpinfo_2ephp',['phpinfo.php',['../phpinfo_8php.html',1,'']]],
-  ['plotdata',['plotData',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ac346a8aa33751124140f01495a4be63e',1,'tk::giesecke::spmonitor::spMonitor']]],
-  ['pshift1',['pShift1',['../spMonitor__a__definitions_8ino.html#a336bfc9caff3ebac9940d6218510ef19',1,'spMonitor_a_definitions.ino']]],
-  ['pshift2',['pShift2',['../spMonitor__a__definitions_8ino.html#abf2c9c5cf46a8dacce30a9ed3c889671',1,'spMonitor_a_definitions.ino']]]
+  ['needlastmonth',['needLastMonth',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a98c674a590743232bc6bad7ba5352a40',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['networkio_2ephp',['NetworkIO.php',['../NetworkIO_8php.html',1,'']]],
+  ['notapproved_2ephp',['NotApproved.php',['../NotApproved_8php.html',1,'']]],
+  ['notifnames',['notifNames',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a6f68127f00033aaf780cec8c3dbeefc6',1,'tk.giesecke.spmonitor.spMonitor.notifNames()'],['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a0c3875762a37e1a8c9a611eb7df858b3',1,'tk.giesecke.spmonitor.SPwidgetConfigureActivity.notifNames()']]],
+  ['notifnamesel',['notifNameSel',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a0a99f9ba9ccf2ba3e3bc677f38ddc217',1,'tk.giesecke.spmonitor.spMonitor.notifNameSel()'],['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a2b863054f0fd19aaff02d0bd4b025cfd',1,'tk.giesecke.spmonitor.SPwidgetConfigureActivity.notifNameSel()']]],
+  ['notifuri',['notifUri',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a5805f46ae8138207ad6884ba3dfaf393',1,'tk.giesecke.spmonitor.spMonitor.notifUri()'],['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a1cc599e5053fbbf7f81d80a498311efe',1,'tk.giesecke.spmonitor.SPwidgetConfigureActivity.notifUri()']]],
+  ['notifurisel',['notifUriSel',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a3951ccd5c6d83f47b6921003068e3218',1,'tk.giesecke.spmonitor.spMonitor.notifUriSel()'],['../classtk_1_1giesecke_1_1spmonitor_1_1SPwidgetConfigureActivity.html#a04219f3b5716092c96d58ca8938481dc',1,'tk.giesecke.spmonitor.SPwidgetConfigureActivity.notifUriSel()']]]
 ];

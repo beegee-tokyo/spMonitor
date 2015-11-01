@@ -92,6 +92,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">tk.giesecke.spmonitor.DataBaseHelper Class Reference</div>  </div>
@@ -111,8 +112,8 @@ Inheritance diagram for tk.giesecke.spmonitor.DataBaseHelper:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2d9dc1e8401c64e6eb90b34ff3ec3c25"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#a2d9dc1e8401c64e6eb90b34ff3ec3c25">DataBaseHelper</a> (Context context)</td></tr>
-<tr class="separator:a2d9dc1e8401c64e6eb90b34ff3ec3c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaebdf186a9a37c4c471e653c69d7e47"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#acaebdf186a9a37c4c471e653c69d7e47">DataBaseHelper</a> (Context context, String dbName)</td></tr>
+<tr class="separator:acaebdf186a9a37c4c471e653c69d7e47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12177e49abc9fe696d2cf458ab2b1f52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#a12177e49abc9fe696d2cf458ab2b1f52">onCreate</a> (SQLiteDatabase db)</td></tr>
 <tr class="separator:a12177e49abc9fe696d2cf458ab2b1f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95dbce41f86a4d1fe8576cf80873e48c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#a95dbce41f86a4d1fe8576cf80873e48c">onUpgrade</a> (SQLiteDatabase db, int oldVersion, int newVersion)</td></tr>
@@ -130,14 +131,20 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a02dccbe10318258995f114bb2814a783"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get specific row values from the database, e.g.  <a href="#a02dccbe10318258995f114bb2814a783">More...</a><br /></td></tr>
 <tr class="separator:a02dccbe10318258995f114bb2814a783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0564fcf183fb6737b78ac818c74afe08"><td class="memItemLeft" align="right" valign="top">static Cursor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#a0564fcf183fb6737b78ac818c74afe08">getLastRow</a> (SQLiteDatabase db)</td></tr>
-<tr class="memdesc:a0564fcf183fb6737b78ac818c74afe08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data of day "dayNumber" and returns the data as a cursor.  <a href="#a0564fcf183fb6737b78ac818c74afe08">More...</a><br /></td></tr>
+<tr class="memdesc:a0564fcf183fb6737b78ac818c74afe08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data of the last database entry and returns the data as a cursor.  <a href="#a0564fcf183fb6737b78ac818c74afe08">More...</a><br /></td></tr>
 <tr class="separator:a0564fcf183fb6737b78ac818c74afe08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:aceba84dc459c8d1d7e220651ab3469cd"><td class="memItemLeft" align="right" valign="top">static final String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#aceba84dc459c8d1d7e220651ab3469cd">DATABASE_NAME</a> =&quot;spMonitor&quot;</td></tr>
+<tr class="memdesc:aceba84dc459c8d1d7e220651ab3469cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the database of current month.  <a href="#aceba84dc459c8d1d7e220651ab3469cd">More...</a><br /></td></tr>
+<tr class="separator:aceba84dc459c8d1d7e220651ab3469cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2dd86c5c24c95c350c65db3393e05c6"><td class="memItemLeft" align="right" valign="top">static final String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#ae2dd86c5c24c95c350c65db3393e05c6">DATABASE_NAME_LAST</a> =&quot;spLast&quot;</td></tr>
+<tr class="memdesc:ae2dd86c5c24c95c350c65db3393e05c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the database of.  <a href="#ae2dd86c5c24c95c350c65db3393e05c6">More...</a><br /></td></tr>
+<tr class="separator:ae2dd86c5c24c95c350c65db3393e05c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
-<tr class="memitem:aceba84dc459c8d1d7e220651ab3469cd"><td class="memItemLeft" align="right" valign="top">static final String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#aceba84dc459c8d1d7e220651ab3469cd">DATABASE_NAME</a> =&quot;spMonitor&quot;</td></tr>
-<tr class="memdesc:aceba84dc459c8d1d7e220651ab3469cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the database.  <a href="#aceba84dc459c8d1d7e220651ab3469cd">More...</a><br /></td></tr>
-<tr class="separator:aceba84dc459c8d1d7e220651ab3469cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40d8c149ecc08351374fd27eb000428d"><td class="memItemLeft" align="right" valign="top">static final String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtk_1_1giesecke_1_1spmonitor_1_1DataBaseHelper.html#a40d8c149ecc08351374fd27eb000428d">TABLE_NAME</a> = &quot;s&quot;</td></tr>
 <tr class="memdesc:a40d8c149ecc08351374fd27eb000428d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Name of the table.  <a href="#a40d8c149ecc08351374fd27eb000428d">More...</a><br /></td></tr>
 <tr class="separator:a40d8c149ecc08351374fd27eb000428d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,9 +155,9 @@ Static Private Attributes</h2></td></tr>
 <dl class="section author"><dt>Author</dt><dd>Bernd Giesecke </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>0.2 beta August 19, 2015. </dd></dl>
 
-<p>Definition at line <a class="el" href="DataBaseHelper_8java_source.html#l00020">20</a> of file <a class="el" href="DataBaseHelper_8java_source.html">DataBaseHelper.java</a>.</p>
+<p>Definition at line <a class="el" href="DataBaseHelper_8java_source.html#l00018">18</a> of file <a class="el" href="DataBaseHelper_8java_source.html">DataBaseHelper.java</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a2d9dc1e8401c64e6eb90b34ff3ec3c25"></a>
+<a class="anchor" id="acaebdf186a9a37c4c471e653c69d7e47"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -158,8 +165,18 @@ Static Private Attributes</h2></td></tr>
           <td class="memname">tk.giesecke.spmonitor.DataBaseHelper.DataBaseHelper </td>
           <td>(</td>
           <td class="paramtype">Context&#160;</td>
-          <td class="paramname"><em>context</em></td><td>)</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">String&#160;</td>
+          <td class="paramname"><em>dbName</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -272,7 +289,7 @@ Static Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>Cursor</code> dayStamp Cursor with all database entries matching with dayNumber Entry per minute is cursor[0] = year stamp cursor[1] = month stamp cursor[2] = day stamp cursor[3] = hour stamp cursor[4] = minute stamp cursor[5] = sensor power cursor[6] = consumed power cursor[7] = light value </dd></dl>
 
-<p>Definition at line <a class="el" href="DataBaseHelper_8java_source.html#l00101">101</a> of file <a class="el" href="DataBaseHelper_8java_source.html">DataBaseHelper.java</a>.</p>
+<p>Definition at line <a class="el" href="DataBaseHelper_8java_source.html#l00105">105</a> of file <a class="el" href="DataBaseHelper_8java_source.html">DataBaseHelper.java</a>.</p>
 
 </div>
 </div>
@@ -336,7 +353,7 @@ Static Private Attributes</h2></td></tr>
 <p>Limiter for row search</p>
 <p>Cursor holding the records of a day </p>
 
-<p>Definition at line <a class="el" href="DataBaseHelper_8java_source.html#l00134">134</a> of file <a class="el" href="DataBaseHelper_8java_source.html">DataBaseHelper.java</a>.</p>
+<p>Definition at line <a class="el" href="DataBaseHelper_8java_source.html#l00138">138</a> of file <a class="el" href="DataBaseHelper_8java_source.html">DataBaseHelper.java</a>.</p>
 
 </div>
 </div>
@@ -362,7 +379,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Read data of day "dayNumber" and returns the data as a cursor. </p>
+<p>Read data of the last database entry and returns the data as a cursor. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">db</td><td>pointer to database </td></tr>
@@ -371,7 +388,7 @@ Static Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>Cursor</code> dayStamp Cursor with the data of the last row Entry is cursor[0] = year stamp cursor[1] = month stamp cursor[2] = day stamp cursor[3] = hour stamp cursor[4] = minute stamp cursor[5] = sensor power cursor[6] = consumed power cursor[7] = light value </dd></dl>
 
-<p>Definition at line <a class="el" href="DataBaseHelper_8java_source.html#l00178">178</a> of file <a class="el" href="DataBaseHelper_8java_source.html">DataBaseHelper.java</a>.</p>
+<p>Definition at line <a class="el" href="DataBaseHelper_8java_source.html#l00182">182</a> of file <a class="el" href="DataBaseHelper_8java_source.html">DataBaseHelper.java</a>.</p>
 
 </div>
 </div>
@@ -441,12 +458,36 @@ Static Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Name of the database. </p>
+<p>Name of the database of current month. </p>
+
+<p>Definition at line <a class="el" href="DataBaseHelper_8java_source.html#l00021">21</a> of file <a class="el" href="DataBaseHelper_8java_source.html">DataBaseHelper.java</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae2dd86c5c24c95c350c65db3393e05c6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">final String tk.giesecke.spmonitor.DataBaseHelper.DATABASE_NAME_LAST =&quot;spLast&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Name of the database of. </p>
 
 <p>Definition at line <a class="el" href="DataBaseHelper_8java_source.html#l00023">23</a> of file <a class="el" href="DataBaseHelper_8java_source.html">DataBaseHelper.java</a>.</p>
 
@@ -482,7 +523,7 @@ Static Private Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 23 2015 10:16:26 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Nov 1 2015 19:24:12 for spMonitor by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

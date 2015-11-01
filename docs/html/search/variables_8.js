@@ -2,6 +2,8 @@ var searchData=
 [
   ['lastconspowermin',['lastConsPowerMin',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a616cb2e330f9b30c4dfa62ae77031717',1,'tk::giesecke::spmonitor::spMonitor']]],
   ['lastlightvalmin',['lastLightValMin',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#ae732ba03253caab9c08b2101a69fc858',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lastlogdates',['lastLogDates',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a244177574cd43bdccdd14e62c535c492',1,'tk::giesecke::spmonitor::spMonitor']]],
+  ['lastlogdatesindex',['lastLogDatesIndex',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a3dade34f573364120dba471f35e35f28',1,'tk::giesecke::spmonitor::spMonitor']]],
   ['lastmeasure',['lastMeasure',['../spMonitor__a__definitions_8ino.html#a2ac22542c1cd2609dba924781699b8b4',1,'spMonitor_a_definitions.ino']]],
   ['lastsave',['lastSave',['../spMonitor__a__definitions_8ino.html#a4b0d8d34df96d9eb9dbb61725b6e5ff7',1,'spMonitor_a_definitions.ino']]],
   ['lastsolarpowermin',['lastSolarPowerMin',['../classtk_1_1giesecke_1_1spmonitor_1_1spMonitor.html#a52b9b13ca98be61339aa8f681267d1df',1,'tk::giesecke::spmonitor::spMonitor']]],
