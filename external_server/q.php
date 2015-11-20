@@ -3,10 +3,10 @@
  * Connect to SQLite database returning results as JSON
  * START SQLite Section
  */
-$username = "beegee_admin";
-$password = "teresa1963";
+$username = "giesecke_admin";
+$password = "Bernabe@1700";
  
-$dbh = new PDO('mysql:host=localhost;dbname=beegee_sp',  $username, $password)or die("cannot open database");
+$dbh = new PDO('mysql:host=localhost;dbname=giesecke_sp',  $username, $password)or die("cannot open database");
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Get year limiter

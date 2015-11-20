@@ -998,7 +998,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 					isWAN= false;
 					mPrefs.edit().putBoolean("access_type",isWAN).apply();
 				} else {
-					urlString = "http://desire.giesecke.tk/s/l.php";
+					urlString = "http://www.spmonitor.giesecke.tk/l.php";
 				}
 			}
 			if (BuildConfig.DEBUG) Log.d("spMonitor","callArduino = " + urlString);

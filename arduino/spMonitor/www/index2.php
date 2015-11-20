@@ -124,6 +124,8 @@
                	$consSum = (double) 0.0;
                	$solarSumMax = (double) 0.0;
                	$consSumMax = (double) 0.0;
+               	$solarNow = (double) 0.0;
+               	$consNow = (double) 0.0;
 				// Define your SQL statement to get time stamps
                 $query = "SELECT * FROM s WHERE d LIKE '" . substr($daySelected,0,8) . "%'";
 				$sth = $dbh->query($query);
@@ -144,6 +146,8 @@
                 	if ($consVal > $consSumMax) {
                 		$consSumMax = $consVal;
                 	}
+                	$solarNow = $solarVal;
+                	$consNow = $consVal;
                 	$index++;
 				}
 				if ($index == 0) {
@@ -220,6 +224,8 @@
 					echo '<tr><td bgcolor="#DDDDDD", align="center"><font color="#FF8C00">'.round($solarSum,3).'kWh</font></td><td bgcolor="#DDDDDD", align="center"><font color="#00008B">'.round($consSum,3).'kWh</font></td></tr>';
 					echo '<tr><td bgcolor="#DDDDDD", align="center"><font color="#FF8C00"><span style="font-weight:bold">Solar peak</span></font></td><td bgcolor="#DDDDDD", align="center"><font color="#00008B"><span style="font-weight:bold">Consumption peak</span></font></td></tr>';
 					echo '<tr><td bgcolor="#DDDDDD", align="center"><font color="#FF8C00">'.round($solarSumMax).'W</font></td><td bgcolor="#DDDDDD", align="center"><font color="#00008B">'.round($consSumMax).'W</font></td></tr>';
+					echo '<tr><td bgcolor="#DDDDDD", align="center"><font color="#FF8C00"><span style="font-weight:bold">Solar now</span></font></td><td bgcolor="#DDDDDD", align="center"><font color="#00008B"><span style="font-weight:bold">Consumption now</span></font></td></tr>';
+					echo '<tr><td bgcolor="#DDDDDD", align="center"><font color="#FF8C00">'.round($solarNow).'W</font></td><td bgcolor="#DDDDDD", align="center"><font color="#00008B">'.round($consNow).'W</font></td></tr>';
 					echo '</table>';
 				}
 			}

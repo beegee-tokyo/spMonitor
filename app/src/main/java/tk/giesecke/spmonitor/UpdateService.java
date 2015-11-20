@@ -82,7 +82,7 @@ public class UpdateService extends IntentService {
 
 				if ((connSSID == null) || (!connSSID.equalsIgnoreCase(mPrefs.getString("SSID","none")))) {
 					isWAN = true;
-					urlString = "http://www.desire.giesecke.tk/s/l.php";
+					urlString = "http://www.spmonitor.giesecke.tk/l.php";
 				}
 
 				/** Consumption received from spMonitor device as minute average */
