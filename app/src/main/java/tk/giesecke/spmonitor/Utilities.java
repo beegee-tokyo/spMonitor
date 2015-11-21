@@ -431,11 +431,6 @@ class Utilities {
 		int alarmTime = 60000;
 
 		// Stop the update
-		/** Intent to stop scheduled update */
-		notifIntent = new Intent(context, UpdateService.class);
-		/** Pending intent for broadcast message to update */
-		//pendingIntent = PendingIntent.getBroadcast(
-		//		context, 3001, notifIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		pendingIntent = PendingIntent.getService(context, 3001,
 				new Intent(context, UpdateService.class),PendingIntent.FLAG_CANCEL_CURRENT);
 

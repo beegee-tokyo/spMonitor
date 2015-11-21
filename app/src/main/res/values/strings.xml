@@ -36,7 +36,9 @@
     <string name="fast_mode_on">5s update activated</string>
     <string name="fast_mode_off">60s update activated</string>
     <string name="filesSynced">Sync successful</string>
-    <string name="filesSyncFail">Sync failed</string>
+    <string name="filesSyncFail">Sync failed - JSON error</string>
+    <string name="filesSyncFail1">Sync failed - DB locked</string>
+    <string name="filesSyncFinished">DB refresh finished</string>
     <string name="tv_widget_conf_txt">Select widget size</string>
     <string name="rb_large_txt">Large text</string>
     <string name="rb_small_txt">Small text</string>

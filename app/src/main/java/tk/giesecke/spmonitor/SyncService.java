@@ -43,6 +43,13 @@ public class SyncService extends IntentService {
 
 		if (intent != null) {
 
+			boolean startFromUI = false;
+			if (intent.hasExtra("START_FROM_UI")) {
+				if (BuildConfig.DEBUG) Log.d("spMsync","Call from UI");
+				startFromUI = true;
+			} else {
+				if (BuildConfig.DEBUG) Log.d("spMsync","Call from timer");
+			}
 			/** Context of application */
 			Context intentContext = getApplicationContext();
 
@@ -119,6 +126,11 @@ public class SyncService extends IntentService {
 					}
 				}
 			}
+			if (startFromUI) {
+				Intent broadcastIntent = new Intent();
+				broadcastIntent.setAction(spMonitor.SyncServiceResponse.ACTION_RESP);
+				broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+				sendBroadcast(broadcastIntent);			}
 		}
 	}
 
@@ -248,7 +260,9 @@ public class SyncService extends IntentService {
 					}
 					dataBase.setTransactionSuccessful();
 					dataBase.endTransaction();
+					if (BuildConfig.DEBUG) Log.d("spMsync","Sync successfull for " + dbName);
 				} catch (JSONException e) {
+					if (BuildConfig.DEBUG) Log.d("spMsync","Sync JSON error for " + dbName + resultData);
 					dataBase.endTransaction();
 					dataBase.close();
 					dbHelper.close();

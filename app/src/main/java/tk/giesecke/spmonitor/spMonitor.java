@@ -5,12 +5,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -216,6 +219,9 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	/** Selected alarm uri */
 	private String notifUriSel = "";
 
+	/** Receiver for result from SyncService */
+	private SyncServiceResponse syncServiceReceiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -236,6 +242,11 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
+
+		IntentFilter filter = new IntentFilter(SyncServiceResponse.ACTION_RESP);
+		filter.addCategory(Intent.CATEGORY_DEFAULT);
+		syncServiceReceiver = new SyncServiceResponse();
+		registerReceiver(syncServiceReceiver, filter);
 
 		/** For debug only */
 		/*
@@ -471,6 +482,8 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	public void onPause() {
 		super.onPause();
 		stopTimer();
+		unregisterReceiver(syncServiceReceiver);
+
 	}
 
 	@Override
@@ -662,7 +675,10 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						showingLog = false;
 						if (!isWAN) {
 							Utilities.startRefreshAnim();
-							new syncDBtoDB().execute(dbNamesList[0]);
+							//new syncDBtoDB().execute(dbNamesList[0]);
+							Intent msgIntent = new Intent(this, SyncService.class);
+							msgIntent.putExtra("START_FROM_UI", "true");
+							startService(msgIntent);
 						}
 
 						/** Pointer to text views showing the consumed / produced energy */
@@ -701,7 +717,10 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			case R.id.bt_sync:
 				if (!showingLog && !isWAN) {
 					Utilities.startRefreshAnim();
-					new syncDBtoDB().execute(dbNamesList[0]);
+					//new syncDBtoDB().execute(dbNamesList[0]);
+					Intent msgIntent = new Intent(this, SyncService.class);
+					msgIntent.putExtra("START_FROM_UI", "true");
+					startService(msgIntent);
 				}
 				break;
 			case R.id.cb_solar:
@@ -1196,28 +1215,33 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 							}
 							/** Instance of data base */
 							dataBase = dbHelper.getWritableDatabase();
-
 							// Get received data into local database
 							/** Data string for insert into database */
 							String record = "";
-							dataBase.beginTransactionNonExclusive();
-							for (int i=0; i<jsonFromDevice.length(); i++) {
-								// skip first data record from device if we are just updating the database
-								if (i == 0 && !splitAccess) i++;
-								/** JSONObject with a single record */
-								JSONObject jsonRecord = jsonFromDevice.getJSONObject(i);
-								record = jsonRecord.getString("d");
-								record = record.replace("-",",");
-								record += ","+jsonRecord.getString("l");
-								record += ","+jsonRecord.getString("s");
-								record += ","+jsonRecord.getString("c");
-								if (BuildConfig.DEBUG && i <= 1) Log.d("spMonitor","DB insert: " + record);
-								DataBaseHelper.addDay(dataBase, record);
+							try {
+								dataBase.beginTransactionNonExclusive();
+								for (int i=0; i<jsonFromDevice.length(); i++) {
+									// skip first data record from device if we are just updating the database
+									if (i == 0 && !splitAccess) i++;
+									/** JSONObject with a single record */
+									JSONObject jsonRecord = jsonFromDevice.getJSONObject(i);
+									record = jsonRecord.getString("d");
+									record = record.replace("-",",");
+									record += ","+jsonRecord.getString("l");
+									record += ","+jsonRecord.getString("s");
+									record += ","+jsonRecord.getString("c");
+									if (BuildConfig.DEBUG && i <= 1) Log.d("spMonitor","DB insert: " + record);
+									DataBaseHelper.addDay(dataBase, record);
+								}
+								dataBase.setTransactionSuccessful();
+								dataBase.endTransaction();
+								if (BuildConfig.DEBUG) Log.d("spMonitor","DB insert: " + record);
+								result.taskResult = result.syncMonth + " " + getResources().getString(R.string.filesSynced);
+							} catch (SQLiteDatabaseLockedException e) {
+								result.taskResult = result.syncMonth + " " + getResources().getString(R.string.filesSyncFail1);
+								dataBase.close();
+								dbHelper.close();
 							}
-							dataBase.setTransactionSuccessful();
-							dataBase.endTransaction();
-							if (BuildConfig.DEBUG) Log.d("spMonitor","DB insert: " + record);
-							result.taskResult = result.syncMonth + " " + getResources().getString(R.string.filesSynced);
 						} catch (JSONException e) {
 							result.taskResult = result.syncMonth + " " + getResources().getString(R.string.filesSyncFail);
 							//dataBase.endTransaction();
@@ -2051,4 +2075,18 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			return -getHeight();
 		}
 	}
-}
+
+	/**
+	 * Stop refresh animation after SyncService has finished
+	 *
+	 */
+	public class SyncServiceResponse extends BroadcastReceiver {
+		public static final String ACTION_RESP =
+				"SYNC_FINISHED";
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Utilities.stopRefreshAnim();
+			resultTextView.setText(getResources().getString(R.string.filesSyncFinished));
+		}
+	}}
