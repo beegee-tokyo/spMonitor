@@ -32,7 +32,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
@@ -344,6 +346,14 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		dbHelper.close();
 
 		if (!deviceIP.equalsIgnoreCase(getResources().getString(R.string.no_device_ip)) && !isWAN) {
+			/** Buttons to be enabled when on wifi */
+			Button uiButton = (Button) findViewById(R.id.bt_sync);
+			uiButton.setEnabled(true);
+			uiButton.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+			uiButton = (Button) findViewById(R.id.bt_status);
+			uiButton.setEnabled(true);
+			uiButton.setTextColor(getResources().getColor(android.R.color.holo_blue_light));
+
 			Utilities.startRefreshAnim();
 			String syncedMonth = mPrefs.getString("synced_month", "");
 			if (!syncedMonth.equalsIgnoreCase(dbNamesList[0])) {
