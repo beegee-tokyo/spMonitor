@@ -2098,5 +2098,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		public void onReceive(Context context, Intent intent) {
 			Utilities.stopRefreshAnim();
 			resultTextView.setText(getResources().getString(R.string.filesSyncFinished));
+			initChart(true);
 		}
 	}}

@@ -1,5 +1,6 @@
 <?php
 	include("fusioncharts.php");
+	include ("utility.php");
 ?>
 <html>
 	<head>
@@ -21,9 +22,6 @@
 		<?php
 			$daySelected = $_GET['day'];
 			$plotType = $_GET['type'];
-			$username = "giesecke_admin";
-			$password = "Bernabe@1700";
-
 			/*
 			 * Connect to SQLite database returning results as JSON
 			 * START SQLite Section
@@ -133,7 +131,7 @@
 				$solarNow = (double) 0.0;
 				$consNow = (double) 0.0;
 				// Define your SQL statement to get time stamps
-                $query = "SELECT * FROM s WHERE d LIKE '" . $daySelected . "%'";
+                $query = "SELECT * FROM s WHERE d LIKE '" . $daySelected . "%' ORDER BY d";
 				$sth = $dbh->query($query);
 				$index = 0;
 

@@ -116,7 +116,7 @@ void saveData () {
   dataSave.runShellCommand ( dataString );
 
   /* Send current data to mySQL database */
-  dataString = "curl \"http://spmonitor.giesecke.tk/i.php?d=";
+  dataString = "curl \"http://sp.giesecke.tk/i.php?d=";
   dataString += timeString + "&s=";
   dataString += String ( solar );
   dataString += "&c=";

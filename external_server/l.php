@@ -3,8 +3,7 @@
  * Connect to SQLite database returning results as JSON
  * START SQLite Section
  */
-$username = "giesecke_admin";
-$password = "Bernabe@1700";
+include ("utility.php");
 
 $dbh = new PDO('mysql:host=localhost;dbname=giesecke_sp',  $username, $password)or die("cannot open database");
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
