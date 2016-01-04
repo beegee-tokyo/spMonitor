@@ -7,6 +7,8 @@ Uses current sensor to measure output of solar panels.<br />
 Optional additional measurement of luminosity.<br />
 Optional additional measurement of in/output to electricity grid<br />
 
+## More details about the project:
+-- http://desire.giesecke.tk/solar-panel-monitoring-part-1-background/<br />
 ### Arduino part:
 #### Hardware:
 Arduino Yun<br />
