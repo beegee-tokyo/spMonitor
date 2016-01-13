@@ -19,7 +19,7 @@ public class AutoStart extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-			// Start service to register BroadcastRegisterService
+			// Start service to register background services
 			context.startService(new Intent(context, BroadcastRegisterService.class));
 		}
 	}

@@ -39,7 +39,6 @@ public class SyncService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (BuildConfig.DEBUG) Log.d("spMsync","started");
-		//if (BuildConfig.DEBUG) Toast.makeText(this, "spMonitor SyncService started", Toast.LENGTH_LONG).show();
 
 		if (intent != null) {
 
@@ -127,10 +126,17 @@ public class SyncService extends IntentService {
 				}
 			}
 			if (startFromUI) {
-				Intent broadcastIntent = new Intent();
-				broadcastIntent.setAction(spMonitor.SyncServiceResponse.ACTION_RESP);
-				broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-				sendBroadcast(broadcastIntent);			}
+				if (spMonitor.syncServiceReceiver != null) {
+					Intent broadcastIntent = new Intent();
+					broadcastIntent.setAction(spMonitor.DataServiceResponse.ACTION_RESP);
+					broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+					try {
+						sendBroadcast(broadcastIntent);
+					} catch (RuntimeException e){
+						if (BuildConfig.DEBUG) Log.d("spMsync","SendBroadCast to UI failed: "+e.toString());
+					}
+				}
+			}
 		}
 	}
 
@@ -260,7 +266,7 @@ public class SyncService extends IntentService {
 					}
 					dataBase.setTransactionSuccessful();
 					dataBase.endTransaction();
-					if (BuildConfig.DEBUG) Log.d("spMsync","Sync successfull for " + dbName);
+					if (BuildConfig.DEBUG) Log.d("spMsync","Sync successful for " + dbName);
 				} catch (JSONException e) {
 					if (BuildConfig.DEBUG) Log.d("spMsync","Sync JSON error for " + dbName + resultData);
 					dataBase.endTransaction();

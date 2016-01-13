@@ -96,14 +96,6 @@ void saveData () {
 
   dataSave.runShellCommand ( dataString );
 
-//  dataString = "sqlite3 /mnt/sda1/s.db 'insert into s (d,s,c,l) Values (\""
-//               + timeString + "\","
-//               + String ( solar ) + ","
-//               + String ( cons ) + ","
-//               + String ( light ) + ");' &";
-
-//  dataSave.runShellCommand ( dataString );
-
   wdt_reset();
   /* Send current data to emonCMS */
   dataString = "curl \"http://emoncms.org/api/post?apikey=e778b92fc1f06d7e94a94bcc2a969664&json={s:";

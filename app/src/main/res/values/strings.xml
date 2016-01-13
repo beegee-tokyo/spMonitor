@@ -33,8 +33,6 @@
     <string name="cb_light_txt">Light</string>
     <string name="bt_sync_txt">Refresh</string>
     <string name="tv_result">Info</string>
-    <string name="fast_mode_on">5s update activated</string>
-    <string name="fast_mode_off">60s update activated</string>
     <string name="filesSynced">Sync successful</string>
     <string name="filesSyncFail">Sync failed - JSON error</string>
     <string name="filesSyncFail1">Sync failed - DB locked</string>

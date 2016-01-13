@@ -20,7 +20,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -32,9 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
@@ -68,8 +65,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 /** spMonitor - Main UI activity
@@ -87,12 +82,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	public static Context appContext;
 	/** The view of the main UI */
 	public static View appView;
-	/** The timer to refresh the UI */
-	private Timer timer;
-	/** Handler for timer task */
-	private final Handler handler = new Handler();
-	/** Flag for communication active */
-	public static boolean isCommunicating = false;
 	/** Flag for last month update request */
 	private static boolean needLastMonth = false;
 
@@ -112,7 +101,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	/** Pointer to text view for results */
 	private static TextView resultTextView;
 	/** Flag if UI auto refresh is on or off */
-	private boolean autoRefreshOn = true;
+	private static boolean autoRefreshOn = true;
 
 	/** MPAndroid chart view for the current chart */
 	private static LineChart lineChart;
@@ -204,8 +193,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	private static boolean showCons = true;
 	/** Flag for showing light data */
 	private static boolean showLight = false;
-	/** Flag for calibration mode. Update every 5 secs instead of 60 seconds */
-	private static boolean calModeOn = false;
 
 	/** Instance of dialog */
 	private Dialog menuDialog;
@@ -222,7 +209,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	private String notifUriSel = "";
 
 	/** Receiver for result from SyncService */
-	private SyncServiceResponse syncServiceReceiver;
+	public static DataServiceResponse syncServiceReceiver = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -245,57 +232,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			StrictMode.setThreadPolicy(policy);
 		}
 
-		IntentFilter filter = new IntentFilter(SyncServiceResponse.ACTION_RESP);
-		filter.addCategory(Intent.CATEGORY_DEFAULT);
-		syncServiceReceiver = new SyncServiceResponse();
-		registerReceiver(syncServiceReceiver, filter);
-
-		/** For debug only */
-		/*
-		RelativeLayout currentLayout = (RelativeLayout) findViewById(R.id.main);
-		if (currentLayout.getTag() != null) {
-			String currentDensity = (String) currentLayout.getTag();
-			switch (currentDensity) {
-				case "1":
-					Toast.makeText(this, "Portrait simple", Toast.LENGTH_LONG).show();
-					break;
-				case "2":
-					Toast.makeText(this, "Portrait graph", Toast.LENGTH_LONG).show();
-					break;
-				case "3":
-					Toast.makeText(this, "Land simple", Toast.LENGTH_LONG).show();
-					break;
-				case "4":
-					Toast.makeText(this, "Land graph", Toast.LENGTH_LONG).show();
-					break;
-				case "5":
-					Toast.makeText(this, "Portrait simple large", Toast.LENGTH_LONG).show();
-					break;
-				case "6":
-					Toast.makeText(this, "Portrait graph large", Toast.LENGTH_LONG).show();
-					break;
-				case "7":
-					Toast.makeText(this, "Land simple large", Toast.LENGTH_LONG).show();
-					break;
-				case "8":
-					Toast.makeText(this, "Land graph large", Toast.LENGTH_LONG).show();
-					break;
-				case "9":
-					Toast.makeText(this, "Portrait simple small", Toast.LENGTH_LONG).show();
-					break;
-				case "10":
-					Toast.makeText(this, "Portrait graph small", Toast.LENGTH_LONG).show();
-					break;
-				case "11":
-					Toast.makeText(this, "Land simple small", Toast.LENGTH_LONG).show();
-					break;
-				case "12":
-					Toast.makeText(this, "Land graph small", Toast.LENGTH_LONG).show();
-					break;
-			}
-		}
-		*/
-
 		appContext = this;
 		appView = getWindow().getDecorView().findViewById(android.R.id.content);
 
@@ -313,6 +249,28 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		} else {
 			if (BuildConfig.DEBUG) Log.d("spMonitor","EventReceiver already registered");
 		}
+
+		/** Pointer to text views showing the consumed / produced energy */
+		TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
+		energyText.setVisibility(View.INVISIBLE);
+		energyText = (TextView) findViewById(R.id.tv_solar_energy);
+		energyText.setVisibility(View.INVISIBLE);
+
+		/** Button to stop/start continuous UI refresh */
+		Button btStop = (Button) findViewById(R.id.bt_stop);
+		if (showingLog) {
+			btStop.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+			btStop.setText(getResources().getString(R.string.start));
+		}
+
+		/** Button to close app when long click => daydream) */
+		Button btClose = (Button) findViewById(R.id.bt_close);
+		btClose.setOnLongClickListener(new View.OnLongClickListener() {
+			public boolean onLongClick(View v) {
+				Utilities.startDayDreaming(appContext);
+				return true;
+			}
+		});
 
 		notifUriSel = "android.resource://"
 				+ this.getPackageName() + "/"
@@ -373,10 +331,11 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				dataBase.close();
 				dbHelper.close();
 			}
-			isCommunicating = true;
-			Utilities.startStopUpdates(appContext,false);
+//			Utilities.startStopUpdates(appContext,false);
 
+			// Get missing values from spMonitor device
 			new syncDBtoDB().execute(dbNamesList[0]);
+
 			// Check if we have already synced the last month
 			/** Instance of DataBaseHelper */
 			dbHelper = new DataBaseHelper(appContext, DataBaseHelper.DATABASE_NAME_LAST);
@@ -387,7 +346,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			if (dbCursor != null) {
 				if (dbCursor.getCount() == 0) { // local database is empty, need to sync all data
 					needLastMonth = true;
-//					new syncDBtoDB().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, dbNamesList[1]);
 				} else { // fill last log file array
 					lastLogDates.clear();
 					/** List with years in the database */
@@ -443,58 +401,28 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				resultTextView.setText(getString(R.string.err_no_device));
 			}
 		}
-
-		/** Pointer to text views showing the consumed / produced energy */
-		TextView energyText = (TextView) findViewById(R.id.tv_cons_energy);
-		energyText.setVisibility(View.INVISIBLE);
-		energyText = (TextView) findViewById(R.id.tv_solar_energy);
-		energyText.setVisibility(View.INVISIBLE);
-
-		/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
-		Button btStop = (Button) findViewById(R.id.bt_stop);
-		if (showingLog) {
-			btStop.setTextColor(getResources().getColor(android.R.color.holo_green_light));
-			btStop.setText(getResources().getString(R.string.start));
-		}
-		btStop.setOnLongClickListener(new View.OnLongClickListener() {
-			public boolean onLongClick(View v) {
-				if (!isWAN) {
-					calModeOn = !calModeOn;
-					if (calModeOn) {
-						resultTextView.setText(getString(R.string.fast_mode_on));
-						stopTimer();
-						startTimer(5000);
-					} else {
-						resultTextView.setText(getString(R.string.fast_mode_off));
-						stopTimer();
-						startTimer(60000);
-					}
-					/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
-					Button stopButton = (Button) findViewById(R.id.bt_stop);
-					stopButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-					stopButton.setText(getResources().getString(R.string.stop));
-					autoRefreshOn = true;
-				}
-				return true;
-			}
-		});
-		/** Button to close app when long click => daydream) */
-		Button btClose = (Button) findViewById(R.id.bt_close);
-		btClose.setOnLongClickListener(new View.OnLongClickListener() {
-			public boolean onLongClick(View v) {
-				Utilities.startDayDreaming(appContext);
-				return true;
-			}
-		});
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		stopTimer();
 		unregisterReceiver(syncServiceReceiver);
-
+		syncServiceReceiver = null;
 	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		IntentFilter filter = new IntentFilter(DataServiceResponse.ACTION_RESP);
+		filter.addCategory(Intent.CATEGORY_DEFAULT);
+		syncServiceReceiver = new DataServiceResponse();
+		registerReceiver(syncServiceReceiver, filter);
+
+		// Initiate first UI update
+		Intent serviceIntent = new Intent(this, UpdateService.class);
+		serviceIntent.putExtra("InitialCall","InitialCall");
+		startService(serviceIntent);	}
 
 	@Override
 	public void onClick(View v) {
@@ -505,8 +433,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		Button prevButton  = (Button) findViewById(R.id.bt_prevLog);
 		/** Button to go to next log */
 		Button nextButton  = (Button) findViewById(R.id.bt_nextLog);
-
-		if (isCommunicating) return;
 
 		switch (v.getId()) {
 			case R.id.bt_prevLog:
@@ -527,7 +453,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
 						stopButton.setText(getResources().getString(R.string.start));
 						autoRefreshOn = false;
-						stopTimer();
 						showingLog = true;
 						// Get data from data base
 						/** String list with requested date info */
@@ -546,13 +471,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						dataBase.close();
 						dbHelper.close();
 
-					/*
-					if (logDatesIndex == 0) {
-						prevButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-					} else {
-						prevButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
-					}
-					*/
 						nextButton.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
 						Utilities.stopRefreshAnim();
 					}
@@ -565,7 +483,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
 						stopButton.setText(getResources().getString(R.string.start));
 						autoRefreshOn = false;
-						stopTimer();
 						showingLog = true;
 						// Get data from data base
 						/** String list with requested date info */
@@ -612,7 +529,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
 						stopButton.setText(getResources().getString(R.string.start));
 						autoRefreshOn = false;
-						stopTimer();
 						showingLog = true;
 						// Get data from data base
 						/** String list with requested date info */
@@ -648,7 +564,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 						stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
 						stopButton.setText(getResources().getString(R.string.start));
 						autoRefreshOn = false;
-						stopTimer();
 						showingLog = true;
 						// Get data from data base
 						/** String list with requested date info */
@@ -674,7 +589,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				break;
 			case R.id.bt_stop:
 				if (autoRefreshOn) {
-					stopTimer();
 					/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
 					Button stopButton = (Button) findViewById(R.id.bt_stop);
 					stopButton.setTextColor(getResources().getColor(android.R.color.holo_green_light));
@@ -699,14 +613,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 
 						logDatesIndex = logDates.size()-1;
 						nextButton.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-					} else {
-						if (isWAN) { // When on mobile connection update only every 5 minutes
-							startTimer(300000);
-						} else if (calModeOn) { // When in calibration mode, update every 5 seconds
-							startTimer(5000);
-						} else { // Normal WiFi mode, update every 1 minute
-							startTimer(60000);
-						}
 					}
 					/** Button to stop/start continuous UI refresh and switch between 5s and 60s refresh rate */
 					Button stopButton = (Button) findViewById(R.id.bt_stop);
@@ -716,18 +622,20 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				}
 				break;
 			case R.id.bt_status:
+				// TODO Maybe this can be removed now complete
 				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
 				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
 				url = deviceIP + "e";
 				break;
 			case R.id.bt_close:
-				stopTimer();
 				finish();
 				break;
 			case R.id.bt_sync:
+				// TODO change to refresh the database complete
+				// => delete current local databases
+				// => read all data for this and last month again
 				if (!showingLog && !isWAN) {
 					Utilities.startRefreshAnim();
-					//new syncDBtoDB().execute(dbNamesList[0]);
 					Intent msgIntent = new Intent(this, SyncService.class);
 					msgIntent.putExtra("START_FROM_UI", "true");
 					startService(msgIntent);
@@ -786,6 +694,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				lineChart.invalidate();
 				break;
 			case R.id.bt_backup:
+				// TODO just call backupDataBase directly for backup
 				client.setConnectTimeout(5, TimeUnit.MINUTES); // connect timeout
 				client.setReadTimeout(5, TimeUnit.MINUTES);    // socket timeout
 				url = deviceIP + "b";
@@ -901,10 +810,10 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 					NotificationManager nMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 					nMgr.cancel(1);
 					mPrefs.edit().putBoolean("notif",false).apply();
-					Utilities.startStopUpdates(this, false);
+//					Utilities.startStopUpdates(this, false);
 				} else {
 					mPrefs.edit().putBoolean("notif",true).apply();
-					Utilities.startStopUpdates(this, true);
+//					Utilities.startStopUpdates(this, true);
 				}
 				menuDialog.dismiss();
 				break;
@@ -1071,15 +980,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 
 		protected void onPostExecute(String result) {
 			updateUI(result);
-			if (timer == null) {
-				if (isWAN) { // When on mobile connection update only every 5 minutes
-					startTimer(300000);
-				} else if (calModeOn) { // When in calibration mode, update every 5 seconds
-					startTimer(5000);
-				} else { // Normal WiFi mode, update every 1 minute
-					startTimer(60000);
-				}
-			}
 		}
 	}
 
@@ -1154,7 +1054,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 								.substring(String.valueOf(lastMinute).length()); // add minute
 						urlString += "&get=all";
 					} else { // local database is empty, need to sync all data
-						//urlString += "?date=" + result.syncMonth + "&get=all"; // get all of this month
 						splitAccess = true;
 						urlString += "?date=" + result.syncMonth;
 					}
@@ -1271,9 +1170,9 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 			if (needLastMonth) {
 				new syncDBtoDB().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, dbNamesList[1]);
 				needLastMonth = false;
-			} else {
-				isCommunicating = false;
-				Utilities.startStopUpdates(appContext,true);
+//			} else {
+//				isCommunicating = false;
+//				Utilities.startStopUpdates(appContext,true);
 			}
 		}
 	}
@@ -1286,6 +1185,8 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		@Override
 		protected String doInBackground(String... params) {
 
+			// TODO need to change to get all existing databases from the spMonitor device
+			// and backup all of them
 			/** URL to be called */
 			String urlString = params[0]; // URL to call
 
@@ -1355,7 +1256,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 		}
 
 		protected void onPostExecute(String result) {
-			updateUI(result);
 		}
 	}
 
@@ -1488,7 +1388,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 									}
 								} else {
 									/** JSON object containing result from server */
-									JSONObject jsonResult = new JSONObject(value.substring(1,value.length()-1));
+									JSONObject jsonResult = new JSONObject(value.substring(1, value.length() - 1));
 									try {
 										solarPowerMin = solarPowerSec = Float.parseFloat(jsonResult.getString("s"));
 										lastSolarPowerMin = solarPowerMin;
@@ -1502,10 +1402,10 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 										consPowerMin = consPowerSec = lastConsPowerMin;
 									}
 									try {
-										lightValMin = lightValSec =Long.parseLong(jsonResult.getString("l"));
+										lightValMin = lightValSec = Long.parseLong(jsonResult.getString("l"));
 										lastLightValMin = lightValMin;
 									} catch (Exception excError) {
-										lightValMin = lightValSec =lastLightValMin;
+										lightValMin = lightValSec = lastLightValMin;
 									}
 									result = "WAN! S="
 											+ String.valueOf(solarPowerMin) + "W C= "
@@ -1515,66 +1415,35 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 
 								/** Double for the result of solar current and consumption used at 1min updates */
 								double resultPowerMin = solarPowerMin + consPowerMin;
-								/** Double for the result of solar current and consumption used at 5sec updates */
-								double resultPowerSec = solarPowerSec + consPowerSec;
 
 								valueFields = (TextView) findViewById(R.id.tv_solar_val);
 								/** String for display */
 								String displayTxt;
-								if (calModeOn) {
-									displayTxt = String.format("%.0f", solarPowerSec) + "W";
-									valueFields.setText(displayTxt);
-									valueFields = (TextView) findViewById(R.id.tv_cons_val);
-									displayTxt = String.format("%.0f", resultPowerSec) + "W";
-									valueFields.setText(displayTxt);
-								} else {
-									displayTxt = String.format("%.0f", solarPowerMin) + "W";
-									valueFields.setText(displayTxt);
-									valueFields = (TextView) findViewById(R.id.tv_cons_val);
-									displayTxt = String.format("%.0f", resultPowerMin) + "W";
-									valueFields.setText(displayTxt);
-								}
+								displayTxt = String.format("%.0f", solarPowerMin) + "W";
+								valueFields.setText(displayTxt);
+								valueFields = (TextView) findViewById(R.id.tv_cons_val);
+								displayTxt = String.format("%.0f", resultPowerMin) + "W";
+								valueFields.setText(displayTxt);
 								resultTextView.setText(result);
 
 								valueFields = (TextView) findViewById(R.id.tv_result_txt);
-								if (calModeOn) {
-									if (consPowerSec > 0.0d) {
-										valueFields.setText(getString(R.string.tv_result_txt_im));
-										valueFields = (TextView) findViewById(R.id.tv_result_val);
-										valueFields.setTextColor(getResources()
-												.getColor(android.R.color.holo_red_light));
-									} else {
-										valueFields.setText(getString(R.string.tv_result_txt_ex));
-										valueFields = (TextView) findViewById(R.id.tv_result_val);
-										valueFields.setTextColor(getResources()
-												.getColor(android.R.color.holo_green_light));
-									}
-									displayTxt = String.format("%.0f", Math.abs(consPowerSec)) + "W";
-									valueFields.setText(displayTxt);
+								if (consPowerMin > 0.0d) {
+									valueFields.setText(getString(R.string.tv_result_txt_im));
+									valueFields = (TextView) findViewById(R.id.tv_result_val);
+									valueFields.setTextColor(getResources()
+											.getColor(android.R.color.holo_red_light));
 								} else {
-									if (consPowerMin > 0.0d) {
-										valueFields.setText(getString(R.string.tv_result_txt_im));
-										valueFields = (TextView) findViewById(R.id.tv_result_val);
-										valueFields.setTextColor(getResources()
-												.getColor(android.R.color.holo_red_light));
-									} else {
-										valueFields.setText(getString(R.string.tv_result_txt_ex));
-										valueFields = (TextView) findViewById(R.id.tv_result_val);
-										valueFields.setTextColor(getResources()
-												.getColor(android.R.color.holo_green_light));
-									}
-									displayTxt = String.format("%.0f", Math.abs(consPowerMin)) + "W";
-									valueFields.setText(displayTxt);
+									valueFields.setText(getString(R.string.tv_result_txt_ex));
+									valueFields = (TextView) findViewById(R.id.tv_result_val);
+									valueFields.setTextColor(getResources()
+											.getColor(android.R.color.holo_green_light));
 								}
+								displayTxt = String.format("%.0f", Math.abs(consPowerMin)) + "W";
+								valueFields.setText(displayTxt);
 
 								valueFields = (TextView) findViewById(R.id.tv_light_value);
-								if (calModeOn) {
-									displayTxt = String.valueOf(lightValSec) + "lux";
-									valueFields.setText(displayTxt);
-								} else {
-									displayTxt = String.valueOf(lightValMin) + "lux";
-									valueFields.setText(displayTxt);
-								}
+								displayTxt = String.valueOf(lightValMin) + "lux";
+								valueFields.setText(displayTxt);
 
 								if (autoRefreshOn && !isSimpleUI) {
 									if (isWANonStart) {
@@ -1589,15 +1458,14 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 										/** Cursor with data from the database */
 										Cursor newDataSet = DataBaseHelper.getLastRow(dataBase);
 										newDataSet.moveToFirst();
-										if (newDataSet.getInt(0) == requestedDate[0]-2000 &&
+										if (newDataSet.getInt(0) == requestedDate[0] - 2000 &&
 												newDataSet.getInt(1) == requestedDate[1] &&
 												newDataSet.getInt(2) == requestedDate[2]) {
 											newDataSet.close();
 											/** Cursor with data from the database */
 											newDataSet = DataBaseHelper.getDay(dataBase,
-													requestedDate[2], requestedDate[1], requestedDate[0]-2000);
+													requestedDate[2], requestedDate[1], requestedDate[0] - 2000);
 											Utilities.fillSeries(newDataSet);
-											initChart(true);
 										}
 										newDataSet.close();
 										dataBase.close();
@@ -1609,39 +1477,21 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 									String nowTime = Utilities.getCurrentTime();
 									plotData.addXValue(nowTime);
 									timeStampsCont.add(nowTime);
-									if (calModeOn) {
-										solarSeries.add(new Entry(solarPowerSec, solarSeries.size()));
-										solarPowerCont.add(solarPowerSec);
-										if (consPowerSec < 0.0) {
-											consPSeries.add(new Entry(consPowerSec, consPSeries.size()));
-											consumPPowerCont.add(consPowerSec);
-											consMSeries.add(new Entry(0, consMSeries.size()));
-											consumMPowerCont.add(0.0f);
-										} else {
-											consMSeries.add(new Entry(consPowerSec, consMSeries.size()));
-											consumMPowerCont.add(consPowerSec);
-											consPSeries.add(new Entry(0, consPSeries.size()));
-											consumPPowerCont.add(0.0f);
-										}
-										lightSeries.add(new Entry(lightValSec, lightSeries.size()));
-										lightValueCont.add(lightValSec);
+									solarSeries.add(new Entry(solarPowerMin, solarSeries.size()));
+									solarPowerCont.add(solarPowerMin);
+									if (consPowerMin < 0.0) {
+										consPSeries.add(new Entry(consPowerMin, consPSeries.size()));
+										consumPPowerCont.add(consPowerMin);
+										consMSeries.add(new Entry(0, consMSeries.size()));
+										consumMPowerCont.add(0.0f);
 									} else {
-										solarSeries.add(new Entry(solarPowerMin, solarSeries.size()));
-										solarPowerCont.add(solarPowerMin);
-										if (consPowerMin < 0.0) {
-											consPSeries.add(new Entry(consPowerMin, consPSeries.size()));
-											consumPPowerCont.add(consPowerMin);
-											consMSeries.add(new Entry(0, consMSeries.size()));
-											consumMPowerCont.add(0.0f);
-										} else {
-											consMSeries.add(new Entry(consPowerMin, consMSeries.size()));
-											consumMPowerCont.add(consPowerMin);
-											consPSeries.add(new Entry(0, consPSeries.size()));
-											consumPPowerCont.add(0.0f);
-										}
-										lightSeries.add(new Entry(lightValMin, lightSeries.size()));
-										lightValueCont.add(lightValMin);
+										consMSeries.add(new Entry(consPowerMin, consMSeries.size()));
+										consumMPowerCont.add(consPowerMin);
+										consPSeries.add(new Entry(0, consPSeries.size()));
+										consumPPowerCont.add(0.0f);
 									}
+									lightSeries.add(new Entry(lightValMin, lightSeries.size()));
+									lightValueCont.add(lightValMin);
 
 									/** Text view to show min and max poser values */
 									TextView maxPowerText = (TextView) findViewById(R.id.tv_cons_max);
@@ -1760,16 +1610,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 
 					if (syncMonth.equalsIgnoreCase(dbNamesList[0])) {
 						logDatesIndex = thisLogDates.size() - 1;
-
-						if (timer == null) {
-							if (isWAN) { // When on mobile connection update only every 5 minutes
-								startTimer(300000);
-							} else if (calModeOn) { // When in calibration mode, update every 5 seconds
-								startTimer(5000);
-							} else { // Normal WiFi mode, update every 1 minute
-								startTimer(60000);
-							}
-						}
 						initChart(true);
 						Utilities.stopRefreshAnim();
 					} else {
@@ -1778,57 +1618,6 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				}
 			}
 		});
-	}
-
-	/**
-	 * Start recurring timer with given repeat time
-	 *
-	 * @param repeatTime
-	 *                repeat time in milli seconds
-	 */
-	private void startTimer(long repeatTime) {
-		// Start new single shot every "repeatTime" seconds
-		timer = new Timer();
-		/** Timer task for UI update */
-		TimerTask timerTask = new TimerTask() {
-			public void run() {
-				//use a handler to run a UI update task
-				handler.post(new Runnable() {
-					public void run() {
-						autoRefresh();
-					}
-				});
-			}
-		};
-		//schedule the timer, after startDelay ms the TimerTask will run every repeatTime ms
-		timer.schedule(timerTask, 1, repeatTime); //
-	}
-
-	/**
-	 * Stop recurring timer if it is running
-	 */
-	private void stopTimer() {
-		if (timer != null) {
-			timer.cancel();
-			timer = null;
-		}
-	}
-
-	/**
-	 * Start async task to get last measurements from spMonitor
-	 */
-	private void autoRefresh() {
-		if (!isCommunicating) {
-			Utilities.startRefreshAnim();
-			/** String list with parts of the URL */
-			String[] ipValues = deviceIP.split("/");
-			url = "http://"+ipValues[2]+"/data/get";
-			if (needLastMonth) {
-				new callArduino().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
-			} else {
-				new callArduino().execute(url);
-			}
-		}
 	}
 
 	/**
@@ -1980,8 +1769,7 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 				c.setTime(myDate);
 				df = new SimpleDateFormat("yyyy-MMM-dd");
 				dayToShow = df.format(c.getTime());
-			} catch (ParseException e) {
-				e.printStackTrace();
+			} catch (ParseException ignore) {
 			}
 
 			chartTitle.setText(dayToShow);
@@ -2087,17 +1875,27 @@ public class spMonitor extends Activity implements View.OnClickListener, Adapter
 	}
 
 	/**
-	 * Stop refresh animation after SyncService has finished
+	 * Receiver for both Update and Sync service results
 	 *
 	 */
-	public class SyncServiceResponse extends BroadcastReceiver {
+	public class DataServiceResponse extends BroadcastReceiver {
 		public static final String ACTION_RESP =
 				"SYNC_FINISHED";
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Utilities.stopRefreshAnim();
-			resultTextView.setText(getResources().getString(R.string.filesSyncFinished));
+			if (intent.hasExtra("startRefresh") && autoRefreshOn) {
+				Utilities.startRefreshAnim();
+				return;
+			}
+			if (intent.hasExtra("resultString") && autoRefreshOn) {
+				url = "get";
+				updateUI(intent.getStringExtra("resultString"));
+			} else {
+				resultTextView.setText(getResources().getString(R.string.filesSyncFinished));
+			}
 			initChart(true);
+			Utilities.stopRefreshAnim();
 		}
-	}}
+	}
+}

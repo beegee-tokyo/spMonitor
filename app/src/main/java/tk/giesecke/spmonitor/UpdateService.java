@@ -40,9 +40,17 @@ public class UpdateService extends IntentService {
 		if (intent != null) {
 			if (BuildConfig.DEBUG) Log.d("spUpdate", "UpdateStart");
 
-			if(spMonitor.isCommunicating) {
-				if (BuildConfig.DEBUG) Log.d("spUpdate", "Update skipped");
-				return;
+			if (spMonitor.syncServiceReceiver != null) {
+				if (BuildConfig.DEBUG) Log.d("spUpdate", "Update Activity");
+				Intent broadcastIntent = new Intent();
+				broadcastIntent.setAction(spMonitor.DataServiceResponse.ACTION_RESP);
+				broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+				broadcastIntent.putExtra("startRefresh", "startUpdate");
+				try {
+					sendBroadcast(broadcastIntent);
+				} catch (RuntimeException e){
+					if (BuildConfig.DEBUG) Log.d("spUpdate","SendBroadCast to UI failed: "+e.toString());
+				}
 			}
 			/** Context of application */
 			Context intentContext = getApplicationContext();
@@ -53,9 +61,11 @@ public class UpdateService extends IntentService {
 			// notification is active
 			// or widget is active
 			// or daydream is active
+			// or activity is running
 			if ((mPrefs.getBoolean("notif",true))
 					|| (mPrefs.getInt("wNums",0) != 0)
-					|| (SolarDayDream.isDayDreaming))
+					|| (SolarDayDream.isDayDreaming)
+					|| (spMonitor.syncServiceReceiver != null))
 			{
 				/** Flag for WAN connection */
 				boolean isWAN = false;
@@ -85,11 +95,6 @@ public class UpdateService extends IntentService {
 					urlString = "http://www.spmonitor.giesecke.tk/l.php";
 				}
 
-				/** Consumption received from spMonitor device as minute average */
-				Float consPowerMin;
-				/** Solar power received from spMonitor device as minute average */
-				Float solarPowerMin;
-
 				/** Request to spMonitor device */
 				Request request = new Request.Builder()
 						.url(urlString)
@@ -110,6 +115,10 @@ public class UpdateService extends IntentService {
 				if (!resultToDisplay.equalsIgnoreCase("")) {
 					// decode JSON
 					if (Utilities.isJSONValid(resultToDisplay)) {
+						/* Consumption received from spMonitor device as minute average */
+						Float consPowerMin;
+						/* Solar power received from spMonitor device as minute average */
+						Float solarPowerMin;
 						try {
 							if (!isWAN) {
 								/** JSON object containing result from server */
@@ -141,6 +150,25 @@ public class UpdateService extends IntentService {
 							solarPowerMin = 0.0f;
 						}
 
+						/****************************************/
+						/* Update activity                      */
+						/****************************************/
+						if (spMonitor.syncServiceReceiver != null) {
+							if (BuildConfig.DEBUG) Log.d("spUpdate", "Update Activity");
+							Intent broadcastIntent = new Intent();
+							broadcastIntent.setAction(spMonitor.DataServiceResponse.ACTION_RESP);
+							broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+							broadcastIntent.putExtra("resultString", resultToDisplay);
+							try {
+								sendBroadcast(broadcastIntent);
+							} catch (RuntimeException e){
+								if (BuildConfig.DEBUG) Log.d("spMsync","SendBroadCast to UI failed: "+e.toString());
+							}
+						}
+
+						/****************************************/
+						/* Update notification if enabled       */
+						/****************************************/
 						if (mPrefs.getBoolean("notif",true)) {
 							if (BuildConfig.DEBUG) Log.d("spUpdate", "Update Notification");
 							/** Icon for notification */
@@ -219,6 +247,9 @@ public class UpdateService extends IntentService {
 							nMgr.cancel(1);
 						}
 
+						/****************************************/
+						/* Update day dream screen if active    */
+						/****************************************/
 						if (SolarDayDream.isDayDreaming) {
 							if (BuildConfig.DEBUG) Log.d("spUpdate", "Update DayDream");
 							SolarDayDream.powerVal = (double) (solarPowerMin + consPowerMin);
@@ -226,6 +257,9 @@ public class UpdateService extends IntentService {
 							SolarDayDream.solarVal = solarPowerMin;
 						}
 
+						/****************************************/
+						/* Update widgets if any */
+						/****************************************/
 						if (mPrefs.getInt("wNums",0) != 0) {
 							if (BuildConfig.DEBUG) Log.d("spUpdate", "Update Widget");
 							/** App widget manager for all widgets of this app */
@@ -237,7 +271,7 @@ public class UpdateService extends IntentService {
 							int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
 
 							for (int appWidgetId : appWidgetIds) {
-								SPwidget.updateAppWidget(intentContext,appWidgetManager,appWidgetId,solarPowerMin,consPowerMin);
+								SPwidget.updateAppWidget(intentContext,appWidgetManager,appWidgetId, solarPowerMin, consPowerMin);
 							}
 						}
 					}

@@ -8,7 +8,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.TimeInterpolator;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
@@ -19,7 +18,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
 /**
- * This class is a sample implementation of a DreamService. When activated, a
+ * This class is the implementation of a DreamService. When activated, a
  * TextView will repeatedly, move from the left to the right of screen, at a
  * random y-value.
  * <p/>
@@ -84,9 +83,9 @@ public class SolarDayDream extends DreamService {
 	public void onDreamingStarted() {
 		super.onDreamingStarted();
 
-		/** Context of application */
-		Context intentContext = getApplicationContext();
-		Utilities.startStopUpdates(intentContext, true);
+//		/** Context of application */
+//		Context intentContext = getApplicationContext();
+//		Utilities.startStopUpdates(intentContext, true);
 
 		startTextViewScrollAnimation();
 
@@ -97,13 +96,15 @@ public class SolarDayDream extends DreamService {
 	public void onDreamingStopped() {
 		super.onDreamingStopped();
 
-		/** Context of application */
-		Context intentContext = getApplicationContext();
-		/** Access to shared preferences of app widget */
-		SharedPreferences mPrefs = intentContext.getSharedPreferences("spMonitor", 0);
-		if (!(mPrefs.getBoolean("notif",true)) && (mPrefs.getInt("wNums",0) == 0)) {
-			Utilities.startStopUpdates(intentContext, false);
-		}
+//		/** Context of application */
+//		Context intentContext = getApplicationContext();
+//		/** Access to shared preferences of app widget */
+//		SharedPreferences mPrefs = intentContext.getSharedPreferences("spMonitor", 0);
+//		if (!(mPrefs.getBoolean("notif",true)) &&
+//				(mPrefs.getInt("wNums",0) == 0) &&
+//				spMonitor.syncServiceReceiver == null) {
+//			Utilities.startStopUpdates(intentContext, false);
+//		}
 
 		mAnimatorPower.cancel();
 

@@ -30,9 +30,9 @@ public class EventReceiver extends BroadcastReceiver {
 			// CONNECTIVITY CHANGE
 			if (BuildConfig.DEBUG) Log.d("spMonitor Event", "Connection Change");
 			if (Utilities.isConnectionAvailable(context)) {
-					Utilities.startStopUpdates(context, true);
+				Utilities.startStopUpdates(context, true);
 			} else {
-					Utilities.startStopUpdates(context, false);
+				Utilities.startStopUpdates(context, false);
 			}
 		}
 	}

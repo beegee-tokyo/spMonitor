@@ -167,7 +167,6 @@ class Utilities {
 		/** Progressbar that will be shown during refresh */
 		ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
 		refreshRot.setVisibility(View.VISIBLE);
-		spMonitor.isCommunicating = true;
 	}
 
 	/**
@@ -177,7 +176,6 @@ class Utilities {
 		/** Progressbar that will be shown during refresh */
 		ProgressBar refreshRot = (ProgressBar) spMonitor.appView.findViewById(R.id.pb_refresh_rot);
 		refreshRot.setVisibility(View.INVISIBLE);
-		spMonitor.isCommunicating = false;
 	}
 
 	/**
@@ -340,35 +338,6 @@ class Utilities {
 	}
 
 	/**
-	 * Add or subtract a day to/from current date
-	 *
-	 * @param fromDate
-	 *              Date in format yy-MM-dd
-	 * @param isAdd
-	 *              Flag for adding / subtracting a day
-	 *              true -> add a day
-	 *              false -> subtract a day
-	 * @return <code>String</code>
-	 *              fromDate + 1 day
-	 */
-/*	public static String changeDay(String fromDate, boolean isAdd) {
-		Calendar c = Calendar.getInstance();
-		@SuppressLint("SimpleDateFormat") DateFormat df = new SimpleDateFormat("yy-MM-dd");
-		try {
-			Date myDate = df.parse(fromDate.trim());
-			c.setTime(myDate);
-			if (isAdd) {
-				c.add(Calendar.DATE, 1);
-			} else {
-				c.add(Calendar.DATE, -1);
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return df.format(c.getTime());
-	}
-*/
-	/**
 	 * Checks if external storage is available for read and write
 	 *
 	 * @return <code>boolean</code>
@@ -408,7 +377,7 @@ class Utilities {
 	}
 
 	/**
-	 * Start or stop timer for notification updates
+	 * Start or stop timer for updates
 	 * If connection is same LAN as spMonitor device then update is every 60 seconds
 	 * else the update is every 5 minutes
 	 *
@@ -419,15 +388,13 @@ class Utilities {
 	 */
 	public static void startStopUpdates(Context context, boolean isStart) {
 
-		/** Intent to start scheduled update */
-		Intent notifIntent;
 		/** Pending intent for broadcast message to update notifications */
 		PendingIntent pendingIntent;
 		/** Alarm manager for scheduled updates */
 		AlarmManager alarmManager;
 		/* Access to shared preferences of app */
 		SharedPreferences mPrefs = context.getSharedPreferences("spMonitor", 0);
-		/** Update interval in ms */
+		/** Update interval 1 minute */
 		int alarmTime = 60000;
 
 		// Stop the update
@@ -444,7 +411,7 @@ class Utilities {
 			String connSSID = getSSID(context);
 
 			if (!((connSSID != null) && (connSSID.equalsIgnoreCase(mPrefs.getString("SSID","none"))))) {
-				/** Update interval in ms */
+				/** Change update interval to 5 minutes if we are not on Wifi */
 				alarmTime = 300000;
 			}
 			/** Pending intent for notification updates */
